@@ -1,7 +1,10 @@
+"use client";
+
 import { Suspense } from "react";
 import { PostCard } from "@/components/blog/post-card";
 import { BlogSidebar } from "@/components/blog/blog-sidebar";
-import { BlogFilters } from "@/components/blog/blog-filters";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
 
 // 模拟博客数据 - 后续会从数据库获取
 const mockPosts = [
@@ -85,7 +88,7 @@ const mockPosts = [
   },
 ];
 
-export default function BlogPage() {
+export default function BlogFixedPage() {
   return (
     <div className="container mx-auto px-4 py-8">
       <div className="mb-8">
@@ -98,9 +101,53 @@ export default function BlogPage() {
       <div className="grid grid-cols-1 lg:grid-cols-4 gap-8">
         {/* 主内容区 */}
         <div className="lg:col-span-3">
-          <BlogFilters />
+          {/* 简化的筛选器 - 使用原生HTML元素避免Select组件问题 */}
+          <div className="bg-muted/50 rounded-lg p-4 mb-6">
+            <div className="flex items-center justify-between mb-4">
+              <h3 className="text-lg font-semibold">筛选文章</h3>
+            </div>
 
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mt-6">
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+              {/* 搜索 */}
+              <div className="space-y-2">
+                <label className="text-sm font-medium">搜索</label>
+                <Input
+                  placeholder="搜索文章标题或内容..."
+                  className="w-full"
+                />
+              </div>
+
+              {/* 分类筛选 */}
+              <div className="space-y-2">
+                <label className="text-sm font-medium">分类</label>
+                <select className="w-full h-10 px-3 py-2 border border-input bg-background rounded-md text-sm focus:outline-none focus:ring-2 focus:ring-ring">
+                  <option value="">全部分类</option>
+                  <option value="tech">技术分享</option>
+                  <option value="frontend">前端开发</option>
+                  <option value="backend">后端开发</option>
+                  <option value="database">数据库</option>
+                  <option value="devops">DevOps</option>
+                </select>
+              </div>
+
+              {/* 排序 */}
+              <div className="space-y-2">
+                <label className="text-sm font-medium">排序</label>
+                <select className="w-full h-10 px-3 py-2 border border-input bg-background rounded-md text-sm focus:outline-none focus:ring-2 focus:ring-ring">
+                  <option value="newest">最新发布</option>
+                  <option value="oldest">最早发布</option>
+                  <option value="most-viewed">最多浏览</option>
+                  <option value="most-liked">最多点赞</option>
+                </select>
+              </div>
+            </div>
+
+            <div className="mt-4 flex justify-end">
+              <Button className="px-6">应用筛选</Button>
+            </div>
+          </div>
+
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
             <Suspense fallback={<div>加载中...</div>}>
               {mockPosts.map((post) => (
                 <PostCard key={post.id} post={post} />
@@ -111,21 +158,11 @@ export default function BlogPage() {
           {/* 分页 */}
           <div className="mt-8 flex justify-center">
             <nav className="flex items-center space-x-2">
-              <button className="px-3 py-2 text-sm border rounded-md hover:bg-muted transition-colors">
-                上一页
-              </button>
-              <button className="px-3 py-2 text-sm bg-primary text-primary-foreground rounded-md">
-                1
-              </button>
-              <button className="px-3 py-2 text-sm border rounded-md hover:bg-muted transition-colors">
-                2
-              </button>
-              <button className="px-3 py-2 text-sm border rounded-md hover:bg-muted transition-colors">
-                3
-              </button>
-              <button className="px-3 py-2 text-sm border rounded-md hover:bg-muted transition-colors">
-                下一页
-              </button>
+              <Button variant="outline" size="sm">上一页</Button>
+              <Button size="sm">1</Button>
+              <Button variant="outline" size="sm">2</Button>
+              <Button variant="outline" size="sm">3</Button>
+              <Button variant="outline" size="sm">下一页</Button>
             </nav>
           </div>
         </div>

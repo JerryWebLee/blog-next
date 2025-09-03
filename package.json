@@ -25,17 +25,22 @@
     "@heroui/switch": "2.2.23",
     "@heroui/system": "2.4.21",
     "@heroui/theme": "2.4.21",
+    "@heroui/popover": "2.3.25",
+
     "@react-aria/ssr": "3.9.10",
     "@react-aria/visually-hidden": "3.8.27",
+    "class-variance-authority": "^0.7.1",
     "clsx": "2.1.1",
     "drizzle-orm": "^0.44.5",
     "framer-motion": "12.23.12",
     "intl-messageformat": "10.7.16",
+    "lucide-react": "^0.542.0",
     "mysql2": "^3.14.4",
     "next": "15.5.2",
     "next-themes": "0.4.6",
     "react": "19.1.1",
-    "react-dom": "19.1.1"
+    "react-dom": "19.1.1",
+    "tailwind-merge": "^3.3.1"
   },
   "devDependencies": {
     "@eslint/eslintrc": "^3.3.1",

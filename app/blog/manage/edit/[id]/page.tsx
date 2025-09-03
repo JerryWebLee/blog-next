@@ -1,0 +1,379 @@
+"use client";
+
+import { useState, useEffect } from "react";
+import { useRouter, useParams } from "next/navigation";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { Textarea } from "@/components/ui/textarea";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Label } from "@/components/ui/label";
+import { ArrowLeft, Save, Eye, EyeOff, Loader2 } from "lucide-react";
+import {
+  Post,
+  UpdatePostRequest,
+  PostStatus,
+  PostVisibility,
+} from "@/types/blog";
+
+export default function EditBlogPage() {
+  const router = useRouter();
+  const params = useParams();
+  const postId = params.id as string;
+
+  const [loading, setLoading] = useState(true);
+  const [saving, setSaving] = useState(false);
+  const [showPassword, setShowPassword] = useState(false);
+  const [post, setPost] = useState<Post | null>(null);
+
+  const [formData, setFormData] = useState<UpdatePostRequest>({
+    title: "",
+    slug: "",
+    excerpt: "",
+    content: "",
+    featuredImage: "",
+    categoryId: undefined,
+    status: "draft",
+    visibility: "public",
+    password: "",
+    allowComments: true,
+    tagIds: [],
+  });
+
+  // 获取博客数据
+  useEffect(() => {
+    const fetchPost = async () => {
+      try {
+        setLoading(true);
+        const response = await fetch(`/api/posts/${postId}`);
+        const result = await response.json();
+
+        if (result.success) {
+          const postData = result.data;
+          setPost(postData);
+          setFormData({
+            title: postData.title || "",
+            slug: postData.slug || "",
+            excerpt: postData.excerpt || "",
+            content: postData.content || "",
+            featuredImage: postData.featuredImage || "",
+            categoryId: postData.categoryId,
+            status: postData.status || "draft",
+            visibility: postData.visibility || "public",
+            password: postData.password || "",
+            allowComments: postData.allowComments ?? true,
+            tagIds: postData.tags?.map((tag: any) => tag.id) || [],
+          });
+        } else {
+          alert("获取博客数据失败");
+          router.push("/blog/manage");
+        }
+      } catch (error) {
+        console.error("获取博客数据失败:", error);
+        alert("获取博客数据失败");
+        router.push("/blog/manage");
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    if (postId) {
+      fetchPost();
+    }
+  }, [postId, router]);
+
+  // 处理表单输入变化
+  const handleInputChange = (field: keyof UpdatePostRequest, value: any) => {
+    setFormData((prev) => ({
+      ...prev,
+      [field]: value,
+    }));
+  };
+
+  // 自动生成slug
+  const generateSlug = (title: string) => {
+    return title
+      .toLowerCase()
+      .replace(/[^a-z0-9\s-]/g, "")
+      .replace(/\s+/g, "-")
+      .replace(/-+/g, "-")
+      .trim();
+  };
+
+  // 处理标题变化时自动生成slug
+  const handleTitleChange = (title: string) => {
+    handleInputChange("title", title);
+    if (!formData.slug) {
+      handleInputChange("slug", generateSlug(title));
+    }
+  };
+
+  // 提交表单
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+
+    if (!formData.title?.trim() || !formData.content?.trim()) {
+      alert("请填写标题和内容");
+      return;
+    }
+
+    try {
+      setSaving(true);
+
+      const response = await fetch(`/api/posts/${postId}`, {
+        method: "PUT",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(formData),
+      });
+
+      const result = await response.json();
+
+      if (result.success) {
+        alert("博客更新成功！");
+        router.push("/blog/manage");
+      } else {
+        alert(`更新失败: ${result.message}`);
+      }
+    } catch (error) {
+      console.error("更新博客失败:", error);
+      alert("更新博客失败，请重试");
+    } finally {
+      setSaving(false);
+    }
+  };
+
+  if (loading) {
+    return (
+      <div className="container mx-auto py-6">
+        <div className="text-center py-8">
+          <Loader2 className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary mx-auto" />
+          <p className="mt-2 text-muted-foreground">加载中...</p>
+        </div>
+      </div>
+    );
+  }
+
+  if (!post) {
+    return (
+      <div className="container mx-auto py-6">
+        <div className="text-center py-8">
+          <p className="text-muted-foreground">博客不存在</p>
+          <Button onClick={() => router.push("/blog/manage")} className="mt-4">
+            返回管理页面
+          </Button>
+        </div>
+      </div>
+    );
+  }
+
+  return (
+    <div className="container mx-auto py-6 space-y-6">
+      {/* 页面标题和返回按钮 */}
+      <div className="flex items-center gap-4">
+        <Button variant="outline" size="sm" onClick={() => router.back()}>
+          <ArrowLeft className="mr-2 h-4 w-4" />
+          返回
+        </Button>
+        <div>
+          <h1 className="text-3xl font-bold">编辑博客</h1>
+          <p className="text-muted-foreground">编辑博客文章: {post.title}</p>
+        </div>
+      </div>
+
+      <form onSubmit={handleSubmit} className="space-y-6">
+        {/* 基本信息 */}
+        <Card>
+          <CardHeader>
+            <CardTitle>基本信息</CardTitle>
+          </CardHeader>
+          <CardContent className="space-y-4">
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+              <div className="space-y-2">
+                <Label htmlFor="title">标题 *</Label>
+                <Input
+                  id="title"
+                  value={formData.title}
+                  onChange={(e) => handleTitleChange(e.target.value)}
+                  placeholder="输入博客标题"
+                  required
+                />
+              </div>
+              <div className="space-y-2">
+                <Label htmlFor="slug">别名</Label>
+                <Input
+                  id="slug"
+                  value={formData.slug}
+                  onChange={(e) => handleInputChange("slug", e.target.value)}
+                  placeholder="自动生成或手动输入"
+                />
+              </div>
+            </div>
+
+            <div className="space-y-2">
+              <Label htmlFor="excerpt">摘要</Label>
+              <Textarea
+                id="excerpt"
+                value={formData.excerpt}
+                onChange={(e) => handleInputChange("excerpt", e.target.value)}
+                placeholder="博客摘要（可选）"
+                rows={3}
+              />
+            </div>
+
+            <div className="space-y-2">
+              <Label htmlFor="featuredImage">特色图片URL</Label>
+              <Input
+                id="featuredImage"
+                value={formData.featuredImage}
+                onChange={(e) =>
+                  handleInputChange("featuredImage", e.target.value)
+                }
+                placeholder="图片链接地址"
+                type="url"
+              />
+            </div>
+          </CardContent>
+        </Card>
+
+        {/* 内容 */}
+        <Card>
+          <CardHeader>
+            <CardTitle>内容</CardTitle>
+          </CardHeader>
+          <CardContent>
+            <div className="space-y-2">
+              <Label htmlFor="content">内容 *</Label>
+              <Textarea
+                id="content"
+                value={formData.content}
+                onChange={(e) => handleInputChange("content", e.target.value)}
+                placeholder="输入博客内容..."
+                rows={15}
+                required
+              />
+            </div>
+          </CardContent>
+        </Card>
+
+        {/* 设置 */}
+        <Card>
+          <CardHeader>
+            <CardTitle>设置</CardTitle>
+          </CardHeader>
+          <CardContent className="space-y-4">
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+              <div className="space-y-2">
+                <Label htmlFor="status">状态</Label>
+                <Select
+                  value={formData.status}
+                  onValueChange={(value) =>
+                    handleInputChange("status", value as PostStatus)
+                  }
+                >
+                  <SelectTrigger>
+                    <SelectValue placeholder="选择状态" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="draft">草稿</SelectItem>
+                    <SelectItem value="published">发布</SelectItem>
+                    <SelectItem value="archived">归档</SelectItem>
+                  </SelectContent>
+                </Select>
+              </div>
+
+              <div className="space-y-2">
+                <Label htmlFor="visibility">可见性</Label>
+                <Select
+                  value={formData.visibility}
+                  onValueChange={(value) =>
+                    handleInputChange("visibility", value as PostVisibility)
+                  }
+                >
+                  <SelectTrigger>
+                    <SelectValue placeholder="选择可见性" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="public">公开</SelectItem>
+                    <SelectItem value="private">私有</SelectItem>
+                    <SelectItem value="password">密码保护</SelectItem>
+                  </SelectContent>
+                </Select>
+              </div>
+            </div>
+
+            {formData.visibility === "password" && (
+              <div className="space-y-2">
+                <Label htmlFor="password">访问密码</Label>
+                <div className="relative">
+                  <Input
+                    id="password"
+                    type={showPassword ? "text" : "password"}
+                    value={formData.password}
+                    onChange={(e) =>
+                      handleInputChange("password", e.target.value)
+                    }
+                    placeholder="设置访问密码"
+                  />
+                  <Button
+                    type="button"
+                    variant="ghost"
+                    size="sm"
+                    className="absolute right-0 top-0 h-full px-3"
+                    onClick={() => setShowPassword(!showPassword)}
+                  >
+                    {showPassword ? (
+                      <EyeOff className="h-4 w-4" />
+                    ) : (
+                      <Eye className="h-4 w-4" />
+                    )}
+                  </Button>
+                </div>
+              </div>
+            )}
+
+            <div className="flex items-center space-x-2">
+              <input
+                type="checkbox"
+                id="allowComments"
+                checked={formData.allowComments}
+                onChange={(e) =>
+                  handleInputChange("allowComments", e.target.checked)
+                }
+                className="rounded"
+              />
+              <Label htmlFor="allowComments">允许评论</Label>
+            </div>
+          </CardContent>
+        </Card>
+
+        {/* 操作按钮 */}
+        <div className="flex justify-end gap-4">
+          <Button type="button" variant="outline" onClick={() => router.back()}>
+            取消
+          </Button>
+          <Button type="submit" disabled={saving}>
+            {saving ? (
+              <>
+                <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-white mr-2"></div>
+                保存中...
+              </>
+            ) : (
+              <>
+                <Save className="mr-2 h-4 w-4" />
+                保存更改
+              </>
+            )}
+          </Button>
+        </div>
+      </form>
+    </div>
+  );
+}
