@@ -20,10 +20,10 @@ export interface BaseEntity {
  * 用于分页查询的通用参数
  */
 export interface PaginationParams {
-  page?: number;      // 页码，从1开始
-  limit?: number;     // 每页数量，默认10
-  sortBy?: string;    // 排序字段
-  sortOrder?: 'asc' | 'desc'; // 排序方向
+  page?: number; // 页码，从1开始
+  limit?: number; // 每页数量，默认10
+  sortBy?: string; // 排序字段
+  sortOrder?: "asc" | "desc"; // 排序方向
 }
 
 /**
@@ -31,15 +31,19 @@ export interface PaginationParams {
  * 包含分页信息和数据列表
  */
 export interface PaginatedResponse<T> {
-  data: T[];          // 数据列表
-  pagination: {
-    page: number;     // 当前页码
-    limit: number;    // 每页数量
-    total: number;    // 总记录数
-    totalPages: number; // 总页数
-    hasNext: boolean; // 是否有下一页
-    hasPrev: boolean; // 是否有上一页
+  data: {
+    data: T[]; // 数据列表
+    pagination: {
+      page: number; // 当前页码
+      limit: number; // 每页数量
+      total: number; // 总记录数
+      totalPages: number; // 总页数
+      hasNext: boolean; // 是否有下一页
+      hasPrev: boolean; // 是否有上一页
+    };
   };
+  message: string;
+  success: boolean;
 }
 
 /**
@@ -47,11 +51,11 @@ export interface PaginatedResponse<T> {
  * 统一的API响应格式
  */
 export interface ApiResponse<T = any> {
-  success: boolean;   // 请求是否成功
-  message: string;    // 响应消息
-  data?: T;          // 响应数据
-  error?: string;     // 错误信息
-  timestamp: string;  // 响应时间戳
+  success: boolean; // 请求是否成功
+  message: string; // 响应消息
+  data?: T; // 响应数据
+  error?: string; // 错误信息
+  timestamp: string; // 响应时间戳
 }
 
 // ==================== 用户相关类型 ====================
@@ -59,12 +63,12 @@ export interface ApiResponse<T = any> {
 /**
  * 用户角色枚举
  */
-export type UserRole = 'admin' | 'author' | 'user';
+export type UserRole = "admin" | "author" | "user";
 
 /**
  * 用户状态枚举
  */
-export type UserStatus = 'active' | 'inactive' | 'banned';
+export type UserStatus = "active" | "inactive" | "banned";
 
 /**
  * 用户实体接口
@@ -116,7 +120,7 @@ export interface LoginRequest {
  * 用户登录响应接口
  */
 export interface LoginResponse {
-  user: Omit<User, 'password'>;
+  user: Omit<User, "password">;
   token: string;
   refreshToken: string;
 }
@@ -133,9 +137,9 @@ export interface Category extends BaseEntity {
   parentId?: number;
   sortOrder: number;
   isActive: boolean;
-  parent?: Category;      // 父分类
-  children?: Category[];  // 子分类
-  postCount?: number;     // 文章数量
+  parent?: Category; // 父分类
+  children?: Category[]; // 子分类
+  postCount?: number; // 文章数量
 }
 
 /**
@@ -203,12 +207,12 @@ export interface UpdateTagRequest {
 /**
  * 文章状态枚举
  */
-export type PostStatus = 'draft' | 'published' | 'archived';
+export type PostStatus = "draft" | "published" | "archived";
 
 /**
  * 文章可见性枚举
  */
-export type PostVisibility = 'public' | 'private' | 'password';
+export type PostVisibility = "public" | "private" | "password";
 
 /**
  * 文章实体接口
@@ -229,7 +233,7 @@ export interface Post extends BaseEntity {
   viewCount: number;
   likeCount: number;
   publishedAt?: Date;
-  
+
   // 关联数据
   author?: User;
   category?: Category;
@@ -289,7 +293,7 @@ export interface PostQueryParams extends PaginationParams {
 /**
  * 评论状态枚举
  */
-export type CommentStatus = 'pending' | 'approved' | 'spam';
+export type CommentStatus = "pending" | "approved" | "spam";
 
 /**
  * 评论实体接口
@@ -305,7 +309,7 @@ export interface Comment extends BaseEntity {
   status: CommentStatus;
   ipAddress?: string;
   userAgent?: string;
-  
+
   // 关联数据
   post?: Post;
   author?: User;
@@ -351,7 +355,7 @@ export interface Media extends BaseEntity {
   altText?: string;
   caption?: string;
   uploadedBy: number;
-  
+
   // 关联数据
   uploader?: User;
 }
@@ -422,10 +426,10 @@ export interface UserStats {
  */
 export interface SearchParams {
   query: string;
-  type?: 'posts' | 'users' | 'tags' | 'categories';
+  type?: "posts" | "users" | "tags" | "categories";
   filters?: Record<string, any>;
   sortBy?: string;
-  sortOrder?: 'asc' | 'desc';
+  sortOrder?: "asc" | "desc";
 }
 
 /**

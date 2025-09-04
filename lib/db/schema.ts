@@ -1,13 +1,13 @@
 import {
-  mysqlTable,
-  varchar,
-  text,
-  timestamp,
-  int,
   boolean,
   index,
-  primaryKey,
+  int,
   mysqlEnum,
+  mysqlTable,
+  primaryKey,
+  text,
+  timestamp,
+  varchar,
 } from "drizzle-orm/mysql-core";
 
 /**
@@ -25,9 +25,7 @@ export const users = mysqlTable(
     avatar: varchar("avatar", { length: 255 }), // 头像URL
     bio: text("bio"), // 个人简介
     role: mysqlEnum("role", ["admin", "author", "user"]).default("user"), // 用户角色
-    status: mysqlEnum("status", ["active", "inactive", "banned"]).default(
-      "active"
-    ), // 用户状态
+    status: mysqlEnum("status", ["active", "inactive", "banned"]).default("active"), // 用户状态
     emailVerified: boolean("email_verified").default(false), // 邮箱是否验证
     lastLoginAt: timestamp("last_login_at"), // 最后登录时间
     createdAt: timestamp("created_at").defaultNow().notNull(),
@@ -81,10 +79,7 @@ export const tags = mysqlTable(
     createdAt: timestamp("created_at").defaultNow().notNull(),
     updatedAt: timestamp("updated_at").defaultNow().onUpdateNow().notNull(),
   },
-  (table) => [
-    index("slug_idx").on(table.slug),
-    index("active_idx").on(table.isActive),
-  ]
+  (table) => [index("slug_idx").on(table.slug), index("active_idx").on(table.isActive)]
 );
 
 /**
@@ -103,14 +98,8 @@ export const posts = mysqlTable(
     featuredImage: varchar("featured_image", { length: 255 }), // 特色图片URL
     authorId: int("author_id").notNull(), // 作者ID
     categoryId: int("category_id"), // 分类ID
-    status: mysqlEnum("status", ["draft", "published", "archived"]).default(
-      "draft"
-    ), // 文章状态
-    visibility: mysqlEnum("visibility", [
-      "public",
-      "private",
-      "password",
-    ]).default("public"), // 可见性
+    status: mysqlEnum("status", ["draft", "published", "archived"]).default("draft"), // 文章状态
+    visibility: mysqlEnum("visibility", ["public", "private", "password"]).default("public"), // 可见性
     password: varchar("password", { length: 255 }), // 密码保护（如果visibility为password）
     allowComments: boolean("allow_comments").default(true), // 是否允许评论
     viewCount: int("view_count").default(0), // 浏览次数
@@ -162,9 +151,7 @@ export const comments = mysqlTable(
     authorEmail: varchar("author_email", { length: 100 }), // 作者邮箱
     authorWebsite: varchar("author_website", { length: 255 }), // 作者网站
     content: text("content").notNull(), // 评论内容
-    status: mysqlEnum("status", ["pending", "approved", "spam"]).default(
-      "pending"
-    ), // 评论状态
+    status: mysqlEnum("status", ["pending", "approved", "spam"]).default("pending"), // 评论状态
     ipAddress: varchar("ip_address", { length: 45 }), // IP地址（IPv6支持）
     userAgent: text("user_agent"), // 用户代理
     createdAt: timestamp("created_at").defaultNow().notNull(),
@@ -222,10 +209,7 @@ export const settings = mysqlTable(
     createdAt: timestamp("created_at").defaultNow().notNull(),
     updatedAt: timestamp("updated_at").defaultNow().onUpdateNow().notNull(),
   },
-  (table) => [
-    index("key_idx").on(table.key),
-    index("public_idx").on(table.isPublic),
-  ]
+  (table) => [index("key_idx").on(table.key), index("public_idx").on(table.isPublic)]
 );
 
 // 导出所有表，供其他地方使用

@@ -1,11 +1,12 @@
 "use client";
 
 import { useState } from "react";
+
+import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
-import { Badge } from "@/components/ui/badge";
 
 export default function TestPage() {
   const [testData, setTestData] = useState({
@@ -83,9 +84,7 @@ export default function TestPage() {
               <label className="text-sm font-medium">标题</label>
               <Input
                 value={testData.title}
-                onChange={(e) =>
-                  setTestData((prev) => ({ ...prev, title: e.target.value }))
-                }
+                onChange={(e) => setTestData((prev) => ({ ...prev, title: e.target.value }))}
               />
             </div>
 
@@ -93,9 +92,7 @@ export default function TestPage() {
               <label className="text-sm font-medium">摘要</label>
               <Input
                 value={testData.excerpt}
-                onChange={(e) =>
-                  setTestData((prev) => ({ ...prev, excerpt: e.target.value }))
-                }
+                onChange={(e) => setTestData((prev) => ({ ...prev, excerpt: e.target.value }))}
               />
             </div>
 
@@ -104,7 +101,10 @@ export default function TestPage() {
               <Input
                 value={testData.featuredImage}
                 onChange={(e) =>
-                  setTestData((prev) => ({ ...prev, featuredImage: e.target.value }))
+                  setTestData((prev) => ({
+                    ...prev,
+                    featuredImage: e.target.value,
+                  }))
                 }
                 placeholder="输入图片URL"
               />
@@ -114,7 +114,7 @@ export default function TestPage() {
                     key={index}
                     variant="outline"
                     size="sm"
-                    onClick={() => setTestData(prev => ({ ...prev, featuredImage: url }))}
+                    onClick={() => setTestData((prev) => ({ ...prev, featuredImage: url }))}
                   >
                     图片{index + 1}
                   </Button>
@@ -126,9 +126,7 @@ export default function TestPage() {
               <label className="text-sm font-medium">内容</label>
               <Textarea
                 value={testData.content}
-                onChange={(e) =>
-                  setTestData((prev) => ({ ...prev, content: e.target.value }))
-                }
+                onChange={(e) => setTestData((prev) => ({ ...prev, content: e.target.value }))}
                 rows={4}
               />
             </div>
@@ -141,20 +139,11 @@ export default function TestPage() {
             <CardTitle>API测试</CardTitle>
           </CardHeader>
           <CardContent className="space-y-4">
-            <Button
-              onClick={testCreatePost}
-              disabled={loading}
-              className="w-full"
-            >
+            <Button onClick={testCreatePost} disabled={loading} className="w-full">
               {loading ? "测试中..." : "测试创建博客"}
             </Button>
 
-            <Button
-              onClick={testGetPosts}
-              disabled={loading}
-              variant="outline"
-              className="w-full"
-            >
+            <Button onClick={testGetPosts} disabled={loading} variant="outline" className="w-full">
               {loading ? "测试中..." : "测试获取博客列表"}
             </Button>
           </CardContent>
@@ -169,15 +158,9 @@ export default function TestPage() {
           </CardHeader>
           <CardContent>
             <div className="w-full h-64 rounded-lg overflow-hidden">
-              <img
-                src={testData.featuredImage}
-                alt="预览图片"
-                className="w-full h-full object-cover"
-              />
+              <img src={testData.featuredImage} alt="预览图片" className="w-full h-full object-cover" />
             </div>
-            <p className="text-sm text-muted-foreground mt-2">
-              {testData.featuredImage}
-            </p>
+            <p className="text-sm text-muted-foreground mt-2">{testData.featuredImage}</p>
           </CardContent>
         </Card>
       )}
@@ -190,9 +173,7 @@ export default function TestPage() {
           </CardHeader>
           <CardContent>
             <div className="bg-muted p-4 rounded-lg">
-              <pre className="text-sm overflow-auto">
-                {JSON.stringify(apiResponse, null, 2)}
-              </pre>
+              <pre className="text-sm overflow-auto">{JSON.stringify(apiResponse, null, 2)}</pre>
             </div>
 
             {apiResponse.success && (

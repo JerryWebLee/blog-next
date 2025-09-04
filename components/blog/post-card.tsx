@@ -1,6 +1,7 @@
-import Link from "next/link";
 import Image from "next/image";
-import { Calendar, User, Eye, MessageCircle, Tag } from "lucide-react";
+import Link from "next/link";
+import { Calendar, Eye, MessageCircle, Tag, User } from "lucide-react";
+
 import { Badge } from "@/components/ui/badge";
 import { Card, CardContent, CardFooter, CardHeader } from "@/components/ui/card";
 
@@ -51,13 +52,11 @@ export function PostCard({ post }: PostCardProps) {
             className="object-cover group-hover:scale-105 transition-transform duration-300"
           />
           {post.category && (
-            <Badge className="absolute top-3 left-3 bg-primary/90 hover:bg-primary">
-              {post.category.name}
-            </Badge>
+            <Badge className="absolute top-3 left-3 bg-primary/90 hover:bg-primary">{post.category.name}</Badge>
           )}
         </div>
       )}
-      
+
       <CardHeader className="pb-3">
         <div className="space-y-2">
           <Link href={`/blog/${post.slug}`}>
@@ -65,9 +64,7 @@ export function PostCard({ post }: PostCardProps) {
               {post.title}
             </h3>
           </Link>
-          <p className="text-muted-foreground line-clamp-3 text-sm">
-            {post.excerpt}
-          </p>
+          <p className="text-muted-foreground line-clamp-3 text-sm">{post.excerpt}</p>
         </div>
       </CardHeader>
 
@@ -79,7 +76,10 @@ export function PostCard({ post }: PostCardProps) {
                 <Badge
                   variant="secondary"
                   className="text-xs hover:bg-primary hover:text-primary-foreground transition-colors cursor-pointer"
-                  style={{ backgroundColor: tag.color + "20", color: tag.color }}
+                  style={{
+                    backgroundColor: tag.color + "20",
+                    color: tag.color,
+                  }}
                 >
                   <Tag className="w-3 h-3 mr-1" />
                   {tag.name}
@@ -116,9 +116,7 @@ export function PostCard({ post }: PostCardProps) {
               <MessageCircle className="w-4 h-4" />
               <span>{post.commentCount}</span>
             </div>
-            <span className="text-xs bg-muted px-2 py-1 rounded">
-              {post.readTime} 分钟
-            </span>
+            <span className="text-xs bg-muted px-2 py-1 rounded">{post.readTime} 分钟</span>
           </div>
         </div>
       </CardFooter>

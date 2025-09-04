@@ -1,7 +1,8 @@
 import Link from "next/link";
+import { Clock, FolderOpen, Tag, TrendingUp } from "lucide-react";
+
 import { Badge } from "@/components/ui/badge";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { TrendingUp, Tag, FolderOpen, Clock } from "lucide-react";
 
 // 模拟数据 - 后续会从数据库获取
 const mockCategories = [
@@ -88,7 +89,10 @@ export function BlogSidebar() {
                 <Badge
                   variant="secondary"
                   className="text-xs hover:bg-primary hover:text-primary-foreground transition-colors cursor-pointer"
-                  style={{ backgroundColor: tag.color + "20", color: tag.color }}
+                  style={{
+                    backgroundColor: tag.color + "20",
+                    color: tag.color,
+                  }}
                 >
                   {tag.name} ({tag.count})
                 </Badge>
@@ -109,15 +113,9 @@ export function BlogSidebar() {
         <CardContent>
           <div className="space-y-3">
             {mockPopularPosts.map((post, index) => (
-              <Link
-                key={post.slug}
-                href={`/blog/${post.slug}`}
-                className="block group"
-              >
+              <Link key={post.slug} href={`/blog/${post.slug}`} className="block group">
                 <div className="flex items-start space-x-3">
-                  <span className="text-sm font-bold text-muted-foreground min-w-[20px]">
-                    {index + 1}
-                  </span>
+                  <span className="text-sm font-bold text-muted-foreground min-w-[20px]">{index + 1}</span>
                   <div className="flex-1 min-w-0">
                     <h4 className="text-sm font-medium line-clamp-2 group-hover:text-primary transition-colors">
                       {post.title}
@@ -140,9 +138,7 @@ export function BlogSidebar() {
           <CardTitle>订阅更新</CardTitle>
         </CardHeader>
         <CardContent>
-          <p className="text-sm text-muted-foreground mb-3">
-            获取最新的技术文章和更新通知
-          </p>
+          <p className="text-sm text-muted-foreground mb-3">获取最新的技术文章和更新通知</p>
           <div className="space-y-2">
             <input
               type="email"

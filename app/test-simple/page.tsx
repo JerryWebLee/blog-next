@@ -14,9 +14,7 @@ export default function TestSimplePage() {
       </div>
 
       <div className="mt-8 p-4 bg-green-100 border border-green-300 rounded-md">
-        <p className="text-green-800">
-          如果按钮正常显示，说明HeroUI Button组件工作正常！
-        </p>
+        <p className="text-green-800">如果按钮正常显示，说明HeroUI Button组件工作正常！</p>
       </div>
     </div>
   );

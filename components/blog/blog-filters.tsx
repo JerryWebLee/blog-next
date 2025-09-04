@@ -1,16 +1,11 @@
 "use client";
 
 import { useState } from "react";
+import { Select, SelectItem } from "@heroui/react";
+import { Filter, Search, X } from "lucide-react";
+
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
-import { Search, Filter, X } from "lucide-react";
 
 export function BlogFilters() {
   const [searchQuery, setSearchQuery] = useState("");
@@ -25,11 +20,31 @@ export function BlogFilters() {
     setSelectedSort("newest");
   };
 
-  const hasActiveFilters =
-    searchQuery ||
-    selectedCategory ||
-    selectedStatus ||
-    selectedSort !== "newest";
+  const hasActiveFilters = searchQuery || selectedCategory || selectedStatus || selectedSort !== "newest";
+
+  const categories = [
+    { label: "全部", key: "all" },
+    { label: "技术分享", key: "tech" },
+    { label: "前端开发", key: "frontend" },
+    { label: "后端开发", key: "backend" },
+    { label: "数据库", key: "database" },
+    { label: "DevOps", key: "devops" },
+  ];
+
+  const statuses = [
+    { label: "全部", key: "all" },
+    { label: "已发布", key: "published" },
+    { label: "草稿", key: "draft" },
+    { label: "已归档", key: "archived" },
+  ];
+
+  const sortOptions = [
+    { label: "最新发布", key: "newest" },
+    { label: "最早发布", key: "oldest" },
+    { label: "最多浏览", key: "most-viewed" },
+    { label: "最多点赞", key: "most-liked" },
+    { label: "标题排序", key: "title" },
+  ];
 
   return (
     <div className="bg-muted/50 rounded-lg p-4">
@@ -69,51 +84,44 @@ export function BlogFilters() {
         {/* 分类筛选 */}
         <div className="space-y-2">
           <label className="text-sm font-medium">分类</label>
-          <Select value={selectedCategory} onValueChange={setSelectedCategory}>
-            <SelectTrigger>
-              <SelectValue placeholder="选择分类" />
-            </SelectTrigger>
-            <SelectContent>
-              <SelectItem value="all">全部分类</SelectItem>
-              <SelectItem value="tech">技术分享</SelectItem>
-              <SelectItem value="frontend">前端开发</SelectItem>
-              <SelectItem value="backend">后端开发</SelectItem>
-              <SelectItem value="database">数据库</SelectItem>
-              <SelectItem value="devops">DevOps</SelectItem>
-            </SelectContent>
+          <Select
+            value={selectedCategory}
+            onChange={(e) => setSelectedCategory(e.target.value)}
+            className="max-w-xs"
+            items={categories}
+            label="分类"
+            placeholder="选择分类"
+          >
+            {(category: any) => <SelectItem>{category.label}</SelectItem>}
           </Select>
         </div>
 
         {/* 状态筛选 */}
         <div className="space-y-2">
           <label className="text-sm font-medium">状态</label>
-          <Select value={selectedStatus} onValueChange={setSelectedStatus}>
-            <SelectTrigger>
-              <SelectValue placeholder="选择状态" />
-            </SelectTrigger>
-            <SelectContent>
-              <SelectItem value="all">全部状态</SelectItem>
-              <SelectItem value="published">已发布</SelectItem>
-              <SelectItem value="draft">草稿</SelectItem>
-              <SelectItem value="archived">已归档</SelectItem>
-            </SelectContent>
+          <Select
+            value={selectedStatus}
+            onChange={(e) => setSelectedStatus(e.target.value)}
+            className="max-w-xs"
+            items={statuses}
+            label="状态"
+            placeholder="选择状态"
+          >
+            {(status: any) => <SelectItem>{status.label}</SelectItem>}
           </Select>
         </div>
 
         {/* 排序 */}
         <div className="space-y-2">
           <label className="text-sm font-medium">排序</label>
-          <Select value={selectedSort} onValueChange={setSelectedSort}>
-            <SelectTrigger>
-              <SelectValue placeholder="选择排序方式" />
-            </SelectTrigger>
-            <SelectContent>
-              <SelectItem value="newest">最新发布</SelectItem>
-              <SelectItem value="oldest">最早发布</SelectItem>
-              <SelectItem value="most-viewed">最多浏览</SelectItem>
-              <SelectItem value="most-liked">最多点赞</SelectItem>
-              <SelectItem value="title">标题排序</SelectItem>
-            </SelectContent>
+          <Select
+            value={selectedSort}
+            onChange={(e) => setSelectedSort(e.target.value)}
+            className="max-w-xs"
+            items={sortOptions}
+            label="排序"
+          >
+            {(sort: any) => <SelectItem>{sort.label}</SelectItem>}
           </Select>
         </div>
       </div>

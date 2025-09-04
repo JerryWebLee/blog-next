@@ -1,6 +1,6 @@
+import * as fs from "fs";
 import { drizzle } from "drizzle-orm/mysql2";
 import mysql, { PoolOptions } from "mysql2/promise";
-import * as fs from "fs";
 
 /**
  * 读取环境变量文件

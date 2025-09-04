@@ -8,19 +8,17 @@
  */
 
 import { NextRequest, NextResponse } from "next/server";
+
 import { postService } from "@/lib/services/post.service";
+import { createErrorResponse, createSuccessResponse } from "@/lib/utils";
 import { UpdatePostRequest } from "@/types/blog";
-import { createSuccessResponse, createErrorResponse } from "@/lib/utils";
 
 /**
  * GET /api/posts/[id]
  * 获取指定文章的详细信息
  * 支持包含关联数据（作者、分类、标签、评论等）
  */
-export async function GET(
-  request: NextRequest,
-  { params }: { params: { id: string } }
-) {
+export async function GET(request: NextRequest, { params }: { params: { id: string } }) {
   try {
     const { id } = params;
     const { searchParams } = new URL(request.url);
@@ -60,10 +58,7 @@ export async function GET(
 
     // 返回错误响应
     return NextResponse.json(
-      createErrorResponse(
-        "获取文章详情失败",
-        error instanceof Error ? error.message : "未知错误"
-      ),
+      createErrorResponse("获取文章详情失败", error instanceof Error ? error.message : "未知错误"),
       { status: 500 }
     );
   }
@@ -74,10 +69,7 @@ export async function GET(
  * 更新指定文章的信息
  * 需要用户认证和适当的权限（作者或管理员）
  */
-export async function PUT(
-  request: NextRequest,
-  { params }: { params: { id: string } }
-) {
+export async function PUT(request: NextRequest, { params }: { params: { id: string } }) {
   try {
     const { id } = params;
 
@@ -94,17 +86,11 @@ export async function PUT(
 
     // 验证更新数据
     if (body.title && body.title.length > 200) {
-      return NextResponse.json(
-        createErrorResponse("文章标题不能超过200个字符"),
-        { status: 400 }
-      );
+      return NextResponse.json(createErrorResponse("文章标题不能超过200个字符"), { status: 400 });
     }
 
     if (body.content && body.content.length < 10) {
-      return NextResponse.json(
-        createErrorResponse("文章内容不能少于10个字符"),
-        { status: 400 }
-      );
+      return NextResponse.json(createErrorResponse("文章内容不能少于10个字符"), { status: 400 });
     }
 
     // TODO: 这里应该验证用户权限
@@ -117,10 +103,7 @@ export async function PUT(
     const updatedPost = await postService.updatePost(postId, body);
 
     // 返回成功响应
-    return NextResponse.json(
-      createSuccessResponse(updatedPost, "文章更新成功"),
-      { status: 200 }
-    );
+    return NextResponse.json(createSuccessResponse(updatedPost, "文章更新成功"), { status: 200 });
   } catch (error) {
     console.error("更新文章失败:", error);
 
@@ -133,21 +116,14 @@ export async function PUT(
       }
 
       if (error.message.includes("文章别名已存在")) {
-        return NextResponse.json(
-          createErrorResponse("文章别名已存在，请使用不同的标题或别名"),
-          { status: 409 }
-        );
+        return NextResponse.json(createErrorResponse("文章别名已存在，请使用不同的标题或别名"), { status: 409 });
       }
     }
 
     // 返回通用错误响应
-    return NextResponse.json(
-      createErrorResponse(
-        "更新文章失败",
-        error instanceof Error ? error.message : "未知错误"
-      ),
-      { status: 500 }
-    );
+    return NextResponse.json(createErrorResponse("更新文章失败", error instanceof Error ? error.message : "未知错误"), {
+      status: 500,
+    });
   }
 }
 
@@ -156,10 +132,7 @@ export async function PUT(
  * 删除指定文章
  * 需要用户认证和适当的权限（作者或管理员）
  */
-export async function DELETE(
-  request: NextRequest,
-  { params }: { params: { id: string } }
-) {
+export async function DELETE(request: NextRequest, { params }: { params: { id: string } }) {
   try {
     const { id } = params;
 
@@ -203,13 +176,9 @@ export async function DELETE(
     }
 
     // 返回通用错误响应
-    return NextResponse.json(
-      createErrorResponse(
-        "删除文章失败",
-        error instanceof Error ? error.message : "未知错误"
-      ),
-      { status: 500 }
-    );
+    return NextResponse.json(createErrorResponse("删除文章失败", error instanceof Error ? error.message : "未知错误"), {
+      status: 500,
+    });
   }
 }
 
@@ -218,10 +187,7 @@ export async function DELETE(
  * 部分更新文章信息
  * 主要用于更新文章状态、可见性等字段
  */
-export async function PATCH(
-  request: NextRequest,
-  { params }: { params: { id: string } }
-) {
+export async function PATCH(request: NextRequest, { params }: { params: { id: string } }) {
   try {
     const { id } = params;
 
@@ -237,19 +203,13 @@ export async function PATCH(
     const body = await request.json();
 
     // 验证更新数据
-    if (
-      body.status &&
-      !["draft", "published", "archived"].includes(body.status)
-    ) {
+    if (body.status && !["draft", "published", "archived"].includes(body.status)) {
       return NextResponse.json(createErrorResponse("无效的文章状态"), {
         status: 400,
       });
     }
 
-    if (
-      body.visibility &&
-      !["public", "private", "password"].includes(body.visibility)
-    ) {
+    if (body.visibility && !["public", "private", "password"].includes(body.visibility)) {
       return NextResponse.json(createErrorResponse("无效的文章可见性"), {
         status: 400,
       });
@@ -261,21 +221,13 @@ export async function PATCH(
     const updatedPost = await postService.updatePost(postId, body);
 
     // 返回成功响应
-    return NextResponse.json(
-      createSuccessResponse(updatedPost, "文章更新成功"),
-      { status: 200 }
-    );
+    return NextResponse.json(createSuccessResponse(updatedPost, "文章更新成功"), { status: 200 });
   } catch (error) {
     console.error("部分更新文章失败:", error);
 
     // 返回错误响应
-    return NextResponse.json(
-      createErrorResponse(
-        "更新文章失败",
-        error instanceof Error ? error.message : "未知错误"
-      ),
-      { status: 500 }
-    );
+    return NextResponse.json(createErrorResponse("更新文章失败", error instanceof Error ? error.message : "未知错误"), {
+      status: 500,
+    });
   }
 }
-

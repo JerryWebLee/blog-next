@@ -3,31 +3,19 @@
  * 实现文章的增删改查、状态管理、标签关联等核心业务逻辑
  */
 
-import { eq, and, or, like, desc, asc, count, sql } from "drizzle-orm";
+import { and, asc, count, desc, eq, like, or, sql } from "drizzle-orm";
+
 import { db } from "@/lib/db/config";
+import { categories, comments, posts, postTags, tags, users } from "@/lib/db/schema";
 import {
-  posts,
-  postTags,
-  tags,
-  categories,
-  users,
-  comments,
-} from "@/lib/db/schema";
-import {
-  Post,
-  CreatePostRequest,
-  UpdatePostRequest,
-  PostQueryParams,
-  PaginatedResponse,
-} from "@/types/blog";
-import {
-  createSuccessResponse,
+  calculatePagination,
   createErrorResponse,
   createPaginatedResponse,
-  calculatePagination,
+  createSuccessResponse,
   generateSlug,
   truncateText,
 } from "@/lib/utils";
+import { CreatePostRequest, PaginatedResponse, Post, PostQueryParams, UpdatePostRequest } from "@/types/blog";
 
 /**
  * 文章服务类
@@ -46,11 +34,7 @@ export class PostService {
       const slug = data.slug || generateSlug(data.title);
 
       // 检查slug是否已存在
-      const existingPost = await db
-        .select()
-        .from(posts)
-        .where(eq(posts.slug, slug))
-        .limit(1);
+      const existingPost = await db.select().from(posts).where(eq(posts.slug, slug)).limit(1);
       if (existingPost.length > 0) {
         throw new Error("文章别名已存在，请使用不同的标题或别名");
       }
@@ -59,29 +43,23 @@ export class PostService {
       const excerpt = data.excerpt || truncateText(data.content, 200);
 
       // 创建文章记录
-      await db
-        .insert(posts)
-        .values({
-          title: data.title,
-          slug,
-          excerpt,
-          content: data.content,
-          featuredImage: data.featuredImage,
-          authorId,
-          categoryId: data.categoryId,
-          status: data.status || "draft",
-          visibility: data.visibility || "public",
-          password: data.password,
-          allowComments: data.allowComments !== false,
-          publishedAt: data.status === "published" ? new Date() : undefined,
-        });
+      await db.insert(posts).values({
+        title: data.title,
+        slug,
+        excerpt,
+        content: data.content,
+        featuredImage: data.featuredImage,
+        authorId,
+        categoryId: data.categoryId,
+        status: data.status || "draft",
+        visibility: data.visibility || "public",
+        password: data.password,
+        allowComments: data.allowComments !== false,
+        publishedAt: data.status === "published" ? new Date() : undefined,
+      });
 
       // 获取新创建的文章ID
-      const [newPost] = await db
-        .select()
-        .from(posts)
-        .where(eq(posts.slug, slug))
-        .limit(1);
+      const [newPost] = await db.select().from(posts).where(eq(posts.slug, slug)).limit(1);
 
       // 如果提供了标签ID，创建标签关联
       if (data.tagIds && data.tagIds.length > 0) {
@@ -102,10 +80,7 @@ export class PostService {
    * @param includeRelations 是否包含关联数据
    * @returns 文章详情
    */
-  async getPostById(
-    id: number,
-    includeRelations: boolean = true
-  ): Promise<Post | null> {
+  async getPostById(id: number, includeRelations: boolean = true): Promise<Post | null> {
     try {
       let query = db.select().from(posts).where(eq(posts.id, id));
 
@@ -126,10 +101,7 @@ export class PostService {
 
       // 如果包含关联数据，获取标签和评论
       if (includeRelations) {
-        const [tags, comments] = await Promise.all([
-          this.getPostTags(post.id),
-          this.getPostComments(post.id),
-        ]);
+        const [tags, comments] = await Promise.all([this.getPostTags(post.id), this.getPostComments(post.id)]);
 
         return {
           ...post,
@@ -153,10 +125,7 @@ export class PostService {
    * @param includeRelations 是否包含关联数据
    * @returns 文章详情
    */
-  async getPostBySlug(
-    slug: string,
-    includeRelations: boolean = true
-  ): Promise<Post | null> {
+  async getPostBySlug(slug: string, includeRelations: boolean = true): Promise<Post | null> {
     try {
       let query = db.select().from(posts).where(eq(posts.slug, slug));
 
@@ -174,10 +143,7 @@ export class PostService {
       const post = result[0];
 
       if (includeRelations) {
-        const [tags, comments] = await Promise.all([
-          this.getPostTags(post.id),
-          this.getPostComments(post.id),
-        ]);
+        const [tags, comments] = await Promise.all([this.getPostTags(post.id), this.getPostComments(post.id)]);
 
         return {
           ...post,
@@ -200,9 +166,7 @@ export class PostService {
    * @param params 查询参数
    * @returns 分页的文章列表
    */
-  async getPosts(
-    params: PostQueryParams = {}
-  ): Promise<PaginatedResponse<Post>> {
+  async getPosts(params: PostQueryParams = {}): Promise<PaginatedResponse<Post>> {
     try {
       const { page, limit, sortBy, sortOrder } = calculatePagination(
         params.total || 0,
@@ -250,14 +214,10 @@ export class PostService {
       }
 
       // 组合所有条件
-      const whereClause =
-        conditions.length > 0 ? and(...conditions) : undefined;
+      const whereClause = conditions.length > 0 ? and(...conditions) : undefined;
 
       // 获取总数
-      const totalResult = await db
-        .select({ count: count() })
-        .from(posts)
-        .where(whereClause);
+      const totalResult = await db.select({ count: count() }).from(posts).where(whereClause);
       const total = totalResult[0]?.count || 0;
 
       // 计算分页信息
@@ -309,9 +269,7 @@ export class PostService {
                       ? posts.likeCount
                       : posts.createdAt;
 
-        query = query.orderBy(
-          sortOrder === "desc" ? desc(orderBy) : asc(orderBy)
-        );
+        query = query.orderBy(sortOrder === "desc" ? desc(orderBy) : asc(orderBy));
       } else {
         // 默认按创建时间倒序
         query = query.orderBy(desc(posts.createdAt));
@@ -576,9 +534,7 @@ export class PostService {
           authorEmail: comments.authorEmail,
         })
         .from(comments)
-        .where(
-          and(eq(comments.postId, postId), eq(comments.status, "approved"))
-        )
+        .where(and(eq(comments.postId, postId), eq(comments.status, "approved")))
         .orderBy(desc(comments.createdAt));
 
       return results;
@@ -594,10 +550,7 @@ export class PostService {
    * @param tagIds 标签ID数组
    * @returns 操作结果
    */
-  private async attachTagsToPost(
-    postId: number,
-    tagIds: number[]
-  ): Promise<boolean> {
+  private async attachTagsToPost(postId: number, tagIds: number[]): Promise<boolean> {
     try {
       // 先删除现有的标签关联
       await db.delete(postTags).where(eq(postTags.postId, postId));
@@ -625,14 +578,10 @@ export class PostService {
    * @param tagIds 标签ID数组
    * @returns 操作结果
    */
-  private async updatePostTags(
-    postId: number,
-    tagIds: number[]
-  ): Promise<boolean> {
+  private async updatePostTags(postId: number, tagIds: number[]): Promise<boolean> {
     return this.attachTagsToPost(postId, tagIds);
   }
 }
 
 // 导出服务实例
 export const postService = new PostService();
-

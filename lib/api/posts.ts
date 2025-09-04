@@ -3,13 +3,7 @@
  * 封装所有与文章相关的API调用
  */
 
-import {
-  Post,
-  CreatePostRequest,
-  UpdatePostRequest,
-  PostQueryParams,
-  PaginatedResponse,
-} from "@/types/blog";
+import { CreatePostRequest, PaginatedResponse, Post, PostQueryParams, UpdatePostRequest } from "@/types/blog";
 
 const API_BASE = "/api/posts";
 
@@ -20,9 +14,7 @@ export class PostsAPI {
   /**
    * 获取文章列表
    */
-  static async getPosts(
-    params: PostQueryParams = {}
-  ): Promise<PaginatedResponse<Post>> {
+  static async getPosts(params: PostQueryParams = {}): Promise<PaginatedResponse<Post>> {
     const searchParams = new URLSearchParams();
 
     if (params.page) searchParams.append("page", params.page.toString());
@@ -30,10 +22,8 @@ export class PostsAPI {
     if (params.search) searchParams.append("search", params.search);
     if (params.status) searchParams.append("status", params.status);
     if (params.visibility) searchParams.append("visibility", params.visibility);
-    if (params.authorId)
-      searchParams.append("authorId", params.authorId.toString());
-    if (params.categoryId)
-      searchParams.append("categoryId", params.categoryId.toString());
+    if (params.authorId) searchParams.append("authorId", params.authorId.toString());
+    if (params.categoryId) searchParams.append("categoryId", params.categoryId.toString());
     if (params.sortBy) searchParams.append("sortBy", params.sortBy);
     if (params.sortOrder) searchParams.append("sortOrder", params.sortOrder);
 
@@ -128,10 +118,7 @@ export class PostsAPI {
   /**
    * 更新文章状态
    */
-  static async updatePostStatus(
-    id: number,
-    status: Post["status"]
-  ): Promise<Post> {
+  static async updatePostStatus(id: number, status: Post["status"]): Promise<Post> {
     const response = await fetch(`${API_BASE}/${id}/status`, {
       method: "PATCH",
       headers: {

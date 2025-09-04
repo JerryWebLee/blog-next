@@ -1,10 +1,9 @@
 "use client";
 
-import type { ThemeProviderProps } from "next-themes";
-
 import * as React from "react";
-import { HeroUIProvider } from "@heroui/system";
 import { useRouter } from "next/navigation";
+import { HeroUIProvider } from "@heroui/system";
+import type { ThemeProviderProps } from "next-themes";
 import { ThemeProvider as NextThemesProvider } from "next-themes";
 
 export interface ProvidersProps {
@@ -14,9 +13,7 @@ export interface ProvidersProps {
 
 declare module "@react-types/shared" {
   interface RouterConfig {
-    routerOptions: NonNullable<
-      Parameters<ReturnType<typeof useRouter>["push"]>[1]
-    >;
+    routerOptions: NonNullable<Parameters<ReturnType<typeof useRouter>["push"]>[1]>;
   }
 }
 

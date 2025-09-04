@@ -1,25 +1,16 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useEffect, useState } from "react";
+import Image from "next/image";
 import { useParams, useRouter } from "next/navigation";
+import { ArrowLeft, Calendar, Edit, Eye, Heart, Lock, MessageCircle, Share2, User } from "lucide-react";
+
+import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Badge } from "@/components/ui/badge";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
-import {
-  ArrowLeft,
-  Calendar,
-  User,
-  Eye,
-  MessageCircle,
-  Heart,
-  Share2,
-  Edit,
-  Lock,
-} from "lucide-react";
 import { Post } from "@/types/blog";
-import Image from "next/image";
 
 export default function BlogDetailPage() {
   const params = useParams();
@@ -39,19 +30,14 @@ export default function BlogDetailPage() {
     const fetchPost = async () => {
       try {
         setLoading(true);
-        const response = await fetch(
-          `/api/posts/${slug}?includeRelations=true`
-        );
+        const response = await fetch(`/api/posts/${slug}?includeRelations=true`);
         const result = await response.json();
 
         if (result.success) {
           const postData = result.data;
 
           // 检查是否需要密码
-          if (
-            postData.visibility === "password" &&
-            !postData.passwordVerified
-          ) {
+          if (postData.visibility === "password" && !postData.passwordVerified) {
             setShowPasswordForm(true);
           }
 
@@ -97,9 +83,7 @@ export default function BlogDetailPage() {
       if (result.success) {
         setShowPasswordForm(false);
         // 重新获取博客数据
-        const postResponse = await fetch(
-          `/api/posts/${slug}?includeRelations=true`
-        );
+        const postResponse = await fetch(`/api/posts/${slug}?includeRelations=true`);
         const postResult = await postResponse.json();
         if (postResult.success) {
           setPost(postResult.data);
@@ -143,9 +127,7 @@ export default function BlogDetailPage() {
         setComment("");
         alert("评论提交成功！");
         // 重新获取博客数据以显示新评论
-        const postResponse = await fetch(
-          `/api/posts/${slug}?includeRelations=true`
-        );
+        const postResponse = await fetch(`/api/posts/${slug}?includeRelations=true`);
         const postResult = await postResponse.json();
         if (postResult.success) {
           setPost(postResult.data);
@@ -210,9 +192,7 @@ export default function BlogDetailPage() {
                   placeholder="输入密码"
                   required
                 />
-                {passwordError && (
-                  <p className="text-sm text-red-500">{passwordError}</p>
-                )}
+                {passwordError && <p className="text-sm text-red-500">{passwordError}</p>}
               </div>
               <Button type="submit" className="w-full">
                 验证密码
@@ -250,24 +230,14 @@ export default function BlogDetailPage() {
         <div className="flex items-center justify-between">
           <div className="space-y-2">
             <h1 className="text-4xl font-bold">{post.title}</h1>
-            {post.excerpt && (
-              <p className="text-xl text-muted-foreground">{post.excerpt}</p>
-            )}
+            {post.excerpt && <p className="text-xl text-muted-foreground">{post.excerpt}</p>}
           </div>
           <div className="flex items-center gap-2">
             <Badge variant={getStatusBadgeVariant(post.status)}>
-              {post.status === "published"
-                ? "已发布"
-                : post.status === "draft"
-                  ? "草稿"
-                  : "已归档"}
+              {post.status === "published" ? "已发布" : post.status === "draft" ? "草稿" : "已归档"}
             </Badge>
-            {post.visibility === "private" && (
-              <Badge variant="secondary">私有</Badge>
-            )}
-            {post.visibility === "password" && (
-              <Badge variant="outline">密码保护</Badge>
-            )}
+            {post.visibility === "private" && <Badge variant="secondary">私有</Badge>}
+            {post.visibility === "password" && <Badge variant="outline">密码保护</Badge>}
           </div>
         </div>
 
@@ -397,15 +367,10 @@ export default function BlogDetailPage() {
               <div className="space-y-4 mt-6">
                 <h3 className="text-lg font-semibold">评论列表</h3>
                 {post.comments.map((comment) => (
-                  <div
-                    key={comment.id}
-                    className="border-l-4 border-primary pl-4 py-2"
-                  >
+                  <div key={comment.id} className="border-l-4 border-primary pl-4 py-2">
                     <div className="flex items-center gap-2 mb-2">
                       <span className="font-medium">
-                        {comment.author?.displayName ||
-                          comment.authorName ||
-                          "匿名用户"}
+                        {comment.author?.displayName || comment.authorName || "匿名用户"}
                       </span>
                       <span className="text-sm text-muted-foreground">
                         {new Date(comment.createdAt).toLocaleDateString()}
@@ -416,9 +381,7 @@ export default function BlogDetailPage() {
                 ))}
               </div>
             ) : (
-              <p className="text-muted-foreground text-center py-4">
-                暂无评论，成为第一个评论的人吧！
-              </p>
+              <p className="text-muted-foreground text-center py-4">暂无评论，成为第一个评论的人吧！</p>
             )}
           </CardContent>
         </Card>

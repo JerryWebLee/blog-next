@@ -2,20 +2,21 @@
 
 import { useState } from "react";
 import { useRouter } from "next/navigation";
+import { ArrowLeft, Eye, EyeOff, Save } from "lucide-react";
+
 import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
-import { Textarea } from "@/components/ui/textarea";
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { ArrowLeft, Save, Eye, EyeOff } from "lucide-react";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import { Textarea } from "@/components/ui/textarea";
 import { CreatePostRequest, PostStatus, PostVisibility } from "@/types/blog";
 
 export default function CreateBlogPage() {
   const router = useRouter();
   const [loading, setLoading] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
-  
+
   const [formData, setFormData] = useState<CreatePostRequest>({
     title: "",
     slug: "",
@@ -32,9 +33,9 @@ export default function CreateBlogPage() {
 
   // 处理表单输入变化
   const handleInputChange = (field: keyof CreatePostRequest, value: any) => {
-    setFormData(prev => ({
+    setFormData((prev) => ({
       ...prev,
-      [field]: value
+      [field]: value,
     }));
   };
 
@@ -59,7 +60,7 @@ export default function CreateBlogPage() {
   // 提交表单
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    
+
     if (!formData.title.trim() || !formData.content.trim()) {
       alert("请填写标题和内容");
       return;
@@ -67,7 +68,7 @@ export default function CreateBlogPage() {
 
     try {
       setLoading(true);
-      
+
       const response = await fetch("/api/posts", {
         method: "POST",
         headers: {
@@ -134,7 +135,7 @@ export default function CreateBlogPage() {
                 />
               </div>
             </div>
-            
+
             <div className="space-y-2">
               <Label htmlFor="excerpt">摘要</Label>
               <Textarea
@@ -188,7 +189,10 @@ export default function CreateBlogPage() {
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               <div className="space-y-2">
                 <Label htmlFor="status">状态</Label>
-                <Select value={formData.status} onValueChange={(value) => handleInputChange("status", value as PostStatus)}>
+                <Select
+                  value={formData.status}
+                  onValueChange={(value) => handleInputChange("status", value as PostStatus)}
+                >
                   <SelectTrigger>
                     <SelectValue placeholder="选择状态" />
                   </SelectTrigger>
@@ -202,7 +206,10 @@ export default function CreateBlogPage() {
 
               <div className="space-y-2">
                 <Label htmlFor="visibility">可见性</Label>
-                <Select value={formData.visibility} onValueChange={(value) => handleInputChange("visibility", value as PostVisibility)}>
+                <Select
+                  value={formData.visibility}
+                  onValueChange={(value) => handleInputChange("visibility", value as PostVisibility)}
+                >
                   <SelectTrigger>
                     <SelectValue placeholder="选择可见性" />
                   </SelectTrigger>

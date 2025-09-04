@@ -1,6 +1,6 @@
+import * as fs from "fs";
 import type { Config } from "drizzle-kit";
 import { defineConfig } from "drizzle-kit";
-import * as fs from "fs";
 
 /**
  * 读取环境变量文件

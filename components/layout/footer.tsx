@@ -6,9 +6,7 @@ export function Footer() {
           {/* 关于我们 */}
           <div className="space-y-3">
             <h3 className="text-lg font-semibold">关于 BlogNext</h3>
-            <p className="text-sm text-muted-foreground">
-              基于 Next.js 15 和 Drizzle ORM 构建的现代化博客系统
-            </p>
+            <p className="text-sm text-muted-foreground">基于 Next.js 15 和 Drizzle ORM 构建的现代化博客系统</p>
           </div>
 
           {/* 快速链接 */}
@@ -16,26 +14,17 @@ export function Footer() {
             <h3 className="text-lg font-semibold">快速链接</h3>
             <ul className="space-y-2 text-sm text-muted-foreground">
               <li>
-                <a
-                  href="/blog"
-                  className="hover:text-foreground transition-colors"
-                >
+                <a href="/blog" className="hover:text-foreground transition-colors">
                   博客文章
                 </a>
               </li>
               <li>
-                <a
-                  href="/categories"
-                  className="hover:text-foreground transition-colors"
-                >
+                <a href="/categories" className="hover:text-foreground transition-colors">
                   文章分类
                 </a>
               </li>
               <li>
-                <a
-                  href="/tags"
-                  className="hover:text-foreground transition-colors"
-                >
+                <a href="/tags" className="hover:text-foreground transition-colors">
                   标签云
                 </a>
               </li>
@@ -54,9 +43,7 @@ export function Footer() {
           {/* 订阅 */}
           <div className="space-y-3">
             <h3 className="text-lg font-semibold">订阅更新</h3>
-            <p className="text-sm text-muted-foreground">
-              获取最新的博客文章和更新通知
-            </p>
+            <p className="text-sm text-muted-foreground">获取最新的博客文章和更新通知</p>
             <div className="flex space-x-2">
               <input
                 type="email"

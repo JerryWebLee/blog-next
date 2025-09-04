@@ -1,15 +1,21 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useEffect, useState } from "react";
+import { Edit, Eye, Filter, MoreHorizontal, Plus, Search, Trash2 } from "lucide-react";
+
+import { BlogNavigation } from "@/components/blog/blog-navigation";
+import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
 import { Input } from "@/components/ui/input";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Badge } from "@/components/ui/badge";
-import { Plus, Search, Filter, Edit, Trash2, Eye, MoreHorizontal } from "lucide-react";
 import { Post, PostStatus, PostVisibility } from "@/types/blog";
-import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
-import { BlogNavigation } from "@/components/blog/blog-navigation";
 
 export default function BlogManagePage() {
   const [posts, setPosts] = useState<Post[]>([]);
@@ -99,7 +105,7 @@ export default function BlogManagePage() {
     <div className="container mx-auto py-6 space-y-6">
       {/* 导航 */}
       <BlogNavigation />
-      
+
       {/* 页面标题和操作按钮 */}
       <div className="flex justify-between items-center">
         <div>
@@ -144,7 +150,10 @@ export default function BlogManagePage() {
                 <SelectItem value="archived">已归档</SelectItem>
               </SelectContent>
             </Select>
-            <Select value={visibilityFilter} onValueChange={(value) => setVisibilityFilter(value as PostVisibility | "all")}>
+            <Select
+              value={visibilityFilter}
+              onValueChange={(value) => setVisibilityFilter(value as PostVisibility | "all")}
+            >
               <SelectTrigger>
                 <SelectValue placeholder="选择可见性" />
               </SelectTrigger>
@@ -188,17 +197,13 @@ export default function BlogManagePage() {
                     <div className="flex items-center gap-2 mb-2">
                       <h3 className="font-semibold text-lg">{post.title}</h3>
                       <Badge variant={getStatusBadgeVariant(post.status)}>
-                        {post.status === "published" ? "已发布" : 
-                         post.status === "draft" ? "草稿" : "已归档"}
+                        {post.status === "published" ? "已发布" : post.status === "draft" ? "草稿" : "已归档"}
                       </Badge>
                       <Badge variant={getVisibilityBadgeVariant(post.visibility)}>
-                        {post.visibility === "public" ? "公开" : 
-                         post.visibility === "private" ? "私有" : "密码保护"}
+                        {post.visibility === "public" ? "公开" : post.visibility === "private" ? "私有" : "密码保护"}
                       </Badge>
                     </div>
-                    <p className="text-muted-foreground text-sm mb-2">
-                      {post.excerpt || "暂无摘要"}
-                    </p>
+                    <p className="text-muted-foreground text-sm mb-2">{post.excerpt || "暂无摘要"}</p>
                     <div className="flex items-center gap-4 text-sm text-muted-foreground">
                       <span>作者: {post.author?.displayName || "未知"}</span>
                       <span>分类: {post.category?.name || "未分类"}</span>

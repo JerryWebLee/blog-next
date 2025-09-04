@@ -4,10 +4,10 @@
  * 简化版本的博客API测试脚本
  * 直接使用数据库操作，避免复杂的服务层问题
  */
+import { sql } from "drizzle-orm";
 
 import { db } from "../lib/db/config";
-import { posts, categories, tags, users } from "../lib/db/schema";
-import { sql } from "drizzle-orm";
+import { categories, posts, tags, users } from "../lib/db/schema";
 
 /**
  * 测试数据
@@ -52,8 +52,7 @@ const testData = {
   post: {
     title: "使用 Next.js 15 构建现代化博客系统",
     slug: "building-modern-blog-with-nextjs-15",
-    excerpt:
-      "本文介绍如何使用 Next.js 15 和 Drizzle ORM 构建一个功能完整的博客系统...",
+    excerpt: "本文介绍如何使用 Next.js 15 和 Drizzle ORM 构建一个功能完整的博客系统...",
     content: `
 # 使用 Next.js 15 构建现代化博客系统
 
@@ -119,9 +118,7 @@ async function cleanupTestData() {
     await db.delete(categories).where(sql`name = '技术分享'`);
 
     // 删除测试标签
-    await db
-      .delete(tags)
-      .where(sql`name = 'JavaScript' OR name = 'React' OR name = 'Next.js'`);
+    await db.delete(tags).where(sql`name = 'JavaScript' OR name = 'React' OR name = 'Next.js'`);
 
     console.log("✅ 测试数据清理完成");
   } catch (error) {
@@ -295,8 +292,7 @@ async function testUpdatePost(postId: number) {
   try {
     const updateData = {
       title: "使用 Next.js 15 构建现代化博客系统 - 更新版",
-      excerpt:
-        "更新后的摘要：本文详细介绍如何使用 Next.js 15 和 Drizzle ORM 构建一个功能完整的博客系统...",
+      excerpt: "更新后的摘要：本文详细介绍如何使用 Next.js 15 和 Drizzle ORM 构建一个功能完整的博客系统...",
     };
 
     await db

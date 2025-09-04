@@ -1,14 +1,15 @@
 "use client";
 
 import { useState } from "react";
-import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import Link from "next/link";
+import { Edit, Eye, Filter, Plus, Search, Trash2 } from "lucide-react";
+
 import { Badge } from "@/components/ui/badge";
+import { Button } from "@/components/ui/button";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Input } from "@/components/ui/input";
 import { usePosts } from "@/lib/hooks/usePosts";
 import { Post, PostStatus, PostVisibility } from "@/types/blog";
-import { Edit, Trash2, Eye, Plus, Search, Filter } from "lucide-react";
-import Link from "next/link";
 
 export default function BlogManageWithAPIPage() {
   const {
@@ -53,7 +54,7 @@ export default function BlogManageWithAPIPage() {
 
   // 处理排序
   const handleSort = (sortBy: string) => {
-    sortPosts(sortBy, 'desc');
+    sortPosts(sortBy, "desc");
   };
 
   // 处理分页
@@ -66,9 +67,9 @@ export default function BlogManageWithAPIPage() {
     if (window.confirm(`确定要删除文章"${post.title}"吗？`)) {
       const success = await deletePost(post.id);
       if (success) {
-        alert('文章删除成功！');
+        alert("文章删除成功！");
       } else {
-        alert('文章删除失败！');
+        alert("文章删除失败！");
       }
     }
   };
@@ -77,37 +78,37 @@ export default function BlogManageWithAPIPage() {
   const handleStatusUpdate = async (post: Post, newStatus: PostStatus) => {
     const success = await updatePostStatus(post.id, newStatus);
     if (success) {
-      alert('状态更新成功！');
+      alert("状态更新成功！");
     } else {
-      alert('状态更新失败！');
+      alert("状态更新失败！");
     }
   };
 
   // 获取状态标签颜色
   const getStatusColor = (status: PostStatus) => {
     switch (status) {
-      case 'published':
-        return 'bg-green-100 text-green-800';
-      case 'draft':
-        return 'bg-yellow-100 text-yellow-800';
-      case 'archived':
-        return 'bg-gray-100 text-gray-800';
+      case "published":
+        return "bg-green-100 text-green-800";
+      case "draft":
+        return "bg-yellow-100 text-yellow-800";
+      case "archived":
+        return "bg-gray-100 text-gray-800";
       default:
-        return 'bg-blue-100 text-blue-800';
+        return "bg-blue-100 text-blue-800";
     }
   };
 
   // 获取可见性标签颜色
   const getVisibilityColor = (visibility: PostVisibility) => {
     switch (visibility) {
-      case 'public':
-        return 'bg-blue-100 text-blue-800';
-      case 'private':
-        return 'bg-red-100 text-red-800';
-      case 'password':
-        return 'bg-orange-100 text-orange-800';
+      case "public":
+        return "bg-blue-100 text-blue-800";
+      case "private":
+        return "bg-red-100 text-red-800";
+      case "password":
+        return "bg-orange-100 text-orange-800";
       default:
-        return 'bg-gray-100 text-gray-800';
+        return "bg-gray-100 text-gray-800";
     }
   };
 
@@ -128,9 +129,7 @@ export default function BlogManageWithAPIPage() {
       <div className="flex justify-between items-center mb-8">
         <div>
           <h1 className="text-4xl font-bold mb-2">文章管理</h1>
-          <p className="text-xl text-muted-foreground">
-            管理您的博客文章
-          </p>
+          <p className="text-xl text-muted-foreground">管理您的博客文章</p>
         </div>
         <Link href="/blog/manage/create">
           <Button className="flex items-center space-x-2">
@@ -158,7 +157,7 @@ export default function BlogManageWithAPIPage() {
                   placeholder="搜索文章标题..."
                   value={searchTerm}
                   onChange={(e) => setSearchTerm(e.target.value)}
-                  onKeyPress={(e) => e.key === 'Enter' && handleSearch()}
+                  onKeyPress={(e) => e.key === "Enter" && handleSearch()}
                 />
                 <Button onClick={handleSearch}>搜索</Button>
               </div>
@@ -167,7 +166,7 @@ export default function BlogManageWithAPIPage() {
             {/* 状态筛选 */}
             <div className="space-y-2">
               <label className="text-sm font-medium">状态</label>
-              <select 
+              <select
                 className="w-full h-10 px-3 py-2 border border-input bg-background rounded-md text-sm focus:outline-none focus:ring-2 focus:ring-ring"
                 value={selectedStatus}
                 onChange={(e) => handleStatusFilter(e.target.value as PostStatus | "")}
@@ -182,7 +181,7 @@ export default function BlogManageWithAPIPage() {
             {/* 分类筛选 */}
             <div className="space-y-2">
               <label className="text-sm font-medium">分类</label>
-              <select 
+              <select
                 className="w-full h-10 px-3 py-2 border border-input bg-background rounded-md text-sm focus:outline-none focus:ring-2 focus:ring-ring"
                 value={selectedCategory || ""}
                 onChange={(e) => handleCategoryFilter(e.target.value ? Number(e.target.value) : null)}
@@ -199,7 +198,7 @@ export default function BlogManageWithAPIPage() {
             {/* 排序 */}
             <div className="space-y-2">
               <label className="text-sm font-medium">排序</label>
-              <select 
+              <select
                 className="w-full h-10 px-3 py-2 border border-input bg-background rounded-md text-sm focus:outline-none focus:ring-2 focus:ring-ring"
                 onChange={(e) => handleSort(e.target.value)}
               >
@@ -236,84 +235,64 @@ export default function BlogManageWithAPIPage() {
                     <div className="flex items-center space-x-3 mb-2">
                       <h3 className="text-xl font-semibold">{post.title}</h3>
                       <Badge className={getStatusColor(post.status)}>
-                        {post.status === 'published' ? '已发布' : 
-                         post.status === 'draft' ? '草稿' : '已归档'}
+                        {post.status === "published" ? "已发布" : post.status === "draft" ? "草稿" : "已归档"}
                       </Badge>
                       <Badge className={getVisibilityColor(post.visibility)}>
-                        {post.visibility === 'public' ? '公开' : 
-                         post.visibility === 'private' ? '私有' : '密码保护'}
+                        {post.visibility === "public" ? "公开" : post.visibility === "private" ? "私有" : "密码保护"}
                       </Badge>
                     </div>
-                    
-                    <p className="text-muted-foreground mb-3 line-clamp-2">
-                      {post.excerpt}
-                    </p>
-                    
+
+                    <p className="text-muted-foreground mb-3 line-clamp-2">{post.excerpt}</p>
+
                     <div className="flex items-center space-x-4 text-sm text-muted-foreground">
-                      <span>作者: {post.author?.displayName || '未知'}</span>
-                      <span>分类: {post.category?.name || '未分类'}</span>
+                      <span>作者: {post.author?.displayName || "未知"}</span>
+                      <span>分类: {post.category?.name || "未分类"}</span>
                       <span>浏览: {post.viewCount || 0}</span>
                       <span>点赞: {post.likeCount || 0}</span>
                       <span>创建: {new Date(post.createdAt).toLocaleDateString()}</span>
                     </div>
                   </div>
-                  
+
                   <div className="flex items-center space-x-2 ml-4">
                     <Link href={`/blog/${post.slug}`}>
                       <Button variant="outline" size="sm">
                         <Eye className="h-4 w-4" />
                       </Button>
                     </Link>
-                    
+
                     <Link href={`/blog/manage/edit/${post.id}`}>
                       <Button variant="outline" size="sm">
                         <Edit className="h-4 w-4" />
                       </Button>
                     </Link>
-                    
-                    <Button 
-                      variant="destructive" 
-                      size="sm"
-                      onClick={() => handleDeletePost(post)}
-                    >
+
+                    <Button variant="destructive" size="sm" onClick={() => handleDeletePost(post)}>
                       <Trash2 className="h-4 w-4" />
                     </Button>
                   </div>
                 </div>
-                
+
                 {/* 快速操作 */}
                 <div className="mt-4 pt-4 border-t flex items-center justify-between">
                   <div className="flex items-center space-x-2">
                     <span className="text-sm text-muted-foreground">快速操作:</span>
-                    {post.status !== 'published' && (
-                      <Button 
-                        size="sm" 
-                        variant="outline"
-                        onClick={() => handleStatusUpdate(post, 'published')}
-                      >
+                    {post.status !== "published" && (
+                      <Button size="sm" variant="outline" onClick={() => handleStatusUpdate(post, "published")}>
                         发布
                       </Button>
                     )}
-                    {post.status === 'published' && (
-                      <Button 
-                        size="sm" 
-                        variant="outline"
-                        onClick={() => handleStatusUpdate(post, 'draft')}
-                      >
+                    {post.status === "published" && (
+                      <Button size="sm" variant="outline" onClick={() => handleStatusUpdate(post, "draft")}>
                         设为草稿
                       </Button>
                     )}
-                    {post.status !== 'archived' && (
-                      <Button 
-                        size="sm" 
-                        variant="outline"
-                        onClick={() => handleStatusUpdate(post, 'archived')}
-                      >
+                    {post.status !== "archived" && (
+                      <Button size="sm" variant="outline" onClick={() => handleStatusUpdate(post, "archived")}>
                         归档
                       </Button>
                     )}
                   </div>
-                  
+
                   <div className="text-sm text-muted-foreground">
                     ID: {post.id} | Slug: {post.slug}
                   </div>
@@ -328,15 +307,15 @@ export default function BlogManageWithAPIPage() {
       {pagination.totalPages > 1 && (
         <div className="mt-8 flex justify-center">
           <nav className="flex items-center space-x-2">
-            <Button 
-              variant="outline" 
+            <Button
+              variant="outline"
               size="sm"
               disabled={pagination.page === 1}
               onClick={() => handlePageChange(pagination.page - 1)}
             >
               上一页
             </Button>
-            
+
             {Array.from({ length: pagination.totalPages }, (_, i) => i + 1).map((page) => (
               <Button
                 key={page}
@@ -347,9 +326,9 @@ export default function BlogManageWithAPIPage() {
                 {page}
               </Button>
             ))}
-            
-            <Button 
-              variant="outline" 
+
+            <Button
+              variant="outline"
               size="sm"
               disabled={pagination.page === pagination.totalPages}
               onClick={() => handlePageChange(pagination.page + 1)}

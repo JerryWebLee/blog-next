@@ -7,6 +7,7 @@
 ## 🏗️ 架构设计
 
 ### 分层架构
+
 ```
 前端页面 (Pages)
     ↓
@@ -20,6 +21,7 @@ API客户端 (PostsAPI)
 ```
 
 ### 核心组件
+
 - **`PostService`**: 后端业务逻辑层，处理数据库操作
 - **`PostsAPI`**: 前端API客户端，封装HTTP请求
 - **`usePosts`**: React Hook，管理前端状态和数据
@@ -30,6 +32,7 @@ API客户端 (PostsAPI)
 ### 1. 文章查询接口
 
 #### 获取文章列表
+
 ```typescript
 // 基本用法
 const { posts, loading, error, pagination } = usePosts();
@@ -37,19 +40,20 @@ const { posts, loading, error, pagination } = usePosts();
 // 带参数查询
 const { posts } = usePosts({
   initialParams: {
-    status: 'published',
-    visibility: 'public',
+    status: "published",
+    visibility: "public",
     limit: 10,
     page: 1,
-    search: '关键词',
+    search: "关键词",
     categoryId: 1,
-    sortBy: 'publishedAt',
-    sortOrder: 'desc'
-  }
+    sortBy: "publishedAt",
+    sortOrder: "desc",
+  },
 });
 ```
 
 #### 获取文章详情
+
 ```typescript
 const { getPost, getPostBySlug } = usePosts();
 
@@ -57,38 +61,41 @@ const { getPost, getPostBySlug } = usePosts();
 const post = await getPost(123);
 
 // 根据slug获取
-const post = await getPostBySlug('article-slug');
+const post = await getPostBySlug("article-slug");
 ```
 
 ### 2. 文章管理接口
 
 #### 创建文章
+
 ```typescript
 const { createPost } = usePosts();
 
 const newPost = await createPost({
-  title: '文章标题',
-  content: '文章内容',
-  excerpt: '文章摘要',
+  title: "文章标题",
+  content: "文章内容",
+  excerpt: "文章摘要",
   categoryId: 1,
-  status: 'draft',
-  visibility: 'public',
-  tagIds: [1, 2, 3]
+  status: "draft",
+  visibility: "public",
+  tagIds: [1, 2, 3],
 });
 ```
 
 #### 更新文章
+
 ```typescript
 const { updatePost } = usePosts();
 
 const updatedPost = await updatePost(123, {
-  title: '新标题',
-  content: '新内容',
-  status: 'published'
+  title: "新标题",
+  content: "新内容",
+  status: "published",
 });
 ```
 
 #### 删除文章
+
 ```typescript
 const { deletePost } = usePosts();
 
@@ -96,15 +103,17 @@ const success = await deletePost(123);
 ```
 
 #### 更新文章状态
+
 ```typescript
 const { updatePostStatus } = usePosts();
 
-const updatedPost = await updatePostStatus(123, 'published');
+const updatedPost = await updatePostStatus(123, "published");
 ```
 
 ### 3. 文章交互接口
 
 #### 增加浏览次数
+
 ```typescript
 const { incrementViewCount } = usePosts();
 
@@ -112,6 +121,7 @@ const success = await incrementViewCount(123);
 ```
 
 #### 增加点赞次数
+
 ```typescript
 const { incrementLikeCount } = usePosts();
 
@@ -121,26 +131,27 @@ const success = await incrementLikeCount(123);
 ## 🎣 使用usePosts Hook
 
 ### 基本用法
+
 ```typescript
-import { usePosts } from '@/lib/hooks/usePosts';
+import { usePosts } from "@/lib/hooks/usePosts";
 
 function BlogPage() {
   const {
-    posts,           // 文章列表
-    loading,         // 加载状态
-    error,           // 错误信息
-    pagination,      // 分页信息
-    fetchPosts,      // 获取文章列表
-    searchPosts,     // 搜索文章
+    posts, // 文章列表
+    loading, // 加载状态
+    error, // 错误信息
+    pagination, // 分页信息
+    fetchPosts, // 获取文章列表
+    searchPosts, // 搜索文章
     filterByCategory, // 按分类筛选
-    sortPosts,       // 排序文章
-    goToPage,        // 跳转页面
-    createPost,      // 创建文章
-    updatePost,      // 更新文章
-    deletePost,      // 删除文章
+    sortPosts, // 排序文章
+    goToPage, // 跳转页面
+    createPost, // 创建文章
+    updatePost, // 更新文章
+    deletePost, // 删除文章
   } = usePosts({
-    initialParams: { status: 'published' },
-    autoFetch: true
+    initialParams: { status: "published" },
+    autoFetch: true,
   });
 
   // 使用这些方法和状态...
@@ -148,17 +159,18 @@ function BlogPage() {
 ```
 
 ### 高级用法
+
 ```typescript
 // 自定义初始参数
 const { posts } = usePosts({
   initialParams: {
-    status: 'published',
-    visibility: 'public',
+    status: "published",
+    visibility: "public",
     limit: 20,
-    sortBy: 'viewCount',
-    sortOrder: 'desc'
+    sortBy: "viewCount",
+    sortOrder: "desc",
   },
-  autoFetch: false // 手动控制数据获取
+  autoFetch: false, // 手动控制数据获取
 });
 
 // 手动获取数据
@@ -176,13 +188,14 @@ const handleCategoryChange = (categoryId: number) => {
 };
 
 const handleSort = (field: string) => {
-  sortPosts(field, 'desc');
+  sortPosts(field, "desc");
 };
 ```
 
 ## 📱 页面集成示例
 
 ### 1. 博客列表页面
+
 ```typescript
 // app/blog/page.tsx
 export default function BlogPage() {
@@ -210,9 +223,9 @@ export default function BlogPage() {
       <SearchBar onSearch={searchPosts} />
       <CategoryFilter onFilter={filterByCategory} />
       <PostGrid posts={posts} />
-      <Pagination 
-        {...pagination} 
-        onPageChange={goToPage} 
+      <Pagination
+        {...pagination}
+        onPageChange={goToPage}
       />
     </div>
   );
@@ -220,6 +233,7 @@ export default function BlogPage() {
 ```
 
 ### 2. 文章管理页面
+
 ```typescript
 // app/blog/manage/page.tsx
 export default function ManagePage() {
@@ -246,7 +260,7 @@ export default function ManagePage() {
   return (
     <div>
       <StatusFilter onFilter={filterByStatus} />
-      <PostTable 
+      <PostTable
         posts={posts}
         onDelete={handleDelete}
         onStatusChange={handleStatusChange}
@@ -257,6 +271,7 @@ export default function ManagePage() {
 ```
 
 ### 3. 文章详情页面
+
 ```typescript
 // app/blog/[slug]/page.tsx
 export default function PostDetailPage({ params }: { params: { slug: string } }) {
@@ -269,7 +284,7 @@ export default function PostDetailPage({ params }: { params: { slug: string } })
       const postData = await getPostBySlug(params.slug);
       setPost(postData);
       setLoading(false);
-      
+
       // 增加浏览次数
       if (postData) {
         await incrementViewCount(postData.id);
@@ -289,18 +304,19 @@ export default function PostDetailPage({ params }: { params: { slug: string } })
 ## 🔧 自定义Hook扩展
 
 ### 创建专用Hook
+
 ```typescript
 // lib/hooks/usePostManagement.ts
 export function usePostManagement() {
   const { createPost, updatePost, deletePost } = usePosts({ autoFetch: false });
-  
+
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [submitError, setSubmitError] = useState<string | null>(null);
 
   const handleCreate = async (data: CreatePostRequest) => {
     setIsSubmitting(true);
     setSubmitError(null);
-    
+
     try {
       const result = await createPost(data);
       return result;
@@ -317,12 +333,13 @@ export function usePostManagement() {
     updatePost,
     deletePost,
     isSubmitting,
-    submitError
+    submitError,
   };
 }
 ```
 
 ### 组合多个Hook
+
 ```typescript
 function BlogDashboard() {
   const { posts, loading } = usePosts();
@@ -337,6 +354,7 @@ function BlogDashboard() {
 ## 📊 数据流管理
 
 ### 状态更新流程
+
 1. **用户操作** → 触发Hook方法
 2. **Hook方法** → 调用API客户端
 3. **API客户端** → 发送HTTP请求
@@ -346,6 +364,7 @@ function BlogDashboard() {
 7. **UI更新** → 重新渲染组件
 
 ### 错误处理
+
 ```typescript
 const { error, clearError } = usePosts();
 
@@ -369,9 +388,10 @@ useEffect(() => {
 ## 🚀 性能优化
 
 ### 1. 分页加载
+
 ```typescript
 const { posts, pagination, goToPage } = usePosts({
-  initialParams: { limit: 20 }
+  initialParams: { limit: 20 },
 });
 
 // 只加载当前页的数据
@@ -383,6 +403,7 @@ const handlePageChange = (page: number) => {
 ```
 
 ### 2. 搜索防抖
+
 ```typescript
 import { useDebounce } from '@/lib/hooks/useDebounce';
 
@@ -408,15 +429,16 @@ function SearchComponent() {
 ```
 
 ### 3. 缓存策略
+
 ```typescript
 // 使用React Query或SWR进行缓存
-import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 
 export function usePostsWithCache() {
   const queryClient = useQueryClient();
-  
+
   const { data: posts, isLoading } = useQuery({
-    queryKey: ['posts'],
+    queryKey: ["posts"],
     queryFn: () => PostsAPI.getPosts(),
     staleTime: 5 * 60 * 1000, // 5分钟
   });
@@ -424,7 +446,7 @@ export function usePostsWithCache() {
   const createMutation = useMutation({
     mutationFn: PostsAPI.createPost,
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ['posts'] });
+      queryClient.invalidateQueries({ queryKey: ["posts"] });
     },
   });
 
@@ -435,27 +457,29 @@ export function usePostsWithCache() {
 ## 🧪 测试和调试
 
 ### 1. 开发环境调试
+
 ```typescript
 // 启用详细日志
 const { posts, loading, error } = usePosts({
-  initialParams: { limit: 5 } // 限制数量便于调试
+  initialParams: { limit: 5 }, // 限制数量便于调试
 });
 
 // 监听状态变化
 useEffect(() => {
-  console.log('Posts updated:', posts);
+  console.log("Posts updated:", posts);
 }, [posts]);
 
 useEffect(() => {
-  console.log('Loading state:', loading);
+  console.log("Loading state:", loading);
 }, [loading]);
 
 useEffect(() => {
-  console.log('Error state:', error);
+  console.log("Error state:", error);
 }, [error]);
 ```
 
 ### 2. 错误边界处理
+
 ```typescript
 class PostErrorBoundary extends React.Component {
   constructor(props) {
@@ -484,24 +508,28 @@ class PostErrorBoundary extends React.Component {
 ## 📝 最佳实践
 
 ### 1. 错误处理
+
 - 始终检查API响应状态
 - 提供用户友好的错误信息
 - 实现重试机制
 - 记录错误日志
 
 ### 2. 加载状态
+
 - 显示加载指示器
 - 禁用交互按钮
 - 提供进度反馈
 - 实现骨架屏
 
 ### 3. 数据验证
+
 - 验证用户输入
 - 检查数据类型
 - 处理边界情况
 - 提供默认值
 
 ### 4. 性能考虑
+
 - 实现分页加载
 - 使用防抖搜索
 - 缓存常用数据

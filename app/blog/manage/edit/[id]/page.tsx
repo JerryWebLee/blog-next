@@ -1,26 +1,16 @@
 "use client";
 
-import { useState, useEffect } from "react";
-import { useRouter, useParams } from "next/navigation";
+import { useEffect, useState } from "react";
+import { useParams, useRouter } from "next/navigation";
+import { ArrowLeft, Eye, EyeOff, Loader2, Save } from "lucide-react";
+
 import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
-import { Textarea } from "@/components/ui/textarea";
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { ArrowLeft, Save, Eye, EyeOff, Loader2 } from "lucide-react";
-import {
-  Post,
-  UpdatePostRequest,
-  PostStatus,
-  PostVisibility,
-} from "@/types/blog";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import { Textarea } from "@/components/ui/textarea";
+import { Post, PostStatus, PostVisibility, UpdatePostRequest } from "@/types/blog";
 
 export default function EditBlogPage() {
   const router = useRouter();
@@ -233,9 +223,7 @@ export default function EditBlogPage() {
               <Input
                 id="featuredImage"
                 value={formData.featuredImage}
-                onChange={(e) =>
-                  handleInputChange("featuredImage", e.target.value)
-                }
+                onChange={(e) => handleInputChange("featuredImage", e.target.value)}
                 placeholder="图片链接地址"
                 type="url"
               />
@@ -274,9 +262,7 @@ export default function EditBlogPage() {
                 <Label htmlFor="status">状态</Label>
                 <Select
                   value={formData.status}
-                  onValueChange={(value) =>
-                    handleInputChange("status", value as PostStatus)
-                  }
+                  onValueChange={(value) => handleInputChange("status", value as PostStatus)}
                 >
                   <SelectTrigger>
                     <SelectValue placeholder="选择状态" />
@@ -293,9 +279,7 @@ export default function EditBlogPage() {
                 <Label htmlFor="visibility">可见性</Label>
                 <Select
                   value={formData.visibility}
-                  onValueChange={(value) =>
-                    handleInputChange("visibility", value as PostVisibility)
-                  }
+                  onValueChange={(value) => handleInputChange("visibility", value as PostVisibility)}
                 >
                   <SelectTrigger>
                     <SelectValue placeholder="选择可见性" />
@@ -317,9 +301,7 @@ export default function EditBlogPage() {
                     id="password"
                     type={showPassword ? "text" : "password"}
                     value={formData.password}
-                    onChange={(e) =>
-                      handleInputChange("password", e.target.value)
-                    }
+                    onChange={(e) => handleInputChange("password", e.target.value)}
                     placeholder="设置访问密码"
                   />
                   <Button
@@ -329,11 +311,7 @@ export default function EditBlogPage() {
                     className="absolute right-0 top-0 h-full px-3"
                     onClick={() => setShowPassword(!showPassword)}
                   >
-                    {showPassword ? (
-                      <EyeOff className="h-4 w-4" />
-                    ) : (
-                      <Eye className="h-4 w-4" />
-                    )}
+                    {showPassword ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
                   </Button>
                 </div>
               </div>
@@ -344,9 +322,7 @@ export default function EditBlogPage() {
                 type="checkbox"
                 id="allowComments"
                 checked={formData.allowComments}
-                onChange={(e) =>
-                  handleInputChange("allowComments", e.target.checked)
-                }
+                onChange={(e) => handleInputChange("allowComments", e.target.checked)}
                 className="rounded"
               />
               <Label htmlFor="allowComments">允许评论</Label>

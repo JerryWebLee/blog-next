@@ -3,7 +3,7 @@
  * 提供博客系统中常用的工具方法和辅助函数
  */
 
-import { type ClassValue, clsx } from "clsx";
+import { clsx, type ClassValue } from "clsx";
 import { twMerge } from "tailwind-merge";
 
 /**
@@ -44,10 +44,7 @@ export function truncateText(text: string, maxLength: number): string {
  * @param format 格式类型
  * @returns 格式化后的日期字符串
  */
-export function formatDate(
-  date: Date | string,
-  format: "short" | "long" | "relative" = "short"
-): string {
+export function formatDate(date: Date | string, format: "short" | "long" | "relative" = "short"): string {
   const dateObj = typeof date === "string" ? new Date(date) : date;
 
   if (format === "relative") {
@@ -87,10 +84,7 @@ export function formatDate(
  * @param wordsPerMinute 每分钟阅读字数
  * @returns 阅读时间（分钟）
  */
-export function calculateReadTime(
-  content: string,
-  wordsPerMinute: number = 200
-): number {
+export function calculateReadTime(content: string, wordsPerMinute: number = 200): number {
   const words = content.trim().split(/\s+/).length;
   return Math.ceil(words / wordsPerMinute);
 }
@@ -122,12 +116,7 @@ export function createErrorResponse(message: string, code?: string) {
 /**
  * 创建分页响应
  */
-export function createPaginatedResponse<T>(
-  data: T[],
-  total: number,
-  page: number,
-  limit: number
-) {
+export function createPaginatedResponse<T>(data: T[], total: number, page: number, limit: number) {
   return {
     success: true,
     data,
@@ -145,11 +134,7 @@ export function createPaginatedResponse<T>(
 /**
  * 计算分页信息
  */
-export function calculatePagination(
-  total: number,
-  page: number = 1,
-  limit: number = 10
-) {
+export function calculatePagination(total: number, page: number = 1, limit: number = 10) {
   const totalPages = Math.ceil(total / limit);
   const currentPage = Math.max(1, Math.min(page, totalPages));
   const offset = (currentPage - 1) * limit;
@@ -168,10 +153,7 @@ export function calculatePagination(
 /**
  * 防抖函数
  */
-export function debounce<T extends (...args: any[]) => any>(
-  func: T,
-  wait: number
-): (...args: Parameters<T>) => void {
+export function debounce<T extends (...args: any[]) => any>(func: T, wait: number): (...args: Parameters<T>) => void {
   let timeout: NodeJS.Timeout;
 
   return (...args: Parameters<T>) => {
@@ -183,10 +165,7 @@ export function debounce<T extends (...args: any[]) => any>(
 /**
  * 节流函数
  */
-export function throttle<T extends (...args: any[]) => any>(
-  func: T,
-  limit: number
-): (...args: Parameters<T>) => void {
+export function throttle<T extends (...args: any[]) => any>(func: T, limit: number): (...args: Parameters<T>) => void {
   let inThrottle: boolean;
 
   return (...args: Parameters<T>) => {
@@ -202,8 +181,7 @@ export function throttle<T extends (...args: any[]) => any>(
  * 生成随机 ID
  */
 export function generateId(length: number = 8): string {
-  const chars =
-    "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
+  const chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
   let result = "";
   for (let i = 0; i < length; i++) {
     result += chars.charAt(Math.floor(Math.random() * chars.length));
@@ -241,9 +219,7 @@ export function validatePassword(password: string): {
     };
   }
 
-  const score = [hasUpperCase, hasLowerCase, hasNumbers, hasSpecialChar].filter(
-    Boolean
-  ).length;
+  const score = [hasUpperCase, hasLowerCase, hasNumbers, hasSpecialChar].filter(Boolean).length;
 
   if (score < 2) {
     return {

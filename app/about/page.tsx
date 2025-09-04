@@ -1,5 +1,5 @@
-import { title } from "@/components/primitives";
 import { Counter } from "@/components/counter";
+import { title } from "@/components/primitives";
 
 export default function AboutPage() {
   return (

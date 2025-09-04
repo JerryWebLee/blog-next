@@ -1,10 +1,11 @@
 "use client";
 
+import Link from "next/link";
 import { usePathname } from "next/navigation";
+import { BarChart3, FileText, Home, Plus, Settings } from "lucide-react";
+
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
-import { Home, FileText, Plus, Settings, BarChart3 } from "lucide-react";
-import Link from "next/link";
 
 const navigationItems = [
   {
@@ -49,7 +50,7 @@ export function BlogNavigation() {
           {navigationItems.map((item) => {
             const Icon = item.icon;
             const isActive = pathname === item.href;
-            
+
             return (
               <Button
                 key={item.href}

@@ -7,9 +7,10 @@
  */
 
 import { NextRequest, NextResponse } from "next/server";
+
 import { postService } from "@/lib/services/post.service";
+import { createErrorResponse, createSuccessResponse } from "@/lib/utils";
 import { CreatePostRequest, PostQueryParams } from "@/types/blog";
-import { createSuccessResponse, createErrorResponse } from "@/lib/utils";
 
 /**
  * GET /api/posts
@@ -28,15 +29,9 @@ export async function GET(request: NextRequest) {
       sortOrder: (searchParams.get("sortOrder") as "asc" | "desc") || "desc",
       status: (searchParams.get("status") as any) || undefined,
       visibility: (searchParams.get("visibility") as any) || undefined,
-      authorId: searchParams.get("authorId")
-        ? parseInt(searchParams.get("authorId")!)
-        : undefined,
-      categoryId: searchParams.get("categoryId")
-        ? parseInt(searchParams.get("categoryId")!)
-        : undefined,
-      tagId: searchParams.get("tagId")
-        ? parseInt(searchParams.get("tagId")!)
-        : undefined,
+      authorId: searchParams.get("authorId") ? parseInt(searchParams.get("authorId")!) : undefined,
+      categoryId: searchParams.get("categoryId") ? parseInt(searchParams.get("categoryId")!) : undefined,
+      tagId: searchParams.get("tagId") ? parseInt(searchParams.get("tagId")!) : undefined,
       search: searchParams.get("search") || undefined,
       featured: searchParams.get("featured") === "true",
     };
@@ -58,19 +53,13 @@ export async function GET(request: NextRequest) {
     const result = await postService.getPosts(queryParams);
 
     // 返回成功响应
-    return NextResponse.json(
-      createSuccessResponse(result, "获取文章列表成功"),
-      { status: 200 }
-    );
+    return NextResponse.json(createSuccessResponse(result, "获取文章列表成功"), { status: 200 });
   } catch (error) {
     console.error("获取文章列表失败:", error);
 
     // 返回错误响应
     return NextResponse.json(
-      createErrorResponse(
-        "获取文章列表失败",
-        error instanceof Error ? error.message : "未知错误"
-      ),
+      createErrorResponse("获取文章列表失败", error instanceof Error ? error.message : "未知错误"),
       { status: 500 }
     );
   }
@@ -95,18 +84,12 @@ export async function POST(request: NextRequest) {
 
     // 验证标题长度
     if (body.title.length > 200) {
-      return NextResponse.json(
-        createErrorResponse("文章标题不能超过200个字符"),
-        { status: 400 }
-      );
+      return NextResponse.json(createErrorResponse("文章标题不能超过200个字符"), { status: 400 });
     }
 
     // 验证内容长度
     if (body.content.length < 10) {
-      return NextResponse.json(
-        createErrorResponse("文章内容不能少于10个字符"),
-        { status: 400 }
-      );
+      return NextResponse.json(createErrorResponse("文章内容不能少于10个字符"), { status: 400 });
     }
 
     // TODO: 这里应该从JWT token中获取用户ID
@@ -126,21 +109,13 @@ export async function POST(request: NextRequest) {
     // 处理特定错误类型
     if (error instanceof Error) {
       if (error.message.includes("文章别名已存在")) {
-        return NextResponse.json(
-          createErrorResponse("文章别名已存在，请使用不同的标题或别名"),
-          { status: 409 }
-        );
+        return NextResponse.json(createErrorResponse("文章别名已存在，请使用不同的标题或别名"), { status: 409 });
       }
     }
 
     // 返回通用错误响应
-    return NextResponse.json(
-      createErrorResponse(
-        "创建文章失败",
-        error instanceof Error ? error.message : "未知错误"
-      ),
-      { status: 500 }
-    );
+    return NextResponse.json(createErrorResponse("创建文章失败", error instanceof Error ? error.message : "未知错误"), {
+      status: 500,
+    });
   }
 }
-

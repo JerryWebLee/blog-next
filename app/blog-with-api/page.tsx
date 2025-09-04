@@ -1,8 +1,9 @@
 "use client";
 
 import { Suspense } from "react";
-import { PostCard } from "@/components/blog/post-card";
+
 import { BlogSidebar } from "@/components/blog/blog-sidebar";
+import { PostCard } from "@/components/blog/post-card";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { usePosts } from "@/lib/hooks/usePosts";
@@ -75,9 +76,7 @@ export default function BlogWithAPIPage() {
     <div className="container mx-auto px-4 py-8">
       <div className="mb-8">
         <h1 className="text-4xl font-bold mb-4">博客文章</h1>
-        <p className="text-xl text-muted-foreground">
-          分享技术见解、学习心得和项目经验
-        </p>
+        <p className="text-xl text-muted-foreground">分享技术见解、学习心得和项目经验</p>
       </div>
 
       <div className="grid grid-cols-1 lg:grid-cols-4 gap-8">
@@ -105,11 +104,7 @@ export default function BlogWithAPIPage() {
                 <label className="text-sm font-medium">分类</label>
                 <select
                   className="w-full h-10 px-3 py-2 border border-input bg-background rounded-md text-sm focus:outline-none focus:ring-2 focus:ring-ring"
-                  onChange={(e) =>
-                    handleCategoryFilter(
-                      e.target.value ? Number(e.target.value) : null
-                    )
-                  }
+                  onChange={(e) => handleCategoryFilter(e.target.value ? Number(e.target.value) : null)}
                 >
                   <option value="">全部分类</option>
                   <option value="1">技术分享</option>
@@ -146,9 +141,7 @@ export default function BlogWithAPIPage() {
           ) : posts.length === 0 ? (
             <div className="text-center py-12">
               <h3 className="text-xl font-semibold mb-2">暂无文章</h3>
-              <p className="text-muted-foreground">
-                当前没有找到符合条件的文章
-              </p>
+              <p className="text-muted-foreground">当前没有找到符合条件的文章</p>
             </div>
           ) : (
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
@@ -176,10 +169,7 @@ export default function BlogWithAPIPage() {
                   上一页
                 </Button>
 
-                {Array.from(
-                  { length: pagination.totalPages },
-                  (_, i) => i + 1
-                ).map((page) => (
+                {Array.from({ length: pagination.totalPages }, (_, i) => i + 1).map((page) => (
                   <Button
                     key={page}
                     size="sm"
@@ -204,8 +194,7 @@ export default function BlogWithAPIPage() {
 
           {/* 分页信息 */}
           <div className="mt-4 text-center text-sm text-muted-foreground">
-            第 {pagination.page} 页，共 {pagination.totalPages} 页，总计{" "}
-            {pagination.total} 篇文章
+            第 {pagination.page} 页，共 {pagination.totalPages} 页，总计 {pagination.total} 篇文章
           </div>
         </div>
 

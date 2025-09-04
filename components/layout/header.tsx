@@ -2,10 +2,11 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { Button } from "@/components/ui/button";
-import { ThemeToggle } from "@/components/theme-toggle";
-import { UserNav } from "@/components/layout/user-nav";
+
 import { SearchBar } from "@/components/layout/search-bar";
+import { UserNav } from "@/components/layout/user-nav";
+import { ThemeToggle } from "@/components/theme-toggle";
+import { Button } from "@/components/ui/button";
 
 export function Header() {
   const pathname = usePathname();
@@ -36,9 +37,7 @@ export function Header() {
               key={item.name}
               href={item.href}
               className={`text-sm font-medium transition-colors hover:text-primary ${
-                pathname === item.href
-                  ? "text-foreground"
-                  : "text-muted-foreground"
+                pathname === item.href ? "text-foreground" : "text-muted-foreground"
               }`}
             >
               {item.name}

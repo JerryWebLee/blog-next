@@ -4,7 +4,6 @@
  * 简单的数据库连接测试脚本
  * 直接读取环境变量并测试数据库连接
  */
-
 import * as fs from "fs";
 import mysql from "mysql2/promise";
 

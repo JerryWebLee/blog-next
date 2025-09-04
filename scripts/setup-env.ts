@@ -4,7 +4,6 @@
  * 环境变量设置和验证脚本
  * 帮助用户正确配置数据库连接
  */
-
 import * as fs from "fs";
 import * as path from "path";
 
@@ -12,12 +11,7 @@ import * as path from "path";
  * 检查环境文件是否存在
  */
 function checkEnvFiles() {
-  const envFiles = [
-    ".env.local",
-    ".env",
-    ".env.development",
-    ".env.production",
-  ];
+  const envFiles = [".env.local", ".env", ".env.development", ".env.production"];
 
   console.log("🔍 检查环境配置文件...");
   console.log("=".repeat(50));
@@ -87,12 +81,8 @@ function showConfigurationGuide() {
   console.log("1. 确保MySQL服务正在运行");
   console.log("2. 创建数据库: CREATE DATABASE blog_system;");
   console.log("3. 创建用户并授权:");
-  console.log(
-    "   CREATE USER 'blog_user'@'localhost' IDENTIFIED BY 'your_password';"
-  );
-  console.log(
-    "   GRANT ALL PRIVILEGES ON blog_system.* TO 'blog_user'@'localhost';"
-  );
+  console.log("   CREATE USER 'blog_user'@'localhost' IDENTIFIED BY 'your_password';");
+  console.log("   GRANT ALL PRIVILEGES ON blog_system.* TO 'blog_user'@'localhost';");
   console.log("   FLUSH PRIVILEGES;");
   console.log("4. 编辑 .env.local 文件，填入正确的配置信息");
   console.log("5. 运行数据库迁移: npm run db:push");

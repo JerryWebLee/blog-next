@@ -1,22 +1,17 @@
 "use client";
 
+import { useState } from "react";
+
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
 import {
-  Select,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-  SelectContent,
-} from "@/components/ui/select";
-import {
   DropdownMenu,
-  DropdownMenuTrigger,
   DropdownMenuContent,
   DropdownMenuItem,
+  DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-import { Avatar, AvatarImage, AvatarFallback } from "@/components/ui/avatar";
 import { Label } from "@/components/ui/label";
-import { useState } from "react";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 
 export default function TestHeroUIPage() {
   const [selectedValue, setSelectedValue] = useState("option1");
@@ -114,9 +109,7 @@ export default function TestHeroUIPage() {
       {/* 状态显示 */}
       <div className="mt-8 p-4 bg-green-100 border border-green-300 rounded-md">
         <h3 className="text-lg font-semibold text-green-800">✅ 测试结果</h3>
-        <p className="text-green-700">
-          如果所有组件都正常显示，说明HeroUI迁移成功！
-        </p>
+        <p className="text-green-700">如果所有组件都正常显示，说明HeroUI迁移成功！</p>
       </div>
     </div>
   );

@@ -1,7 +1,8 @@
 import { Suspense } from "react";
-import { PostCard } from "@/components/blog/post-card";
-import { BlogSidebar } from "@/components/blog/blog-sidebar";
+
 import { BlogFilters } from "@/components/blog/blog-filters";
+import { BlogSidebar } from "@/components/blog/blog-sidebar";
+import { PostCard } from "@/components/blog/post-card";
 
 // 模拟博客数据 - 后续会从数据库获取
 const mockPosts = [
@@ -11,8 +12,7 @@ const mockPosts = [
     slug: "building-modern-blog-with-nextjs-15",
     excerpt:
       "本文介绍如何使用 Next.js 15 和 Drizzle ORM 构建一个功能完整的博客系统，包括数据库设计、API 开发、前端界面等...",
-    featuredImage:
-      "https://images.unsplash.com/photo-1555066931-4365d14bab8c?w=800&h=400&fit=crop",
+    featuredImage: "https://images.unsplash.com/photo-1555066931-4365d14bab8c?w=800&h=400&fit=crop",
     author: {
       displayName: "张三",
       username: "zhangsan",
@@ -37,8 +37,7 @@ const mockPosts = [
     slug: "drizzle-orm-getting-started",
     excerpt:
       "Drizzle ORM 是一个现代化的 TypeScript ORM，本文将从基础概念开始，逐步介绍如何使用 Drizzle ORM 进行数据库操作...",
-    featuredImage:
-      "https://images.unsplash.com/photo-1518709268805-4e9042af2176?w=800&h=400&fit=crop",
+    featuredImage: "https://images.unsplash.com/photo-1518709268805-4e9042af2176?w=800&h=400&fit=crop",
     author: {
       displayName: "李四",
       username: "lisi",
@@ -61,10 +60,8 @@ const mockPosts = [
     id: 3,
     title: "Tailwind CSS 4.0 新特性详解",
     slug: "tailwind-css-4-new-features",
-    excerpt:
-      "Tailwind CSS 4.0 带来了许多激动人心的新特性，包括新的颜色系统、改进的响应式设计、更好的性能等...",
-    featuredImage:
-      "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=800&h=400&fit=crop",
+    excerpt: "Tailwind CSS 4.0 带来了许多激动人心的新特性，包括新的颜色系统、改进的响应式设计、更好的性能等...",
+    featuredImage: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=800&h=400&fit=crop",
     author: {
       displayName: "王五",
       username: "wangwu",
@@ -90,9 +87,7 @@ export default function BlogPage() {
     <div className="container mx-auto px-4 py-8">
       <div className="mb-8">
         <h1 className="text-4xl font-bold mb-4">博客文章</h1>
-        <p className="text-xl text-muted-foreground">
-          分享技术见解、学习心得和项目经验
-        </p>
+        <p className="text-xl text-muted-foreground">分享技术见解、学习心得和项目经验</p>
       </div>
 
       <div className="grid grid-cols-1 lg:grid-cols-4 gap-8">
@@ -111,21 +106,11 @@ export default function BlogPage() {
           {/* 分页 */}
           <div className="mt-8 flex justify-center">
             <nav className="flex items-center space-x-2">
-              <button className="px-3 py-2 text-sm border rounded-md hover:bg-muted transition-colors">
-                上一页
-              </button>
-              <button className="px-3 py-2 text-sm bg-primary text-primary-foreground rounded-md">
-                1
-              </button>
-              <button className="px-3 py-2 text-sm border rounded-md hover:bg-muted transition-colors">
-                2
-              </button>
-              <button className="px-3 py-2 text-sm border rounded-md hover:bg-muted transition-colors">
-                3
-              </button>
-              <button className="px-3 py-2 text-sm border rounded-md hover:bg-muted transition-colors">
-                下一页
-              </button>
+              <button className="px-3 py-2 text-sm border rounded-md hover:bg-muted transition-colors">上一页</button>
+              <button className="px-3 py-2 text-sm bg-primary text-primary-foreground rounded-md">1</button>
+              <button className="px-3 py-2 text-sm border rounded-md hover:bg-muted transition-colors">2</button>
+              <button className="px-3 py-2 text-sm border rounded-md hover:bg-muted transition-colors">3</button>
+              <button className="px-3 py-2 text-sm border rounded-md hover:bg-muted transition-colors">下一页</button>
             </nav>
           </div>
         </div>

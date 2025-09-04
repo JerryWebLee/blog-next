@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import { Search, X } from "lucide-react";
+
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 
@@ -25,12 +26,7 @@ export function SearchBar() {
 
   if (!isExpanded) {
     return (
-      <Button
-        variant="ghost"
-        size="sm"
-        onClick={() => setIsExpanded(true)}
-        className="h-9 w-9 p-0"
-      >
+      <Button variant="ghost" size="sm" onClick={() => setIsExpanded(true)} className="h-9 w-9 p-0">
         <Search className="h-4 w-4" />
         <span className="sr-only">搜索</span>
       </Button>
@@ -64,13 +60,7 @@ export function SearchBar() {
       <Button type="submit" size="sm">
         搜索
       </Button>
-      <Button
-        type="button"
-        variant="ghost"
-        size="sm"
-        onClick={handleClear}
-        className="h-9 w-9 p-0"
-      >
+      <Button type="button" variant="ghost" size="sm" onClick={handleClear} className="h-9 w-9 p-0">
         <X className="h-4 w-4" />
       </Button>
     </form>
