@@ -5,7 +5,6 @@
  * 帮助用户正确配置数据库连接
  */
 import * as fs from "fs";
-import * as path from "path";
 
 /**
  * 检查环境文件是否存在
@@ -29,7 +28,6 @@ function checkEnvFiles() {
     }
   }
 
-  console.log("");
   return { existingFiles, missingFiles };
 }
 

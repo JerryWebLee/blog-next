@@ -30,9 +30,9 @@ function loadEnvFile(filePath: string): Record<string, string> {
  * 加载环境变量
  */
 const env = {
-  ...loadEnvFile(".env"),
-  ...loadEnvFile(".env.local"),
-  ...loadEnvFile(".env.development"),
+  // ...loadEnvFile(".env"),
+  // ...loadEnvFile(".env.local"),
+  // ...loadEnvFile(".env.development"),
   ...process.env,
 };
 
