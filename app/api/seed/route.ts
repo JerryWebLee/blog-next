@@ -214,7 +214,7 @@ async function seedUsers() {
   console.log("👥 插入用户数据...");
 
   try {
-    await db.insert(users).values(seedData.users);
+    await db.insert(users).values(seedData.users as any);
     console.log("✅ 用户数据插入完成");
   } catch (error) {
     console.error("❌ 用户数据插入失败:", error);
@@ -259,7 +259,7 @@ async function seedPosts() {
   console.log("📝 插入文章数据...");
 
   try {
-    await db.insert(posts).values(seedData.posts);
+    await db.insert(posts).values(seedData.posts as any);
     console.log("✅ 文章数据插入完成");
   } catch (error) {
     console.error("❌ 文章数据插入失败:", error);
@@ -299,7 +299,7 @@ async function verifyData() {
   }
 }
 
-export async function POST(request: NextRequest) {
+export async function GET(request: NextRequest) {
   try {
     console.log("🌱 开始数据库种子数据初始化...");
     console.log("=".repeat(50));

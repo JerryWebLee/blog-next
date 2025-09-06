@@ -24,7 +24,7 @@ const seedData = {
     },
     {
       username: "author",
-      email: "author@example.com", 
+      email: "author@example.com",
       password: "$2b$10$example.hash",
       role: "author",
       isActive: true,

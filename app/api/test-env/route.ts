@@ -108,7 +108,7 @@ function checkEnvironmentVariables() {
   return { missingVars, presentVars };
 }
 
-export async function POST(request: NextRequest) {
+export async function GET(request: NextRequest) {
   try {
     console.log("🚀 环境配置助手");
     console.log("=".repeat(50));
@@ -173,4 +173,3 @@ export async function POST(request: NextRequest) {
     );
   }
 }
-

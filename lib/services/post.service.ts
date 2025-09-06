@@ -28,7 +28,7 @@ export class PostService {
    * @param authorId 作者ID
    * @returns 创建的文章信息
    */
-  async createPost(data: CreatePostRequest, authorId: number): Promise<Post> {
+  async createPost(data: CreatePostRequest, authorId: number): Promise<Post | null> {
     try {
       // 生成slug（如果未提供）
       const slug = data.slug || generateSlug(data.title);

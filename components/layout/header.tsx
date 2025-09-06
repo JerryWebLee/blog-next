@@ -6,7 +6,6 @@ import { usePathname } from "next/navigation";
 import { SearchBar } from "@/components/layout/search-bar";
 import { UserNav } from "@/components/layout/user-nav";
 import { ThemeToggle } from "@/components/theme-toggle";
-import { Button } from "@/components/ui/button";
 
 export function Header() {
   const pathname = usePathname();

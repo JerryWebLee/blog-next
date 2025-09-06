@@ -53,11 +53,11 @@ async function testDatabaseConnection() {
     const tableCount = (tables as any[]).length;
     console.log(`   表数量: ${tableCount}`);
 
-    const tableNames = [];
+    const tableNames: string[] = [];
     if (tableCount > 0) {
       console.log("   现有表:");
       (tables as any[]).forEach((table: any) => {
-        const tableName = Object.values(table)[0];
+        const tableName = Object.values(table)[0] as string;
         tableNames.push(tableName);
         console.log(`     - ${tableName}`);
       });
@@ -123,7 +123,7 @@ function checkEnvironmentVariables() {
   };
 }
 
-export async function POST(request: NextRequest) {
+export async function GET(request: NextRequest) {
   try {
     console.log("🚀 数据库连接测试工具");
     console.log("=".repeat(50));
@@ -172,4 +172,3 @@ export async function POST(request: NextRequest) {
     );
   }
 }
-
