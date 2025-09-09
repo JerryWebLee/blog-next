@@ -40,15 +40,14 @@ const stats = [
 
 export default function HomePage() {
   return (
-    <div className="min-h-screen">
+    <div>
       {/* Hero 区域 */}
-      <section className="relative bg-gradient-to-br from-blue-50 to-indigo-100 dark:from-blue-950 dark:to-indigo-950 py-20">
+      <section className="relative py-20">
         <div className="container mx-auto px-4 text-center">
-          <h1 className="text-5xl md:text-6xl font-bold text-gray-900 dark:text-white mb-6">
-            欢迎来到{" "}
-            <span className="text-transparent bg-clip-text bg-gradient-to-r from-blue-600 to-purple-600">BlogNext</span>
+          <h1 className="text-5xl md:text-6xl font-bold mb-6">
+            欢迎来到 <span className="">BlogNext</span>
           </h1>
-          <p className="text-xl md:text-2xl text-gray-600 dark:text-gray-300 mb-8 max-w-3xl mx-auto">
+          <p className="text-xl md:text-2xl  mb-8 max-w-3xl mx-auto">
             基于 Next.js 15 和 Drizzle ORM 构建的现代化博客系统
           </p>
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
@@ -66,18 +65,18 @@ export default function HomePage() {
       </section>
 
       {/* 统计数据 */}
-      <section className="py-16 bg-white dark:bg-gray-900">
+      <section className="py-16">
         <div className="container mx-auto px-4">
           <div className="grid grid-cols-2 md:grid-cols-4 gap-8">
             {stats.map((stat, index) => (
               <div key={index} className="text-center">
                 <div className="flex justify-center mb-4">
-                  <div className="p-3 bg-blue-100 dark:bg-blue-900 rounded-full">
-                    <stat.icon className="h-8 w-8 text-blue-600 dark:text-blue-400" />
+                  <div className="p-3 rounded-full">
+                    <stat.icon className="h-8 w-8" />
                   </div>
                 </div>
-                <div className="text-3xl font-bold text-gray-900 dark:text-white mb-2">{stat.value}</div>
-                <div className="text-gray-600 dark:text-gray-400">{stat.label}</div>
+                <div className="text-3xl font-bold mb-2">{stat.value}</div>
+                <div className="">{stat.label}</div>
               </div>
             ))}
           </div>
@@ -85,13 +84,11 @@ export default function HomePage() {
       </section>
 
       {/* 特色文章 */}
-      <section className="py-16 bg-gray-50 dark:bg-gray-800">
+      <section className="py-16">
         <div className="container mx-auto px-4">
           <div className="text-center mb-12">
-            <h2 className="text-3xl md:text-4xl font-bold text-gray-900 dark:text-white mb-4">特色文章</h2>
-            <p className="text-xl text-gray-600 dark:text-gray-300 max-w-2xl mx-auto">
-              精选优质技术文章，分享最新的技术趋势和开发经验
-            </p>
+            <h2 className="text-3xl md:text-4xl font-bold mb-4">特色文章</h2>
+            <p className="text-xl  max-w-2xl mx-auto">精选优质技术文章，分享最新的技术趋势和开发经验</p>
           </div>
 
           <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
@@ -99,7 +96,7 @@ export default function HomePage() {
               <Card key={post.id} className="overflow-hidden hover:shadow-lg transition-shadow">
                 <div className="relative h-48">
                   <Image src={post.featuredImage} alt={post.title} fill className="object-cover" />
-                  <Badge className="absolute top-4 left-4 bg-primary/90">{post.category}</Badge>
+                  <Badge className="absolute top-4 left-4">{post.category}</Badge>
                 </div>
                 <CardHeader>
                   <CardTitle className="text-xl line-clamp-2">
@@ -109,8 +106,8 @@ export default function HomePage() {
                   </CardTitle>
                 </CardHeader>
                 <CardContent>
-                  <p className="text-gray-600 dark:text-gray-300 mb-4 line-clamp-3">{post.excerpt}</p>
-                  <div className="flex items-center justify-between text-sm text-gray-500 dark:text-gray-400">
+                  <p className=" mb-4 line-clamp-3">{post.excerpt}</p>
+                  <div className="flex items-center justify-between text-sm">
                     <span>{post.publishedAt}</span>
                     <span>{post.readTime} 分钟阅读</span>
                   </div>
@@ -131,38 +128,36 @@ export default function HomePage() {
       </section>
 
       {/* 技术栈介绍 */}
-      <section className="py-16 bg-white dark:bg-gray-900">
+      <section className="py-16">
         <div className="container mx-auto px-4">
           <div className="text-center mb-12">
-            <h2 className="text-3xl md:text-4xl font-bold text-gray-900 dark:text-white mb-4">技术栈</h2>
-            <p className="text-xl text-gray-600 dark:text-gray-300 max-w-2xl mx-auto">
-              采用现代化的技术栈，确保系统的高性能、可维护性和扩展性
-            </p>
+            <h2 className="text-3xl md:text-4xl font-bold mb-4">技术栈</h2>
+            <p className="text-xl  max-w-2xl mx-auto">采用现代化的技术栈，确保系统的高性能、可维护性和扩展性</p>
           </div>
 
           <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
             <Card className="text-center p-6">
-              <div className="w-16 h-16 bg-blue-100 dark:bg-blue-900 rounded-full flex items-center justify-center mx-auto mb-4">
-                <span className="text-2xl font-bold text-blue-600 dark:text-blue-400">N</span>
+              <div className="w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-4">
+                <span className="text-2xl font-bold">N</span>
               </div>
               <h3 className="text-xl font-semibold mb-2">Next.js 15</h3>
-              <p className="text-gray-600 dark:text-gray-400">最新的 React 框架，提供优秀的开发体验和性能优化</p>
+              <p className="">最新的 React 框架，提供优秀的开发体验和性能优化</p>
             </Card>
 
             <Card className="text-center p-6">
-              <div className="w-16 h-16 bg-green-100 dark:bg-green-900 rounded-full flex items-center justify-center mx-auto mb-4">
-                <span className="text-2xl font-bold text-green-600 dark:text-green-400">D</span>
+              <div className="w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-4">
+                <span className="text-2xl font-bold">D</span>
               </div>
               <h3 className="text-xl font-semibold mb-2">Drizzle ORM</h3>
-              <p className="text-gray-600 dark:text-gray-400">现代化的 TypeScript ORM，类型安全且性能优异</p>
+              <p className="">现代化的 TypeScript ORM，类型安全且性能优异</p>
             </Card>
 
             <Card className="text-center p-6">
-              <div className="w-16 h-16 bg-purple-100 dark:bg-purple-900 rounded-full flex items-center justify-center mx-auto mb-4">
-                <span className="text-2xl font-bold text-purple-600 dark:text-purple-400">T</span>
+              <div className="w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-4">
+                <span className="text-2xl font-bold">T</span>
               </div>
               <h3 className="text-xl font-semibold mb-2">Tailwind CSS</h3>
-              <p className="text-gray-600 dark:text-gray-400">实用优先的 CSS 框架，快速构建现代化界面</p>
+              <p className="">实用优先的 CSS 框架，快速构建现代化界面</p>
             </Card>
           </div>
         </div>

@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
-import { Inter } from "next/font/google";
+import { Inter, Urbanist } from "next/font/google";
 
-import "@/styles/globals.css";
+import "@/styles/globals.scss";
 
 import { Footer } from "@/components/layout/footer";
 import { Header } from "@/components/layout/header";
@@ -9,9 +9,41 @@ import { Providers } from "./providers";
 
 const inter = Inter({ subsets: ["latin"] });
 
+const urbanist = Urbanist({ subsets: ["latin"] });
+
 export const metadata: Metadata = {
-  title: "BlogNext - 现代化博客系统",
-  description: "基于 Next.js 15 和 Drizzle ORM 构建的现代化博客系统",
+  title: "荒野博客 | 在数字荒野中探索技术 - 在思考森林中寻找真理",
+  description: "在数字荒野中探索技术，在思考森林中寻找真理",
+  authors: [{ name: "荒野", url: "https://blog.huangye.cn" }],
+  applicationName: "荒野博客",
+  generator: "Next.js",
+  keywords: [
+    "荒野博客",
+    "技术博客",
+    "思考博客",
+    "blog",
+    "technology",
+    "thinking",
+    "前端开发",
+    "后端开发",
+    "全栈开发",
+    "前端框架",
+    "后端框架",
+    "全栈框架",
+    "前端技术",
+    "后端技术",
+    "全栈技术",
+  ],
+  robots: "none",
+  viewport: { width: "device-width", initialScale: 1 },
+  colorScheme: "light dark",
+  // manifest: "/manifest.json",
+  openGraph: {
+    title: "荒野博客",
+    description: "在数字荒野中探索技术，在思考森林中寻找真理",
+    // url: "https://blog.huangye.cn",
+  },
+  category: "technology",
 };
 
 export default function RootLayout({
@@ -21,11 +53,20 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="zh-CN" suppressHydrationWarning>
-      <body className={inter.className}>
-        <Providers>
+      <body className={urbanist.className}>
+        <Providers
+          themeProps={{
+            defaultTheme: "dark",
+            attribute: "class",
+            value: {
+              dark: "dark",
+              light: "light",
+            },
+          }}
+        >
           <div className="min-h-screen flex flex-col">
             <Header />
-            <main className="flex-1">{children}</main>
+            <main className="flex-1 min-h-[80vh] relative">{children}</main>
             <Footer />
           </div>
         </Providers>
