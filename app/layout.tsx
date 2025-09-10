@@ -3,6 +3,8 @@ import { Inter, Urbanist } from "next/font/google";
 
 import "@/styles/globals.scss";
 
+import clsx from "clsx";
+
 import { Footer } from "@/components/layout/footer";
 import { Header } from "@/components/layout/header";
 import { Providers } from "./providers";
@@ -53,7 +55,12 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="zh-CN" suppressHydrationWarning>
-      <body className={urbanist.className}>
+      <body
+        className={clsx(
+          urbanist.className,
+          "bg-radial from-[hsla(var(--heroui-background))] to-[hsla(var(--heroui-background-1))]"
+        )}
+      >
         <Providers
           themeProps={{
             defaultTheme: "dark",

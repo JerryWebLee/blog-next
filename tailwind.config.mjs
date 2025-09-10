@@ -15,7 +15,7 @@ const config = {
       },
     },
   },
-  darkMode: ["selector", '[data-theme="dark"]'],
+  darkMode: ["class"],
   plugins: [heroui()],
 };
 

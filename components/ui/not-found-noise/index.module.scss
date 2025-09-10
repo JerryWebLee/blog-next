@@ -2,37 +2,28 @@
 
 .container {
   .noise {
-    pointer-events: none;
-    position: absolute;
-    width: 100%;
-    height: 100%;
     background-image: url("/images/Static GIF.gif");
     background-repeat: no-repeat;
     background-size: cover;
-    z-index: -1;
+    height: 100%;
     opacity: 0.05;
-  }
-
-  .overlay {
     pointer-events: none;
     position: absolute;
     width: 100%;
-    height: 100%;
+    z-index: -1;
+  }
+
+  .overlay {
     background: repeating-linear-gradient(180deg, rgba(0, 0, 0, 0) 0, rgba(0, 0, 0, 0.3) 50%, rgba(0, 0, 0, 0) 100%);
     background-size: auto 4px;
+    height: 100%;
+    pointer-events: none;
+    position: absolute;
+    width: 100%;
     z-index: 1;
 
     &::before {
-      content: "";
-      pointer-events: none;
-      position: absolute;
-      display: block;
-      top: 0;
-      left: 0;
-      right: 0;
-      bottom: 0;
-      width: 100%;
-      height: 100%;
+      animation: scan 7.5s linear 0s infinite;
       background-image: linear-gradient(
         0deg,
         transparent 0%,
@@ -42,7 +33,16 @@
         transparent 100%
       );
       background-repeat: no-repeat;
-      animation: scan 7.5s linear 0s infinite;
+      bottom: 0;
+      content: "";
+      display: block;
+      height: 100%;
+      left: 0;
+      pointer-events: none;
+      position: absolute;
+      right: 0;
+      top: 0;
+      width: 100%;
     }
   }
 
@@ -58,11 +58,11 @@
 
   .terminal {
     box-sizing: inherit;
-    position: absolute;
     height: 100%;
-    width: 100%;
     padding: 4rem;
+    position: absolute;
     text-transform: uppercase;
+    width: 100%;
   }
 
   .output {

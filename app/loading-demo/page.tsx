@@ -1,9 +1,10 @@
 "use client";
 
 import { useState } from "react";
-import Loading, { PageLoading, CardLoading, ButtonLoading, ContentLoading } from "@/components/ui/loading";
+
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
+import Loading, { ButtonLoading, CardLoading, ContentLoading, PageLoading } from "@/components/ui/loading";
 
 export default function LoadingDemo() {
   const [activeDemo, setActiveDemo] = useState<string | null>(null);
@@ -24,9 +25,7 @@ export default function LoadingDemo() {
       <div className="max-w-6xl mx-auto space-y-8">
         <div className="text-center space-y-4">
           <h1 className="text-4xl font-bold text-foreground">加载UI演示</h1>
-          <p className="text-muted-foreground text-lg">
-            展示各种加载动画效果和组件
-          </p>
+          <p className="text-muted-foreground text-lg">展示各种加载动画效果和组件</p>
         </div>
 
         {/* 基础加载器变体 */}
@@ -59,13 +58,8 @@ export default function LoadingDemo() {
         <Card className="p-6">
           <h2 className="text-2xl font-semibold mb-6">页面级加载器</h2>
           <div className="space-y-4">
-            <p className="text-muted-foreground">
-              用于全页面加载状态，占据整个视口
-            </p>
-            <Button
-              onClick={() => setActiveDemo(activeDemo === "page" ? null : "page")}
-              variant="outline"
-            >
+            <p className="text-muted-foreground">用于全页面加载状态，占据整个视口</p>
+            <Button onClick={() => setActiveDemo(activeDemo === "page" ? null : "page")} variant="outline">
               {activeDemo === "page" ? "隐藏" : "显示"}页面加载器
             </Button>
             {activeDemo === "page" && (
@@ -80,13 +74,8 @@ export default function LoadingDemo() {
         <Card className="p-6">
           <h2 className="text-2xl font-semibold mb-6">卡片级加载器</h2>
           <div className="space-y-4">
-            <p className="text-muted-foreground">
-              用于卡片内容加载状态，显示骨架屏效果
-            </p>
-            <Button
-              onClick={() => setActiveDemo(activeDemo === "card" ? null : "card")}
-              variant="outline"
-            >
+            <p className="text-muted-foreground">用于卡片内容加载状态，显示骨架屏效果</p>
+            <Button onClick={() => setActiveDemo(activeDemo === "card" ? null : "card")} variant="outline">
               {activeDemo === "card" ? "隐藏" : "显示"}卡片加载器
             </Button>
             {activeDemo === "card" && (
@@ -102,13 +91,8 @@ export default function LoadingDemo() {
         <Card className="p-6">
           <h2 className="text-2xl font-semibold mb-6">内容加载器</h2>
           <div className="space-y-4">
-            <p className="text-muted-foreground">
-              用于内容区域加载状态，显示闪烁效果
-            </p>
-            <Button
-              onClick={() => setActiveDemo(activeDemo === "content" ? null : "content")}
-              variant="outline"
-            >
+            <p className="text-muted-foreground">用于内容区域加载状态，显示闪烁效果</p>
+            <Button onClick={() => setActiveDemo(activeDemo === "content" ? null : "content")} variant="outline">
               {activeDemo === "content" ? "隐藏" : "显示"}内容加载器
             </Button>
             {activeDemo === "content" && (
@@ -124,9 +108,7 @@ export default function LoadingDemo() {
         <Card className="p-6">
           <h2 className="text-2xl font-semibold mb-6">按钮级加载器</h2>
           <div className="space-y-4">
-            <p className="text-muted-foreground">
-              用于按钮内部加载状态
-            </p>
+            <p className="text-muted-foreground">用于按钮内部加载状态</p>
             <div className="flex flex-wrap gap-4">
               <Button disabled>
                 <ButtonLoading size="sm" />
@@ -150,27 +132,15 @@ export default function LoadingDemo() {
           <div className="space-y-6">
             <div className="text-center">
               <h3 className="text-lg font-medium mb-4">自定义颜色</h3>
-              <Loading 
-                variant="spinner" 
-                className="border-t-blue-500 border-blue-200" 
-                text="蓝色加载器" 
-              />
+              <Loading variant="spinner" className="border-t-blue-500 border-blue-200" text="蓝色加载器" />
             </div>
             <div className="text-center">
               <h3 className="text-lg font-medium mb-4">自定义大小</h3>
-              <Loading 
-                variant="wave" 
-                className="scale-150" 
-                text="放大波浪加载器" 
-              />
+              <Loading variant="wave" className="scale-150" text="放大波浪加载器" />
             </div>
             <div className="text-center">
               <h3 className="text-lg font-medium mb-4">渐变效果</h3>
-              <Loading 
-                variant="pulse" 
-                className="bg-gradient-to-r from-blue-500 to-purple-500" 
-                text="渐变脉冲加载器" 
-              />
+              <Loading variant="pulse" className="bg-gradient-to-r from-blue-500 to-purple-500" text="渐变脉冲加载器" />
             </div>
           </div>
         </Card>

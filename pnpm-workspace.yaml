@@ -1,9 +1,9 @@
 ignoredBuiltDependencies:
-  - '@parcel/watcher'
+  - "@parcel/watcher"
 
 onlyBuiltDependencies:
-  - '@heroui/shared-utils'
-  - '@tailwindcss/oxide'
+  - "@heroui/shared-utils"
+  - "@tailwindcss/oxide"
   - esbuild
   - sharp
   - unrs-resolver

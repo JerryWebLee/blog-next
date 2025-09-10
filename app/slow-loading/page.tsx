@@ -1,9 +1,10 @@
 "use client";
 
-import { useState, useEffect } from "react";
-import Loading from "@/components/ui/loading";
+import { useEffect, useState } from "react";
+
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
+import Loading from "@/components/ui/loading";
 
 export default function SlowLoadingPage() {
   const [isLoading, setIsLoading] = useState(true);
@@ -12,7 +13,7 @@ export default function SlowLoadingPage() {
   useEffect(() => {
     if (isLoading) {
       const interval = setInterval(() => {
-        setLoadingTime(prev => prev + 1);
+        setLoadingTime((prev) => prev + 1);
       }, 1000);
 
       const timer = setTimeout(() => {
@@ -36,20 +37,14 @@ export default function SlowLoadingPage() {
     return (
       <div className="min-h-screen flex items-center justify-center bg-background">
         <div className="text-center space-y-6">
-          <Loading 
-            variant="spinner" 
-            text={`正在加载内容... (${loadingTime}/10秒)`} 
-            size="lg"
-          />
+          <Loading variant="spinner" text={`正在加载内容... (${loadingTime}/10秒)`} size="lg" />
           <div className="w-64 bg-muted rounded-full h-2">
-            <div 
+            <div
               className="bg-primary h-2 rounded-full transition-all duration-1000"
               style={{ width: `${(loadingTime / 10) * 100}%` }}
             ></div>
           </div>
-          <p className="text-sm text-muted-foreground">
-            这是一个模拟的慢速加载页面，用于测试加载UI效果
-          </p>
+          <p className="text-sm text-muted-foreground">这是一个模拟的慢速加载页面，用于测试加载UI效果</p>
         </div>
       </div>
     );
@@ -60,9 +55,7 @@ export default function SlowLoadingPage() {
       <div className="max-w-4xl mx-auto space-y-8">
         <div className="text-center space-y-4">
           <h1 className="text-4xl font-bold text-foreground">慢速加载测试完成</h1>
-          <p className="text-muted-foreground text-lg">
-            这个页面模拟了10秒的加载时间，让你可以充分查看加载UI的效果
-          </p>
+          <p className="text-muted-foreground text-lg">这个页面模拟了10秒的加载时间，让你可以充分查看加载UI的效果</p>
         </div>
 
         <Card className="p-6">
@@ -78,23 +71,15 @@ export default function SlowLoadingPage() {
         <Card className="p-6">
           <h2 className="text-2xl font-semibold mb-4">测试其他加载效果</h2>
           <div className="space-y-4">
-            <p className="text-muted-foreground">
-              点击下面的按钮重新开始加载，体验不同的加载效果
-            </p>
+            <p className="text-muted-foreground">点击下面的按钮重新开始加载，体验不同的加载效果</p>
             <div className="flex flex-wrap gap-4">
               <Button onClick={resetLoading} variant="default">
                 重新开始加载 (10秒)
               </Button>
-              <Button 
-                onClick={() => window.location.href = '/loading-test'} 
-                variant="outline"
-              >
+              <Button onClick={() => (window.location.href = "/loading-test")} variant="outline">
                 查看交互式测试页面
               </Button>
-              <Button 
-                onClick={() => window.location.href = '/loading-demo'} 
-                variant="outline"
-              >
+              <Button onClick={() => (window.location.href = "/loading-demo")} variant="outline">
                 查看演示页面
               </Button>
             </div>

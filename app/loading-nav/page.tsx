@@ -9,26 +9,26 @@ export default function LoadingNavPage() {
       title: "交互式测试页面",
       description: "可以手动触发不同的加载效果，每个加载持续5秒",
       url: "/loading-test",
-      features: ["手动控制", "多种变体", "实时切换"]
+      features: ["手动控制", "多种变体", "实时切换"],
     },
     {
       title: "慢速加载页面",
       description: "模拟10秒的慢速加载，带有进度条和倒计时",
       url: "/slow-loading",
-      features: ["进度条", "倒计时", "长时间加载"]
+      features: ["进度条", "倒计时", "长时间加载"],
     },
     {
       title: "延迟加载页面",
       description: "页面加载时自动显示5秒加载状态",
       url: "/delayed-page",
-      features: ["自动加载", "5秒延迟", "变体切换"]
+      features: ["自动加载", "5秒延迟", "变体切换"],
     },
     {
       title: "演示页面",
       description: "展示所有加载组件的静态演示",
       url: "/loading-demo",
-      features: ["静态演示", "完整展示", "使用说明"]
-    }
+      features: ["静态演示", "完整展示", "使用说明"],
+    },
   ];
 
   return (
@@ -36,9 +36,7 @@ export default function LoadingNavPage() {
       <div className="max-w-6xl mx-auto space-y-8">
         <div className="text-center space-y-4">
           <h1 className="text-4xl font-bold text-foreground">加载UI测试导航</h1>
-          <p className="text-muted-foreground text-lg">
-            选择下面的页面来测试不同的加载UI效果
-          </p>
+          <p className="text-muted-foreground text-lg">选择下面的页面来测试不同的加载UI效果</p>
         </div>
 
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
@@ -46,33 +44,22 @@ export default function LoadingNavPage() {
             <Card key={index} className="p-6 hover:shadow-lg transition-shadow">
               <div className="space-y-4">
                 <div>
-                  <h2 className="text-2xl font-semibold text-foreground mb-2">
-                    {page.title}
-                  </h2>
-                  <p className="text-muted-foreground">
-                    {page.description}
-                  </p>
+                  <h2 className="text-2xl font-semibold text-foreground mb-2">{page.title}</h2>
+                  <p className="text-muted-foreground">{page.description}</p>
                 </div>
-                
+
                 <div className="space-y-2">
                   <h3 className="text-sm font-medium text-primary">特性:</h3>
                   <div className="flex flex-wrap gap-2">
                     {page.features.map((feature, featureIndex) => (
-                      <span 
-                        key={featureIndex}
-                        className="px-2 py-1 bg-muted text-muted-foreground text-xs rounded-md"
-                      >
+                      <span key={featureIndex} className="px-2 py-1 bg-muted text-muted-foreground text-xs rounded-md">
                         {feature}
                       </span>
                     ))}
                   </div>
                 </div>
 
-                <Button 
-                  onClick={() => window.location.href = page.url}
-                  className="w-full"
-                  size="lg"
-                >
+                <Button onClick={() => (window.location.href = page.url)} className="w-full" size="lg">
                   访问 {page.title}
                 </Button>
               </div>
@@ -92,7 +79,7 @@ export default function LoadingNavPage() {
                 <li>在慢速加载页面中，可以查看长时间加载的效果</li>
               </ol>
             </div>
-            
+
             <div>
               <h3 className="text-lg font-medium text-foreground mb-2">测试建议：</h3>
               <ul className="list-disc list-inside space-y-1 ml-4">
@@ -108,22 +95,13 @@ export default function LoadingNavPage() {
         <Card className="p-6">
           <h2 className="text-2xl font-semibold mb-4">快速链接</h2>
           <div className="flex flex-wrap gap-4">
-            <Button 
-              onClick={() => window.location.href = '/blog'} 
-              variant="outline"
-            >
+            <Button onClick={() => (window.location.href = "/blog")} variant="outline">
               博客页面 (有loading.tsx)
             </Button>
-            <Button 
-              onClick={() => window.location.href = '/about'} 
-              variant="outline"
-            >
+            <Button onClick={() => (window.location.href = "/about")} variant="outline">
               关于页面 (有loading.tsx)
             </Button>
-            <Button 
-              onClick={() => window.location.href = '/docs'} 
-              variant="outline"
-            >
+            <Button onClick={() => (window.location.href = "/docs")} variant="outline">
               文档页面 (有loading.tsx)
             </Button>
           </div>
