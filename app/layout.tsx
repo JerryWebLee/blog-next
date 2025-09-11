@@ -5,8 +5,7 @@ import "@/styles/globals.scss";
 
 import clsx from "clsx";
 
-import { Footer } from "@/components/layout/footer";
-import { Header } from "@/components/layout/header";
+import { ConditionalLayout } from "@/components/layout/conditional-layout";
 import { Providers } from "./providers";
 
 const inter = Inter({ subsets: ["latin"] });
@@ -71,11 +70,7 @@ export default function RootLayout({
             },
           }}
         >
-          <div className="min-h-screen flex flex-col">
-            <Header />
-            <main className="flex-1 min-h-[80vh] relative">{children}</main>
-            <Footer />
-          </div>
+          <ConditionalLayout>{children}</ConditionalLayout>
         </Providers>
       </body>
     </html>

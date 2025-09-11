@@ -81,18 +81,18 @@ export async function POST(request: NextRequest) {
     const hashedPassword = await hashPassword(password);
 
     // 创建用户
-    const newUser = await db
-      .insert(users)
-      .values({
-        username,
-        email,
-        password: hashedPassword,
-        displayName,
-        role: "user",
-        status: "active",
-        emailVerified: false,
-      })
-      .returning();
+    const [insertResult] = await db.insert(users).values({
+      username,
+      email,
+      password: hashedPassword,
+      displayName,
+      role: "user",
+      status: "active",
+      emailVerified: false,
+    });
+
+    // 获取新创建的用户信息
+    const newUser = await db.select().from(users).where(eq(users.id, insertResult.insertId)).limit(1);
 
     // 构建响应数据（排除密码）
     const { password: _, ...userWithoutPassword } = newUser[0];

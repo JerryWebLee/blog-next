@@ -1,19 +1,28 @@
 @use "tailwindcss";
-@layer theme, base, components, utilities, custom;
+@layer theme, base, components, utilities, blog;
 
 @config "../tailwind.config.mjs";
+@import url(./class.scss);
 
-@layer custom {
+@layer blog {
   .light {
     --heroui-background: 0, 0%, 70.59%;
     --heroui-background-1: 0, 0%, 94.51%;
     --heroui-foreground: 210, 29.03%, 24.31%;
+    --blog-nav-background: 0, 0%, 72%, 0.1;
+    --blog-color-bg-start: #949494;
+    --blog-color-bg-end: #ffffff;
+    --blog-nav-link-active-color-bg: #f5f5f5;
   }
 
   .dark {
     --heroui-background: 277.5, 6.78%, 23.14%;
     --heroui-background-1: 315, 4.76%, 32.94%;
     --heroui-foreground: 0, 0%, 100%;
+    --blog-nav-background: 0, 0%, 20.78%;
+    --blog-color-bg-start: #949494;
+    --blog-color-bg-end: #514b51;
+    --blog-nav-link-active-color-bg: rgba(0, 0, 0, 0.75);
   }
 }
 

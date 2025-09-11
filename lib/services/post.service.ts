@@ -362,10 +362,8 @@ export class PostService {
       let publishedAt = data.publishedAt;
       if (data.status === "published" && existingPost.status !== "published") {
         publishedAt = new Date();
-      }
-
       // 更新文章记录
-      const [updatedPost] = await db
+      const [updateResult] = await db
         .update(posts)
         .set({
           title: data.title,
@@ -381,9 +379,7 @@ export class PostService {
           publishedAt,
           updatedAt: new Date(),
         })
-        .where(eq(posts.id, id))
-        .returning();
-
+        .where(eq(posts.id, id));
       // 如果提供了标签ID，更新标签关联
       if (data.tagIds) {
         await this.updatePostTags(id, data.tagIds);

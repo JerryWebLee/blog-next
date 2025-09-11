@@ -6,6 +6,11 @@ CREATE DATABASE IF NOT EXISTS `blog_system`
 CHARACTER SET utf8mb4 
 COLLATE utf8mb4_unicode_ci;
 
+-- 创建blog_user用户并赋予权限
+CREATE USER IF NOT EXISTS 'blog_user'@'%' IDENTIFIED BY 'blog_password_123';
+GRANT ALL PRIVILEGES ON blog_system.* TO 'blog_user'@'%';
+FLUSH PRIVILEGES;
+
 -- 使用数据库
 USE `blog_system`;
 
