@@ -1,41 +1,34 @@
 "use client";
 
-import { Moon, Sun } from "lucide-react";
+import { useEffect, useState } from "react";
+import { Switch } from "@heroui/switch";
+import { useIsSSR } from "@react-aria/ssr";
+import { MoonIcon, SunIcon } from "lucide-react";
 import { useTheme } from "next-themes";
 
-import { Button } from "@/components/ui/button";
-import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu";
-
 export function ThemeToggle() {
-  const { setTheme } = useTheme();
+  const { theme, setTheme } = useTheme();
+  const isSSR = useIsSSR();
+  const [mounted, setMounted] = useState(false);
+
+  // 确保组件在客户端挂载后才渲染
+  useEffect(() => {
+    setMounted(true);
+  }, []);
+
+  // 在服务端渲染或未挂载时，不渲染开关
+  if (!mounted || isSSR) {
+    return <div className="w-[60px] h-[32px] bg-gray-200 dark:bg-gray-700 rounded-full animate-pulse" />;
+  }
 
   return (
-    <DropdownMenu>
-      <DropdownMenuTrigger asChild>
-        <Button variant="ghost" size="sm" className="h-9 w-9 p-0">
-          <Sun className="h-4 w-4 rotate-0 scale-100 transition-all dark:-rotate-90 dark:scale-0" />
-          <Moon className="absolute h-4 w-4 rotate-90 scale-0 transition-all dark:rotate-0 dark:scale-100" />
-          <span className="sr-only">切换主题</span>
-        </Button>
-      </DropdownMenuTrigger>
-      <DropdownMenuContent align="end">
-        <DropdownMenuItem onClick={() => setTheme("light")}>
-          <Sun className="mr-2 h-4 w-4" />
-          <span>浅色</span>
-        </DropdownMenuItem>
-        <DropdownMenuItem onClick={() => setTheme("dark")}>
-          <Moon className="mr-2 h-4 w-4" />
-          <span>深色</span>
-        </DropdownMenuItem>
-        <DropdownMenuItem onClick={() => setTheme("system")}>
-          <span>系统</span>
-        </DropdownMenuItem>
-      </DropdownMenuContent>
-    </DropdownMenu>
+    <Switch
+      onValueChange={(value) => setTheme(value ? "dark" : "light")}
+      isSelected={theme === "dark"}
+      color="success"
+      endContent={<MoonIcon width="1em" height="1em" className="text-base" />}
+      size="lg"
+      startContent={<SunIcon width="1em" height="1em" className="text-base" />}
+    />
   );
 }

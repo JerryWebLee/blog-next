@@ -362,7 +362,7 @@ export class PostService {
       let publishedAt = data.publishedAt;
       if (data.status === "published" && existingPost.status !== "published") {
         publishedAt = new Date();
-      // 更新文章记录
+      }
       const [updateResult] = await db
         .update(posts)
         .set({

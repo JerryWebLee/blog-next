@@ -33,6 +33,12 @@ const nextConfig: NextConfig = {
         port: "",
         pathname: "/**",
       },
+      {
+        protocol: "https",
+        hostname: "haowallpaper.com",
+        port: "",
+        pathname: "/**",
+      },
     ],
   },
   eslint: {
