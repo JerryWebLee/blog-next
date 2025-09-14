@@ -161,7 +161,7 @@ export default function BlogDetailPage() {
     return (
       <div className="container mx-auto py-6">
         <div className="text-center py-8">
-          <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary mx-auto"></div>
+          <div className="animate-spin rounded-full h-8 w-8 blog-border-y-box-shadow-2 border-primary mx-auto"></div>
           <p className="mt-2 text-muted-foreground">加载中...</p>
         </div>
       </div>

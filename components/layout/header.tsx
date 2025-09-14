@@ -23,12 +23,7 @@ export function Header() {
   ];
 
   return (
-    <header
-      style={{
-        boxShadow: "0 4px 6px -1px var(--blog-nav-link-active-color-bg)",
-      }}
-      className="w-full h-16 flex items-center justify-between px-4 md:px-8 sticky top-0 z-50 bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60"
-    >
+    <header className="blog-border-y-box-shadow w-full h-16 flex items-center justify-between px-4 md:px-8 sticky top-0 z-50 bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
       {/* Logo */}
       <Link href="/" className="flex items-center space-x-2">
         <Image

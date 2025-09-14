@@ -209,7 +209,8 @@ export default function ResetPasswordPage() {
                   size="lg"
                   classNames={{
                     input: "text-sm",
-                    inputWrapper: "border-gray-300 hover:border-blue-500 focus-within:border-blue-500",
+                    inputWrapper:
+                      "border-gray-300 hover:blog-border-y-box-shadowlue-500 focus-within:blog-border-y-box-shadowlue-500",
                   }}
                 />
               </div>
@@ -242,13 +243,14 @@ export default function ResetPasswordPage() {
                   size="lg"
                   classNames={{
                     input: "text-sm",
-                    inputWrapper: "border-gray-300 hover:border-blue-500 focus-within:border-blue-500",
+                    inputWrapper:
+                      "border-gray-300 hover:blog-border-y-box-shadowlue-500 focus-within:blog-border-y-box-shadowlue-500",
                   }}
                 />
               </div>
 
               {/* 密码要求提示 */}
-              <div className="bg-blue-50 border border-blue-200 rounded-lg p-4">
+              <div className="bg-blue-50 border blog-border-y-box-shadowlue-200 rounded-lg p-4">
                 <h4 className="text-sm font-medium text-blue-900 mb-2">密码要求：</h4>
                 <ul className="text-xs text-blue-800 space-y-1">
                   <li>• 至少8个字符</li>

@@ -3,3 +3,11 @@
     2px 2px 6px var(--blog-color-bg-start),
     -2px -2px 6px var(--blog-color-bg-end);
 }
+
+.blog-border-y-box-shadow {
+  box-shadow: 0 4px 6px -1px var(--blog-nav-link-active-color-bg);
+}
+
+.blog-border-x-box-shadow {
+  box-shadow: 0 -2px 13px -2px var(--blog-nav-link-active-color-bg);
+}

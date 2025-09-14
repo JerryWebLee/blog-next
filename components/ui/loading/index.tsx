@@ -26,7 +26,7 @@ const Loading: React.FC<LoadingProps> = ({ variant = "spinner", size = "md", tex
   const renderSpinner = () => (
     <div
       className={cn(
-        "animate-spin-slow rounded-full border-2 border-muted border-t-primary",
+        "animate-spin-slow rounded-full border-2 border-muted blog-border-x-box-shadow-primary",
         sizeClasses[size],
         className
       )}

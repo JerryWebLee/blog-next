@@ -144,7 +144,7 @@ export default function EditBlogPage() {
     return (
       <div className="container mx-auto py-6">
         <div className="text-center py-8">
-          <Loader2 className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary mx-auto" />
+          <Loader2 className="animate-spin rounded-full h-8 w-8 blog-border-y-box-shadow-2 border-primary mx-auto" />
           <p className="mt-2 text-muted-foreground">加载中...</p>
         </div>
       </div>
@@ -338,7 +338,7 @@ export default function EditBlogPage() {
           <Button type="submit" disabled={saving}>
             {saving ? (
               <>
-                <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-white mr-2"></div>
+                <div className="animate-spin rounded-full h-4 w-4 blog-border-y-box-shadow-2 border-white mr-2"></div>
                 保存中...
               </>
             ) : (

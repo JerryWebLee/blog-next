@@ -148,7 +148,8 @@ export default function RegisterPage() {
                   size="lg"
                   classNames={{
                     input: "text-sm",
-                    inputWrapper: "border-gray-300 hover:border-blue-500 focus-within:border-blue-500",
+                    inputWrapper:
+                      "border-gray-300 hover:blog-border-y-box-shadowlue-500 focus-within:blog-border-y-box-shadowlue-500",
                   }}
                 />
               </div>
@@ -168,7 +169,8 @@ export default function RegisterPage() {
                   size="lg"
                   classNames={{
                     input: "text-sm",
-                    inputWrapper: "border-gray-300 hover:border-blue-500 focus-within:border-blue-500",
+                    inputWrapper:
+                      "border-gray-300 hover:blog-border-y-box-shadowlue-500 focus-within:blog-border-y-box-shadowlue-500",
                   }}
                 />
               </div>
@@ -188,7 +190,8 @@ export default function RegisterPage() {
                   size="lg"
                   classNames={{
                     input: "text-sm",
-                    inputWrapper: "border-gray-300 hover:border-blue-500 focus-within:border-blue-500",
+                    inputWrapper:
+                      "border-gray-300 hover:blog-border-y-box-shadowlue-500 focus-within:blog-border-y-box-shadowlue-500",
                   }}
                 />
               </div>
@@ -217,7 +220,8 @@ export default function RegisterPage() {
                   size="lg"
                   classNames={{
                     input: "text-sm",
-                    inputWrapper: "border-gray-300 hover:border-blue-500 focus-within:border-blue-500",
+                    inputWrapper:
+                      "border-gray-300 hover:blog-border-y-box-shadowlue-500 focus-within:blog-border-y-box-shadowlue-500",
                   }}
                 />
               </div>
@@ -250,7 +254,8 @@ export default function RegisterPage() {
                   size="lg"
                   classNames={{
                     input: "text-sm",
-                    inputWrapper: "border-gray-300 hover:border-blue-500 focus-within:border-blue-500",
+                    inputWrapper:
+                      "border-gray-300 hover:blog-border-y-box-shadowlue-500 focus-within:blog-border-y-box-shadowlue-500",
                   }}
                 />
               </div>
