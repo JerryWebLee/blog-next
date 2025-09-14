@@ -6,23 +6,39 @@
 
 @layer blog {
   .light {
-    --heroui-background: 0, 0%, 70.59%;
-    --heroui-background-1: 0, 0%, 94.51%;
-    --heroui-foreground: 210, 29.03%, 24.31%;
+    // 亮色模式下的颜色变量
+    --blog-color-background: 0, 0%, 70.59%;
     --blog-nav-background: 0, 0%, 72%, 0.1;
     --blog-color-bg-start: #949494;
     --blog-color-bg-end: #ffffff;
     --blog-nav-link-active-color-bg: #f5f5f5;
+    // 亮色模式下的heroui主题色
+    --heroui-background: var(--blog-color-background);
+    --heroui-content1: var(--blog-color-background);
+    --heroui-background-1: 0, 0%, 94.51%;
+    --heroui-foreground: 210, 29.03%, 24.31%;
+    // 亮色模式下的box-shadow
+    --heroui-box-shadow-small: 0px 0px 5px 0px color-mix(in srgb, var(--blog-color-bg-end) 20%, transparent),
+      0px 2px 10px 0px color-mix(in srgb, var(--blog-color-bg-end) 40%, transparent),
+      0px 0px 1px 0px color-mix(in srgb, var(--blog-color-bg-end) 60%, transparent);
   }
 
   .dark {
-    --heroui-background: 277.5, 6.78%, 23.14%;
+    // 暗色模式下的颜色变量
+    --blog-color-background: 277.5, 6.78%, 23.14%;
+    --blog-nav-background: 0, 0%, 20.78%;
+    --blog-color-bg-start: #514b51;
+    --blog-color-bg-end: #191919;
+    --blog-nav-link-active-color-bg: rgba(0, 0, 0, 0.75);
+    // 暗色模式下的heroui主题色
+    --heroui-background: var(--blog-color-background);
+    --heroui-content1: var(--blog-color-background);
     --heroui-background-1: 315, 4.76%, 32.94%;
     --heroui-foreground: 0, 0%, 100%;
-    --blog-nav-background: 0, 0%, 20.78%;
-    --blog-color-bg-start: #949494;
-    --blog-color-bg-end: #514b51;
-    --blog-nav-link-active-color-bg: rgba(0, 0, 0, 0.75);
+    // 暗色模式下的box-shadow
+    --heroui-box-shadow-small: 0px 0px 5px 0px color-mix(in srgb, var(--blog-color-bg-end) 20%, transparent),
+      0px 2px 10px 0px color-mix(in srgb, var(--blog-color-bg-end) 40%, transparent),
+      0px 0px 1px 0px color-mix(in srgb, var(--blog-color-bg-end) 60%, transparent);
   }
 }
 

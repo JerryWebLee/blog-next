@@ -135,7 +135,7 @@ export default function BlogWithAPIPage() {
           {/* 文章列表 */}
           {loading ? (
             <div className="text-center py-12">
-              <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-primary mx-auto"></div>
+              <div className="animate-spin rounded-full h-12 w-12 blog-border-y-box-shadow-2 border-primary mx-auto"></div>
               <p className="mt-4 text-muted-foreground">加载中...</p>
             </div>
           ) : posts.length === 0 ? (

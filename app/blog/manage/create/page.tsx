@@ -267,7 +267,7 @@ export default function CreateBlogPage() {
           <Button type="submit" disabled={loading}>
             {loading ? (
               <>
-                <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-white mr-2"></div>
+                <div className="animate-spin rounded-full h-4 w-4 blog-border-y-box-shadow-2 border-white mr-2"></div>
                 创建中...
               </>
             ) : (

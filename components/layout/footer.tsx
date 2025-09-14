@@ -1,8 +1,8 @@
 export function Footer() {
   return (
-    <footer className="border-t bg-background">
-      <div className="container py-8">
-        <div className="grid grid-cols-1 md:grid-cols-4 gap-8">
+    <footer className="blog-border-x-box-shadow bg-background">
+      <div className="container mx-auto">
+        <div className="py-8 grid grid-cols-1 md:grid-cols-4 gap-8">
           {/* 关于我们 */}
           <div className="space-y-3">
             <h3 className="text-lg font-semibold">关于 BlogNext</h3>
@@ -36,7 +36,6 @@ export function Footer() {
             <h3 className="text-lg font-semibold">联系我们</h3>
             <ul className="space-y-2 text-sm text-muted-foreground">
               <li>邮箱: contact@blognext.com</li>
-              <li>GitHub: github.com/blognext</li>
             </ul>
           </div>
 
@@ -56,10 +55,9 @@ export function Footer() {
             </div>
           </div>
         </div>
-
-        <div className="mt-8 pt-8 border-t text-center text-sm text-muted-foreground">
-          <p>&copy; 2024 BlogNext. 保留所有权利。</p>
-        </div>
+      </div>
+      <div className="blog-border-x-box-shadow py-4 text-center text-sm text-muted-foreground">
+        <p>&copy; 2024 BlogNext. 保留所有权利。</p>
       </div>
     </footer>
   );

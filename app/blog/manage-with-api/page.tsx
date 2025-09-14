@@ -217,7 +217,7 @@ export default function BlogManageWithAPIPage() {
       {/* 文章列表 */}
       {loading ? (
         <div className="text-center py-12">
-          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-primary mx-auto"></div>
+          <div className="animate-spin rounded-full h-12 w-12 blog-border-y-box-shadow-2 border-primary mx-auto"></div>
           <p className="mt-4 text-muted-foreground">加载中...</p>
         </div>
       ) : posts.length === 0 ? (
@@ -273,7 +273,7 @@ export default function BlogManageWithAPIPage() {
                 </div>
 
                 {/* 快速操作 */}
-                <div className="mt-4 pt-4 border-t flex items-center justify-between">
+                <div className="mt-4 pt-4 blog-border-x-box-shadow flex items-center justify-between">
                   <div className="flex items-center space-x-2">
                     <span className="text-sm text-muted-foreground">快速操作:</span>
                     {post.status !== "published" && (

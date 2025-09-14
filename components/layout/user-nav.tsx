@@ -1,19 +1,18 @@
 "use client";
 
+import Image from "next/image";
 import Link from "next/link";
-import { LogIn, LogOut, Plus, Settings, User } from "lucide-react";
+import { Button } from "@heroui/button";
+import { Avatar, Dropdown, DropdownItem, DropdownMenu, DropdownSection, DropdownTrigger } from "@heroui/react";
+import { FileIcon, LogInIcon, LogOutIcon, MailIcon, SettingsIcon, User, UserCircleIcon } from "lucide-react";
 
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
-import { Button } from "@/components/ui/button";
-import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuLabel,
-  DropdownMenuSeparator,
-  DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu";
 import { useAuth } from "@/lib/contexts/auth-context";
+
+const iconClasses = "text-base text-default-500 shrink-0";
+
+// 默认头像图片 - 使用更可靠的图片源
+const DEFAULT_AVATAR = "/images/avatar.jpeg";
+const FALLBACK_AVATAR = "/images/fallback.svg";
 
 export function UserNav() {
   const { isAuthenticated, user, logout, isLoading } = useAuth();
@@ -29,60 +28,85 @@ export function UserNav() {
   if (!isAuthenticated || !user) {
     return (
       <div className="flex items-center space-x-2">
-        <Button variant="ghost" size="sm" as={Link} href="/auth/login">
-          <LogIn className="h-4 w-4 mr-2" />
-          登录
-        </Button>
-        <Button size="sm" as={Link} href="/auth/register">
-          <User className="h-4 w-4 mr-2" />
-          注册
+        <Button isIconOnly aria-label="login" color="default" size="sm" variant="faded" as={Link} href="/auth/login">
+          <LogInIcon width="1em" height="1em" className="text-base" />
         </Button>
       </div>
     );
   }
 
+  // 获取用户头像，优先使用用户数据中的头像
+  const avatarSrc = user.avatar || DEFAULT_AVATAR;
+
   return (
-    <DropdownMenu>
-      <DropdownMenuTrigger asChild>
-        <Button variant="ghost" className="relative h-8 w-8 rounded-full">
-          <Avatar className="h-8 w-8">
-            <AvatarImage src={user.avatar} alt={user.displayName || user.username} />
-            <AvatarFallback>{(user.displayName || user.username).charAt(0).toUpperCase()}</AvatarFallback>
-          </Avatar>
-        </Button>
-      </DropdownMenuTrigger>
-      <DropdownMenuContent className="w-56" align="end" forceMount>
-        <DropdownMenuLabel className="font-normal">
-          <div className="flex flex-col space-y-1">
-            <p className="text-sm font-medium leading-none">{user.displayName || user.username}</p>
-            <p className="text-xs leading-none text-muted-foreground">{user.email}</p>
-          </div>
-        </DropdownMenuLabel>
-        <DropdownMenuSeparator />
-        <DropdownMenuItem>
-          <Link href="/dashboard" className="cursor-pointer flex items-center">
-            <User className="mr-2 h-4 w-4" />
-            <span>个人中心</span>
-          </Link>
-        </DropdownMenuItem>
-        <DropdownMenuItem>
-          <Link href="/dashboard/posts/new" className="cursor-pointer flex items-center">
-            <Plus className="mr-2 h-4 w-4" />
-            <span>写文章</span>
-          </Link>
-        </DropdownMenuItem>
-        <DropdownMenuItem>
-          <Link href="/dashboard/settings" className="cursor-pointer flex items-center">
-            <Settings className="mr-2 h-4 w-4" />
-            <span>设置</span>
-          </Link>
-        </DropdownMenuItem>
-        <DropdownMenuSeparator />
-        <DropdownMenuItem onClick={logout} className="cursor-pointer">
-          <LogOut className="mr-2 h-4 w-4" />
-          <span>退出登录</span>
-        </DropdownMenuItem>
-      </DropdownMenuContent>
-    </DropdownMenu>
+    <Dropdown>
+      <DropdownTrigger>
+        <Avatar
+          isBordered
+          radius="sm"
+          src={avatarSrc}
+          fallback={<Image src={FALLBACK_AVATAR} alt="fallback" width={40} height={40} />}
+          className="cursor-pointer"
+          onError={() => {
+            console.log("头像加载失败，使用默认头像");
+          }}
+          showFallback
+        />
+      </DropdownTrigger>
+      <DropdownMenu aria-label="登录下拉框" variant="faded">
+        <DropdownSection showDivider title="信息及操作">
+          <DropdownItem
+            key="user"
+            description="用户名"
+            startContent={<User className={iconClasses} width="1em" height="1em" />}
+          >
+            {user.displayName || user.username}
+          </DropdownItem>
+          <DropdownItem
+            key="email"
+            description="邮箱"
+            startContent={<MailIcon className={iconClasses} width="1em" height="1em" />}
+          >
+            {user.email}
+          </DropdownItem>
+          <DropdownItem
+            key="user-center"
+            description="个人信息操作入口"
+            startContent={<UserCircleIcon className={iconClasses} width="1em" height="1em" />}
+            href="/dashboard"
+          >
+            个人中心
+          </DropdownItem>
+          <DropdownItem
+            key="write-article"
+            description="文章编辑入口"
+            startContent={<FileIcon className={iconClasses} width="1em" height="1em" />}
+            href="/dashboard/posts/new"
+          >
+            写文章
+          </DropdownItem>
+          <DropdownItem
+            key="settings"
+            description="系统设置"
+            startContent={<SettingsIcon width="1em" height="1em" className={iconClasses} />}
+            href="/dashboard/settings"
+          >
+            设置
+          </DropdownItem>
+        </DropdownSection>
+        <DropdownSection>
+          <DropdownItem
+            key="logout"
+            className="text-danger"
+            color="danger"
+            description="退出登录后，将无法编辑文章和信息"
+            startContent={<LogOutIcon className={iconClasses} width="1em" height="1em" />}
+            onClick={logout}
+          >
+            退出登录
+          </DropdownItem>
+        </DropdownSection>
+      </DropdownMenu>
+    </Dropdown>
   );
 }

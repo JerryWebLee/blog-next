@@ -132,7 +132,11 @@ export default function LoadingDemo() {
           <div className="space-y-6">
             <div className="text-center">
               <h3 className="text-lg font-medium mb-4">自定义颜色</h3>
-              <Loading variant="spinner" className="border-t-blue-500 border-blue-200" text="蓝色加载器" />
+              <Loading
+                variant="spinner"
+                className="blog-border-x-box-shadow-blue-500 blog-border-y-box-shadowlue-200"
+                text="蓝色加载器"
+              />
             </div>
             <div className="text-center">
               <h3 className="text-lg font-medium mb-4">自定义大小</h3>
