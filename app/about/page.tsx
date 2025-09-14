@@ -1,33 +1,58 @@
 import Image from "next/image";
 import Link from "next/link";
-import { 
-  Code, 
-  Database, 
-  Globe, 
-  Heart, 
-  Mail, 
-  MapPin, 
-  MessageCircle, 
-  Palette, 
-  Rocket, 
-  Shield, 
-  Star, 
-  Users, 
-  Zap 
+import {
+  Code,
+  Database,
+  Globe,
+  Heart,
+  Mail,
+  MapPin,
+  MessageCircle,
+  Palette,
+  Rocket,
+  Shield,
+  Star,
+  Users,
+  Zap,
 } from "lucide-react";
 
+import { GithubIcon, TwitterIcon } from "@/components/icons";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { GithubIcon, TwitterIcon } from "@/components/icons";
 
 // 技术栈数据
 const techStack = [
-  { name: "Next.js 15", description: "React 全栈框架", icon: <Rocket className="h-6 w-6" />, color: "bg-black text-white" },
-  { name: "Drizzle ORM", description: "现代化 TypeScript ORM", icon: <Database className="h-6 w-6" />, color: "bg-blue-600 text-white" },
-  { name: "Tailwind CSS", description: "实用优先的 CSS 框架", icon: <Palette className="h-6 w-6" />, color: "bg-cyan-500 text-white" },
-  { name: "TypeScript", description: "类型安全的 JavaScript", icon: <Code className="h-6 w-6" />, color: "bg-blue-500 text-white" },
-  { name: "PostgreSQL", description: "强大的关系型数据库", icon: <Database className="h-6 w-6" />, color: "bg-indigo-600 text-white" },
+  {
+    name: "Next.js 15",
+    description: "React 全栈框架",
+    icon: <Rocket className="h-6 w-6" />,
+    color: "bg-black text-white",
+  },
+  {
+    name: "Drizzle ORM",
+    description: "现代化 TypeScript ORM",
+    icon: <Database className="h-6 w-6" />,
+    color: "bg-blue-600 text-white",
+  },
+  {
+    name: "Tailwind CSS",
+    description: "实用优先的 CSS 框架",
+    icon: <Palette className="h-6 w-6" />,
+    color: "bg-cyan-500 text-white",
+  },
+  {
+    name: "TypeScript",
+    description: "类型安全的 JavaScript",
+    icon: <Code className="h-6 w-6" />,
+    color: "bg-blue-500 text-white",
+  },
+  {
+    name: "PostgreSQL",
+    description: "强大的关系型数据库",
+    icon: <Database className="h-6 w-6" />,
+    color: "bg-indigo-600 text-white",
+  },
   { name: "Vercel", description: "现代化部署平台", icon: <Globe className="h-6 w-6" />, color: "bg-black text-white" },
 ];
 
@@ -84,16 +109,16 @@ export default function AboutPage() {
                 <div className="w-3 h-3 bg-white rounded-full"></div>
               </div>
             </div>
-            
+
             <h1 className="text-4xl md:text-5xl font-bold mb-6">
               关于 <span className="text-primary">荒野博客</span>
             </h1>
-            
+
             <p className="text-xl text-muted-foreground mb-8 max-w-2xl mx-auto leading-relaxed">
               在数字荒野中探索技术，在思考森林中寻找真理。这是一个基于 Next.js 15 构建的现代化博客系统，
               致力于分享技术见解、开发经验和生活感悟。
             </p>
-            
+
             <div className="flex flex-wrap justify-center gap-4 mb-8">
               <Badge variant="secondary" className="px-4 py-2">
                 <MapPin className="h-4 w-4 mr-2" />
@@ -108,17 +133,13 @@ export default function AboutPage() {
                 开源爱好者
               </Badge>
             </div>
-            
+
             <div className="flex flex-col sm:flex-row gap-4 justify-center">
               <Button size="lg" asChild>
-                <Link href="/blog">
-                  浏览文章
-                </Link>
+                <Link href="/blog">浏览文章</Link>
               </Button>
               <Button variant="outline" size="lg" asChild>
-                <Link href="#contact">
-                  联系我
-                </Link>
+                <Link href="#contact">联系我</Link>
               </Button>
             </div>
           </div>
@@ -132,9 +153,7 @@ export default function AboutPage() {
             {stats.map((stat, index) => (
               <div key={index} className="text-center">
                 <div className="flex justify-center mb-4">
-                  <div className="p-3 rounded-full bg-primary/10">
-                    {stat.icon}
-                  </div>
+                  <div className="p-3 rounded-full bg-primary/10">{stat.icon}</div>
                 </div>
                 <div className="text-3xl font-bold mb-2 text-primary">{stat.value}</div>
                 <div className="text-muted-foreground">{stat.label}</div>
@@ -160,9 +179,7 @@ export default function AboutPage() {
               {features.map((feature, index) => (
                 <Card key={index} className="p-6 hover:shadow-lg transition-shadow">
                   <div className="flex items-start space-x-4">
-                    <div className="p-3 rounded-lg bg-primary/10 text-primary">
-                      {feature.icon}
-                    </div>
+                    <div className="p-3 rounded-lg bg-primary/10 text-primary">{feature.icon}</div>
                     <div>
                       <h3 className="text-xl font-semibold mb-2">{feature.title}</h3>
                       <p className="text-muted-foreground">{feature.description}</p>
@@ -189,9 +206,7 @@ export default function AboutPage() {
             {techStack.map((tech, index) => (
               <Card key={index} className="p-6 hover:shadow-lg transition-all duration-300 hover:-translate-y-1">
                 <div className="flex items-center space-x-4">
-                  <div className={`p-3 rounded-lg ${tech.color}`}>
-                    {tech.icon}
-                  </div>
+                  <div className={`p-3 rounded-lg ${tech.color}`}>{tech.icon}</div>
                   <div>
                     <h3 className="text-lg font-semibold mb-1">{tech.name}</h3>
                     <p className="text-sm text-muted-foreground">{tech.description}</p>
@@ -209,9 +224,7 @@ export default function AboutPage() {
           <div className="max-w-4xl mx-auto">
             <div className="text-center mb-16">
               <h2 className="text-3xl md:text-4xl font-bold mb-6">开发历程</h2>
-              <p className="text-xl text-muted-foreground">
-                从概念到实现，记录项目的成长轨迹
-              </p>
+              <p className="text-xl text-muted-foreground">从概念到实现，记录项目的成长轨迹</p>
             </div>
 
             <div className="space-y-8">
@@ -221,9 +234,7 @@ export default function AboutPage() {
                 </div>
                 <div className="flex-1">
                   <h3 className="text-xl font-semibold mb-2">项目规划</h3>
-                  <p className="text-muted-foreground mb-2">
-                    确定技术栈选择，设计系统架构，制定开发计划
-                  </p>
+                  <p className="text-muted-foreground mb-2">确定技术栈选择，设计系统架构，制定开发计划</p>
                   <Badge variant="outline">2024年1月</Badge>
                 </div>
               </div>
@@ -234,9 +245,7 @@ export default function AboutPage() {
                 </div>
                 <div className="flex-1">
                   <h3 className="text-xl font-semibold mb-2">核心开发</h3>
-                  <p className="text-muted-foreground mb-2">
-                    实现用户认证、文章管理、分类标签等核心功能
-                  </p>
+                  <p className="text-muted-foreground mb-2">实现用户认证、文章管理、分类标签等核心功能</p>
                   <Badge variant="outline">2024年2月</Badge>
                 </div>
               </div>
@@ -247,9 +256,7 @@ export default function AboutPage() {
                 </div>
                 <div className="flex-1">
                   <h3 className="text-xl font-semibold mb-2">UI/UX 优化</h3>
-                  <p className="text-muted-foreground mb-2">
-                    完善用户界面设计，优化用户体验，添加响应式支持
-                  </p>
+                  <p className="text-muted-foreground mb-2">完善用户界面设计，优化用户体验，添加响应式支持</p>
                   <Badge variant="outline">2024年3月</Badge>
                 </div>
               </div>
@@ -260,9 +267,7 @@ export default function AboutPage() {
                 </div>
                 <div className="flex-1">
                   <h3 className="text-xl font-semibold mb-2">测试部署</h3>
-                  <p className="text-muted-foreground mb-2">
-                    全面测试系统功能，部署到生产环境，持续优化
-                  </p>
+                  <p className="text-muted-foreground mb-2">全面测试系统功能，部署到生产环境，持续优化</p>
                   <Badge variant="outline">2024年4月</Badge>
                 </div>
               </div>
@@ -276,9 +281,7 @@ export default function AboutPage() {
         <div className="container mx-auto px-4">
           <div className="max-w-4xl mx-auto text-center">
             <h2 className="text-3xl md:text-4xl font-bold mb-6">联系我</h2>
-            <p className="text-xl text-muted-foreground mb-12">
-              有任何问题或建议，欢迎随时联系我
-            </p>
+            <p className="text-xl text-muted-foreground mb-12">有任何问题或建议，欢迎随时联系我</p>
 
             <div className="grid grid-cols-1 md:grid-cols-3 gap-8 mb-12">
               <Card className="p-6 text-center hover:shadow-lg transition-shadow">
@@ -324,14 +327,10 @@ export default function AboutPage() {
               </p>
               <div className="flex flex-col sm:flex-row gap-4 justify-center">
                 <Button size="lg" asChild>
-                  <Link href="/blog">
-                    开始阅读文章
-                  </Link>
+                  <Link href="/blog">开始阅读文章</Link>
                 </Button>
                 <Button variant="outline" size="lg" asChild>
-                  <Link href="/">
-                    返回首页
-                  </Link>
+                  <Link href="/">返回首页</Link>
                 </Button>
               </div>
             </div>
