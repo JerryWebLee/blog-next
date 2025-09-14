@@ -10,7 +10,6 @@ interface LoadingProps {
 }
 
 const Loading: React.FC<LoadingProps> = ({ variant = "spinner", size = "md", text = "加载中...", className }) => {
-  console.log("Loading");
   const sizeClasses = {
     sm: "w-4 h-4",
     md: "w-8 h-8",
@@ -129,7 +128,7 @@ const Loading: React.FC<LoadingProps> = ({ variant = "spinner", size = "md", tex
 
 // 页面级加载组件
 export const PageLoading: React.FC<{ text?: string }> = ({ text = "页面加载中..." }) => (
-  <div className="min-h-screen flex items-center justify-center bg-background">
+  <div className="min-h-screen flex items-center justify-center">
     <Loading variant="spinner" size="lg" text={text} />
   </div>
 );

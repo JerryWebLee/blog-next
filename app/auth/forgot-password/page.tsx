@@ -2,15 +2,12 @@
 
 import { useState } from "react";
 import Link from "next/link";
-import { useRouter } from "next/navigation";
 import { Button } from "@heroui/button";
 import { Card, CardBody, CardHeader } from "@heroui/card";
 import { Input } from "@heroui/input";
-import { ArrowLeft, CheckCircle, Mail } from "lucide-react";
+import { ArrowLeft, ArrowLeftIcon, CheckCircle, Mail } from "lucide-react";
 
 export default function ForgotPasswordPage() {
-  const router = useRouter();
-
   const [email, setEmail] = useState("");
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [isSuccess, setIsSuccess] = useState(false);
@@ -59,16 +56,17 @@ export default function ForgotPasswordPage() {
 
   if (isSuccess) {
     return (
-      <div className="min-h-screen flex items-center justify-center p-4">
-        <div className="w-full max-w-md">
+      <div className="h-screen flex overflow-y-auto pt-24 justify-center">
+        <div className="container max-w-screen-sm">
           {/* 返回按钮 */}
           <div className="mb-6">
             <Link
-              href="/auth/login"
+              href="/"
               className="inline-flex items-center text-sm text-gray-600 hover:text-gray-900 transition-colors"
             >
-              <ArrowLeft className="w-4 h-4 mr-2" />
-              返回登录
+              <Button radius="full" color="warning" variant="light" startContent={<ArrowLeftIcon />}>
+                返回首页
+              </Button>
             </Link>
           </div>
 
@@ -80,8 +78,8 @@ export default function ForgotPasswordPage() {
               </div>
 
               <h1 className="text-2xl font-bold text-gray-900 mb-4">邮件已发送</h1>
-              <p className="text-gray-600 mb-6">
-                我们已向 <span className="font-medium text-gray-900">{email}</span> 发送了密码重置链接。
+              <p className="text-gray-400 mb-6">
+                我们已向 <span className="text-gray-300 font-bold">{email}</span> 发送了密码重置链接。
                 <br />
                 请检查您的邮箱并点击链接重置密码。
               </p>
@@ -95,7 +93,7 @@ export default function ForgotPasswordPage() {
                   variant="light"
                   size="lg"
                   className="w-full"
-                  onClick={() => {
+                  onPress={() => {
                     setIsSuccess(false);
                     setEmail("");
                   }}
@@ -127,16 +125,17 @@ export default function ForgotPasswordPage() {
   }
 
   return (
-    <div className="min-h-screen flex items-center justify-center p-4">
-      <div className="w-full max-w-md">
+    <div className="h-screen flex overflow-y-auto pt-24 justify-center">
+      <div className="container max-w-screen-sm">
         {/* 返回按钮 */}
         <div className="mb-6">
           <Link
-            href="/auth/login"
+            href="/"
             className="inline-flex items-center text-sm text-gray-600 hover:text-gray-900 transition-colors"
           >
-            <ArrowLeft className="w-4 h-4 mr-2" />
-            返回登录
+            <Button radius="full" color="warning" variant="light" startContent={<ArrowLeftIcon />}>
+              返回首页
+            </Button>
           </Link>
         </div>
 
@@ -145,7 +144,7 @@ export default function ForgotPasswordPage() {
           <CardHeader className="text-center pb-2">
             <div className="w-full">
               <h1 className="text-2xl font-bold text-gray-900 mb-2">忘记密码</h1>
-              <p className="text-gray-600">输入您的邮箱地址，我们将发送密码重置链接给您</p>
+              <p className="text-gray-400">输入您的邮箱地址，我们将发送密码重置链接给您</p>
             </div>
           </CardHeader>
 
@@ -160,11 +159,11 @@ export default function ForgotPasswordPage() {
               <div className="space-y-2">
                 <Input
                   type="email"
-                  label="邮箱地址"
+                  label={<span className="text-gray-200">邮箱地址</span>}
                   placeholder="请输入您的邮箱地址"
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
-                  startContent={<Mail className="w-4 h-4 text-gray-400" />}
+                  startContent={<Mail className="w-4 h-4 text-gray-200" />}
                   variant="bordered"
                   size="lg"
                   classNames={{
@@ -189,8 +188,8 @@ export default function ForgotPasswordPage() {
 
               {/* 返回登录链接 */}
               <div className="text-center">
-                <span className="text-sm text-gray-600">
-                  记起密码了？{" "}
+                <span className="text-sm">
+                  <span className="text-gray-200">记起密码了？ </span>
                   <Link href="/auth/login" className="text-blue-600 hover:text-blue-800 font-medium transition-colors">
                     返回登录
                   </Link>
@@ -202,7 +201,7 @@ export default function ForgotPasswordPage() {
 
         {/* 底部信息 */}
         <div className="mt-8 text-center">
-          <p className="text-xs text-gray-500">
+          <p className="text-xs text-gray-300">
             如果您在几分钟内没有收到邮件，请检查您的垃圾邮件文件夹。
             <br />
             如果问题仍然存在，请联系我们的支持团队。

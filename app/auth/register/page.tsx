@@ -6,76 +6,24 @@ import { useRouter } from "next/navigation";
 import { Button } from "@heroui/button";
 import { Card, CardBody, CardHeader } from "@heroui/card";
 import { Input } from "@heroui/input";
-import { ArrowLeft, Eye, EyeOff, Lock, Mail, User } from "lucide-react";
+import { Form } from "@heroui/react";
+import { ArrowLeftIcon, Eye, EyeOff, Lock, Mail, User } from "lucide-react";
 
 export default function RegisterPage() {
   const router = useRouter();
 
-  const [formData, setFormData] = useState({
-    username: "",
-    email: "",
-    password: "",
-    confirmPassword: "",
-    displayName: "",
-  });
-
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
-  const [errors, setErrors] = useState<Record<string, string>>({});
   const [isSubmitting, setIsSubmitting] = useState(false);
 
-  const handleInputChange = (field: string, value: string) => {
-    setFormData((prev) => ({ ...prev, [field]: value }));
-    // 清除对应字段的错误
-    if (errors[field]) {
-      setErrors((prev) => ({ ...prev, [field]: "" }));
-    }
-  };
-
-  const validateForm = (): boolean => {
-    const newErrors: Record<string, string> = {};
-
-    if (!formData.username.trim()) {
-      newErrors.username = "请输入用户名";
-    } else if (formData.username.length < 3) {
-      newErrors.username = "用户名长度至少3位";
-    }
-
-    if (!formData.email.trim()) {
-      newErrors.email = "请输入邮箱地址";
-    } else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(formData.email)) {
-      newErrors.email = "请输入有效的邮箱地址";
-    }
-
-    if (!formData.password) {
-      newErrors.password = "请输入密码";
-    } else if (formData.password.length < 8) {
-      newErrors.password = "密码长度至少8位";
-    }
-
-    if (!formData.confirmPassword) {
-      newErrors.confirmPassword = "请确认密码";
-    } else if (formData.password !== formData.confirmPassword) {
-      newErrors.confirmPassword = "两次输入的密码不一致";
-    }
-
-    if (!formData.displayName.trim()) {
-      newErrors.displayName = "请输入显示名称";
-    }
-
-    setErrors(newErrors);
-    return Object.keys(newErrors).length === 0;
-  };
+  const [password, setPassword] = useState("");
+  const [confirmPassword, setConfirmPassword] = useState("");
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
 
-    if (!validateForm()) {
-      return;
-    }
-
     setIsSubmitting(true);
-    setErrors({});
+    const formData = Object.fromEntries(new FormData(e.currentTarget as HTMLFormElement));
 
     try {
       const response = await fetch("/api/auth/register", {
@@ -92,26 +40,25 @@ export default function RegisterPage() {
         // 注册成功，跳转到登录页面
         router.push("/auth/login?message=注册成功，请登录");
       } else {
-        setErrors({ general: data.message || "注册失败，请稍后重试" });
       }
     } catch (error) {
-      setErrors({ general: "网络错误，请稍后重试" });
     } finally {
       setIsSubmitting(false);
     }
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center p-4">
-      <div className="w-full max-w-md">
+    <div className="h-screen flex overflow-y-auto pt-24 justify-center">
+      <div className="container max-w-screen-sm">
         {/* 返回按钮 */}
         <div className="mb-6">
           <Link
             href="/"
             className="inline-flex items-center text-sm text-gray-600 hover:text-gray-900 transition-colors"
           >
-            <ArrowLeft className="w-4 h-4 mr-2" />
-            返回首页
+            <Button radius="full" color="warning" variant="light" startContent={<ArrowLeftIcon />}>
+              返回首页
+            </Button>
           </Link>
         </div>
 
@@ -120,145 +67,194 @@ export default function RegisterPage() {
           <CardHeader className="text-center pb-2">
             <div className="w-full">
               <h1 className="text-2xl font-bold text-gray-900 mb-2">创建账户</h1>
-              <p className="text-gray-600">注册新账户以开始使用</p>
+              <p className="text-gray-400">注册新账户以开始使用</p>
             </div>
           </CardHeader>
 
           <CardBody className="pt-0">
-            <form onSubmit={handleSubmit} className="space-y-6">
-              {/* 通用错误提示 */}
-              {errors.general && (
-                <div className="bg-red-50 border border-red-200 text-red-700 px-4 py-3 rounded-lg text-sm">
-                  {errors.general}
-                </div>
-              )}
-
+            <Form onSubmit={handleSubmit} className="space-y-6">
               {/* 用户名输入 */}
-              <div className="space-y-2">
-                <Input
-                  type="text"
-                  label="用户名"
-                  placeholder="请输入用户名"
-                  value={formData.username}
-                  onChange={(e) => handleInputChange("username", e.target.value)}
-                  isInvalid={!!errors.username}
-                  errorMessage={errors.username}
-                  startContent={<User className="w-4 h-4 text-gray-400" />}
-                  variant="bordered"
-                  size="lg"
-                  classNames={{
-                    input: "text-sm",
-                    inputWrapper:
-                      "border-gray-300 hover:blog-border-y-box-shadowlue-500 focus-within:blog-border-y-box-shadowlue-500",
-                  }}
-                />
-              </div>
+              <Input
+                type="text"
+                label={<span className="text-gray-200">用户名</span>}
+                name="username"
+                placeholder="请输入用户名"
+                startContent={<User className="w-4 h-4 text-gray-200" />}
+                variant="bordered"
+                size="lg"
+                classNames={{
+                  input: "text-sm",
+                  inputWrapper:
+                    "border-gray-300 hover:blog-border-y-box-shadowlue-500 focus-within:blog-border-y-box-shadowlue-500",
+                }}
+                validate={(value) => {
+                  if (!value) {
+                    return "用户名不能为空";
+                  }
+
+                  if (value.length < 3) {
+                    return "用户名长度至少3位";
+                  }
+
+                  if (value.length > 12) {
+                    return "用户名长度最多12位";
+                  }
+
+                  return null;
+                }}
+              />
 
               {/* 显示名称输入 */}
-              <div className="space-y-2">
-                <Input
-                  type="text"
-                  label="显示名称"
-                  placeholder="请输入显示名称"
-                  value={formData.displayName}
-                  onChange={(e) => handleInputChange("displayName", e.target.value)}
-                  isInvalid={!!errors.displayName}
-                  errorMessage={errors.displayName}
-                  startContent={<User className="w-4 h-4 text-gray-400" />}
-                  variant="bordered"
-                  size="lg"
-                  classNames={{
-                    input: "text-sm",
-                    inputWrapper:
-                      "border-gray-300 hover:blog-border-y-box-shadowlue-500 focus-within:blog-border-y-box-shadowlue-500",
-                  }}
-                />
-              </div>
+              <Input
+                type="text"
+                label={<span className="text-gray-200">显示名称</span>}
+                name="displayName"
+                placeholder="请输入显示名称"
+                startContent={<User className="w-4 h-4 text-gray-200" />}
+                variant="bordered"
+                size="lg"
+                classNames={{
+                  input: "text-sm",
+                  inputWrapper:
+                    "border-gray-300 hover:blog-border-y-box-shadowlue-500 focus-within:blog-border-y-box-shadowlue-500",
+                }}
+                validate={(value) => {
+                  if (!value?.trim()) {
+                    return "显示名称不能为空";
+                  }
+
+                  if (value.length < 3) {
+                    return "显示名称长度至少3位";
+                  }
+
+                  if (value.length > 12) {
+                    return "显示名称长度最多12位";
+                  }
+
+                  return null;
+                }}
+              />
 
               {/* 邮箱输入 */}
-              <div className="space-y-2">
-                <Input
-                  type="email"
-                  label="邮箱地址"
-                  placeholder="请输入邮箱地址"
-                  value={formData.email}
-                  onChange={(e) => handleInputChange("email", e.target.value)}
-                  isInvalid={!!errors.email}
-                  errorMessage={errors.email}
-                  startContent={<Mail className="w-4 h-4 text-gray-400" />}
-                  variant="bordered"
-                  size="lg"
-                  classNames={{
-                    input: "text-sm",
-                    inputWrapper:
-                      "border-gray-300 hover:blog-border-y-box-shadowlue-500 focus-within:blog-border-y-box-shadowlue-500",
-                  }}
-                />
-              </div>
+              <Input
+                type="email"
+                name="email"
+                label={<span className="text-gray-200">邮箱地址</span>}
+                placeholder="请输入邮箱地址"
+                startContent={<Mail className="w-4 h-4 text-gray-200" />}
+                variant="bordered"
+                size="lg"
+                classNames={{
+                  input: "text-sm",
+                  inputWrapper:
+                    "border-gray-300 hover:blog-border-y-box-shadowlue-500 focus-within:blog-border-y-box-shadowlue-500",
+                }}
+                validate={(value) => {
+                  if (!value?.trim()) {
+                    return "邮箱地址不能为空";
+                  }
+
+                  if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(value?.trim())) {
+                    return "请输入有效的邮箱地址";
+                  }
+
+                  return null;
+                }}
+              />
 
               {/* 密码输入 */}
-              <div className="space-y-2">
-                <Input
-                  type={showPassword ? "text" : "password"}
-                  label="密码"
-                  placeholder="请输入密码"
-                  value={formData.password}
-                  onChange={(e) => handleInputChange("password", e.target.value)}
-                  isInvalid={!!errors.password}
-                  errorMessage={errors.password}
-                  startContent={<Lock className="w-4 h-4 text-gray-400" />}
-                  endContent={
-                    <button type="button" onClick={() => setShowPassword(!showPassword)} className="focus:outline-none">
-                      {showPassword ? (
-                        <EyeOff className="w-4 h-4 text-gray-400" />
-                      ) : (
-                        <Eye className="w-4 h-4 text-gray-400" />
-                      )}
-                    </button>
+              <Input
+                type={showPassword ? "text" : "password"}
+                name="password"
+                label={<span className="text-gray-200">密码</span>}
+                placeholder="请输入密码"
+                startContent={<Lock className="w-4 h-4 text-gray-200" />}
+                endContent={
+                  <button type="button" onClick={() => setShowPassword(!showPassword)} className="focus:outline-none">
+                    {showPassword ? (
+                      <EyeOff className="w-4 h-4 text-gray-200" />
+                    ) : (
+                      <Eye className="w-4 h-4 text-gray-200" />
+                    )}
+                  </button>
+                }
+                variant="bordered"
+                size="lg"
+                classNames={{
+                  input: "text-sm",
+                  inputWrapper:
+                    "border-gray-300 hover:blog-border-y-box-shadowlue-500 focus-within:blog-border-y-box-shadowlue-500",
+                }}
+                validate={(value) => {
+                  if (!value) {
+                    return "确认密码不能为空";
                   }
-                  variant="bordered"
-                  size="lg"
-                  classNames={{
-                    input: "text-sm",
-                    inputWrapper:
-                      "border-gray-300 hover:blog-border-y-box-shadowlue-500 focus-within:blog-border-y-box-shadowlue-500",
-                  }}
-                />
-              </div>
+
+                  if (value.length < 8) {
+                    return "密码长度至少8位";
+                  }
+
+                  if (confirmPassword && value && value !== confirmPassword) {
+                    return "两次输入的密码不一致";
+                  }
+
+                  return null;
+                }}
+                value={password}
+                onChange={(e) => {
+                  setPassword(e.target.value);
+                  setConfirmPassword(e.target.value);
+                }}
+              />
 
               {/* 确认密码输入 */}
-              <div className="space-y-2">
-                <Input
-                  type={showConfirmPassword ? "text" : "password"}
-                  label="确认密码"
-                  placeholder="请再次输入密码"
-                  value={formData.confirmPassword}
-                  onChange={(e) => handleInputChange("confirmPassword", e.target.value)}
-                  isInvalid={!!errors.confirmPassword}
-                  errorMessage={errors.confirmPassword}
-                  startContent={<Lock className="w-4 h-4 text-gray-400" />}
-                  endContent={
-                    <button
-                      type="button"
-                      onClick={() => setShowConfirmPassword(!showConfirmPassword)}
-                      className="focus:outline-none"
-                    >
-                      {showConfirmPassword ? (
-                        <EyeOff className="w-4 h-4 text-gray-400" />
-                      ) : (
-                        <Eye className="w-4 h-4 text-gray-400" />
-                      )}
-                    </button>
+              <Input
+                type={showConfirmPassword ? "text" : "password"}
+                name="confirmPassword"
+                label={<span className="text-gray-200">确认密码</span>}
+                placeholder="请再次输入密码"
+                startContent={<Lock className="w-4 h-4 text-gray-200" />}
+                endContent={
+                  <button
+                    type="button"
+                    onClick={() => setShowConfirmPassword(!showConfirmPassword)}
+                    className="focus:outline-none"
+                  >
+                    {showConfirmPassword ? (
+                      <EyeOff className="w-4 h-4 text-gray-400" />
+                    ) : (
+                      <Eye className="w-4 h-4 text-gray-400" />
+                    )}
+                  </button>
+                }
+                variant="bordered"
+                size="lg"
+                classNames={{
+                  input: "text-sm",
+                  inputWrapper:
+                    "border-gray-300 hover:blog-border-y-box-shadowlue-500 focus-within:blog-border-y-box-shadowlue-500",
+                }}
+                validate={(value) => {
+                  if (!value) {
+                    return "确认密码不能为空";
                   }
-                  variant="bordered"
-                  size="lg"
-                  classNames={{
-                    input: "text-sm",
-                    inputWrapper:
-                      "border-gray-300 hover:blog-border-y-box-shadowlue-500 focus-within:blog-border-y-box-shadowlue-500",
-                  }}
-                />
-              </div>
+
+                  if (value.length < 8) {
+                    return "密码长度至少8位";
+                  }
+
+                  //  实时校验
+                  if (password && value && value !== password) {
+                    return "两次输入的密码不一致";
+                  }
+
+                  return null;
+                }}
+                value={confirmPassword}
+                onChange={(e) => {
+                  setConfirmPassword(e.target.value);
+                }}
+              />
 
               {/* 注册按钮 */}
               <Button
@@ -273,15 +269,15 @@ export default function RegisterPage() {
               </Button>
 
               {/* 登录链接 */}
-              <div className="text-center">
+              <div className="w-full text-center">
                 <span className="text-sm text-gray-600">
-                  已有账户？{" "}
+                  已有账户？
                   <Link href="/auth/login" className="text-blue-600 hover:text-blue-800 font-medium transition-colors">
                     立即登录
                   </Link>
                 </span>
               </div>
-            </form>
+            </Form>
           </CardBody>
         </Card>
 
