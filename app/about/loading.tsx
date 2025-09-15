@@ -1,5 +1,5 @@
-import Loading from "@/components/ui/loading";
+import { ProgressBar } from "@/components/ui/progress-bar";
 
-export default function AboutLoading() {
-  return <Loading variant="wave" text="关于页面加载中..." />;
+export default function LoadingPage() {
+  return <ProgressBar />;
 }

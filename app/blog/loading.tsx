@@ -1,9 +1,5 @@
-import Loading from "@/components/ui/loading";
+import { ProgressBar } from "@/components/ui/progress-bar";
 
-export default function BlogLoading() {
-  return (
-    <div className="min-h-screen flex items-center justify-center bg-background">
-      <Loading variant="skeleton" text="博客内容加载中..." size="lg" />
-    </div>
-  );
+export default function LoadingPage() {
+  return <ProgressBar />;
 }

@@ -1,5 +1,5 @@
-import Loading from "@/components/ui/loading";
+import { ProgressBar } from "@/components/ui/progress-bar";
 
-export default function DocsLoading() {
-  return <Loading variant="dots" text="文档加载中..." />;
+export default function LoadingPage() {
+  return <ProgressBar />;
 }

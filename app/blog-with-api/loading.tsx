@@ -1,6 +1,5 @@
-import Loading from "@/components/ui/loading";
+import { ProgressBar } from "@/components/ui/progress-bar";
 
 export default function LoadingPage() {
-  console.log("LoadingPage");
-  return <Loading />;
+  return <ProgressBar />;
 }

@@ -9,7 +9,7 @@ import { BookImageIcon, ClipboardPlus, HouseIcon, LibraryBig, TagIcon } from "lu
 
 import { SearchBar } from "@/components/layout/search-bar";
 import { UserNav } from "@/components/layout/user-nav";
-import { ThemeToggle } from "@/components/theme-toggle";
+import { ThemeToggle } from "@/components/layout/theme-toggle";
 
 export function Header() {
   const pathname = usePathname();

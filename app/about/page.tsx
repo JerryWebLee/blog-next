@@ -3,6 +3,7 @@ import Link from "next/link";
 import {
   Code,
   Database,
+  Github,
   Globe,
   Heart,
   Mail,
@@ -12,11 +13,11 @@ import {
   Rocket,
   Shield,
   Star,
+  Twitter,
   Users,
   Zap,
 } from "lucide-react";
 
-import { GithubIcon, TwitterIcon } from "@/components/icons";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
@@ -300,10 +301,10 @@ export default function AboutPage() {
                 <p className="text-muted-foreground mb-4">关注我的动态</p>
                 <div className="flex justify-center space-x-2">
                   <Button variant="outline" size="sm">
-                    <TwitterIcon className="h-4 w-4" />
+                    <Twitter className="h-4 w-4" />
                   </Button>
                   <Button variant="outline" size="sm">
-                    <GithubIcon className="h-4 w-4" />
+                    <Github className="h-4 w-4" />
                   </Button>
                 </div>
               </Card>
