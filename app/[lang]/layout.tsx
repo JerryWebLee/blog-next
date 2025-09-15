@@ -6,35 +6,29 @@ import "@/styles/globals.scss";
 import clsx from "clsx";
 
 import { ConditionalLayout } from "@/components/layout/conditional-layout";
-import { Providers } from "../providers";
 import { getDictionary } from "@/lib/dictionaries";
+import { Providers } from "../providers";
 
 const inter = Inter({ subsets: ["latin"] });
 const urbanist = Urbanist({ subsets: ["latin"] });
 
 // 支持的语言类型
-type Locale = 'zh-CN' | 'en-US' | 'ja-JP';
+type Locale = "zh-CN" | "en-US" | "ja-JP";
 
 // 生成静态参数
 export async function generateStaticParams() {
-  return [
-    { lang: 'zh-CN' },
-    { lang: 'en-US' },
-    { lang: 'ja-JP' }
-  ];
+  return [{ lang: "zh-CN" }, { lang: "en-US" }, { lang: "ja-JP" }];
 }
 
 // 生成元数据
-export async function generateMetadata({
-  params,
-}: {
-  params: Promise<{ lang: string }>;
-}): Promise<Metadata> {
+export async function generateMetadata({ params }: { params: Promise<{ lang: string }> }): Promise<Metadata> {
   const { lang } = await params;
+  console.log(lang, "lang");
+
   const dict = await getDictionary(lang as Locale);
 
   const metadata: Record<string, Metadata> = {
-    'zh-CN': {
+    "zh-CN": {
       title: "荒野博客 | 在数字荒野中探索技术 - 在思考森林中寻找真理",
       description: "在数字荒野中探索技术，在思考森林中寻找真理",
       authors: [{ name: "荒野", url: "https://blog.huangye.cn" }],
@@ -66,7 +60,7 @@ export async function generateMetadata({
       },
       category: "technology",
     },
-    'en-US': {
+    "en-US": {
       title: "Wilderness Blog | Exploring Technology in the Digital Wilderness",
       description: "Exploring technology in the digital wilderness, seeking truth in the forest of thought",
       authors: [{ name: "Wilderness", url: "https://blog.huangye.cn" }],
@@ -98,7 +92,7 @@ export async function generateMetadata({
       },
       category: "technology",
     },
-    'ja-JP': {
+    "ja-JP": {
       title: "ワイルドネスブログ | デジタルの荒野で技術を探求",
       description: "デジタルの荒野で技術を探求し、思考の森で真実を求める",
       authors: [{ name: "ワイルドネス", url: "https://blog.huangye.cn" }],
@@ -132,7 +126,7 @@ export async function generateMetadata({
     },
   };
 
-  return metadata[lang] || metadata['zh-CN'];
+  return metadata[lang] || metadata["zh-CN"];
 }
 
 export default async function RootLayout({

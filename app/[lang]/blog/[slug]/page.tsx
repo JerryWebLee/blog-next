@@ -12,10 +12,11 @@ import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { Post } from "@/types/blog";
 
-export default function BlogDetailPage() {
-  const params = useParams();
+export default async function BlogDetailPage({ params }: { params: Promise<{ lang: string; slug: string }> }) {
+  const { lang, slug } = await params;
+
+  // const params = useParams();
   const router = useRouter();
-  const slug = params.slug as string;
 
   const [post, setPost] = useState<Post | null>(null);
   const [loading, setLoading] = useState(true);
