@@ -46,6 +46,8 @@ const nextConfig: NextConfig = {
     // your project has ESLint errors.
     ignoreDuringBuilds: true,
   },
+  // 国际化配置
+  serverExternalPackages: ['@formatjs/intl-localematcher', 'negotiator'],
 };
 
 export default nextConfig;

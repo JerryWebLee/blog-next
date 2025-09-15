@@ -1,8 +1,8 @@
 "use client";
 
-import { useEffect, useState } from "react";
-import { useParams, useRouter } from "next/navigation";
-import { ArrowLeft, Eye, EyeOff, Loader2, Save } from "lucide-react";
+import { useState } from "react";
+import { useRouter } from "next/navigation";
+import { ArrowLeft, Eye, EyeOff, Save } from "lucide-react";
 
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
@@ -10,19 +10,14 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Textarea } from "@/components/ui/textarea";
-import { Post, PostStatus, PostVisibility, UpdatePostRequest } from "@/types/blog";
+import { CreatePostRequest, PostStatus, PostVisibility } from "@/types/blog";
 
-export default function EditBlogPage() {
+export default function CreateBlogPage() {
   const router = useRouter();
-  const params = useParams();
-  const postId = params.id as string;
-
-  const [loading, setLoading] = useState(true);
-  const [saving, setSaving] = useState(false);
+  const [loading, setLoading] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
-  const [post, setPost] = useState<Post | null>(null);
 
-  const [formData, setFormData] = useState<UpdatePostRequest>({
+  const [formData, setFormData] = useState<CreatePostRequest>({
     title: "",
     slug: "",
     excerpt: "",
@@ -36,50 +31,8 @@ export default function EditBlogPage() {
     tagIds: [],
   });
 
-  // 获取博客数据
-  useEffect(() => {
-    const fetchPost = async () => {
-      try {
-        setLoading(true);
-        const response = await fetch(`/api/posts/${postId}`);
-        const result = await response.json();
-
-        if (result.success) {
-          const postData = result.data;
-          setPost(postData);
-          setFormData({
-            title: postData.title || "",
-            slug: postData.slug || "",
-            excerpt: postData.excerpt || "",
-            content: postData.content || "",
-            featuredImage: postData.featuredImage || "",
-            categoryId: postData.categoryId,
-            status: postData.status || "draft",
-            visibility: postData.visibility || "public",
-            password: postData.password || "",
-            allowComments: postData.allowComments ?? true,
-            tagIds: postData.tags?.map((tag: any) => tag.id) || [],
-          });
-        } else {
-          alert("获取博客数据失败");
-          router.push("/blog/manage");
-        }
-      } catch (error) {
-        console.error("获取博客数据失败:", error);
-        alert("获取博客数据失败");
-        router.push("/blog/manage");
-      } finally {
-        setLoading(false);
-      }
-    };
-
-    if (postId) {
-      fetchPost();
-    }
-  }, [postId, router]);
-
   // 处理表单输入变化
-  const handleInputChange = (field: keyof UpdatePostRequest, value: any) => {
+  const handleInputChange = (field: keyof CreatePostRequest, value: any) => {
     setFormData((prev) => ({
       ...prev,
       [field]: value,
@@ -108,16 +61,16 @@ export default function EditBlogPage() {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
 
-    if (!formData.title?.trim() || !formData.content?.trim()) {
+    if (!formData.title.trim() || !formData.content.trim()) {
       alert("请填写标题和内容");
       return;
     }
 
     try {
-      setSaving(true);
+      setLoading(true);
 
-      const response = await fetch(`/api/posts/${postId}`, {
-        method: "PUT",
+      const response = await fetch("/api/posts", {
+        method: "POST",
         headers: {
           "Content-Type": "application/json",
         },
@@ -127,42 +80,18 @@ export default function EditBlogPage() {
       const result = await response.json();
 
       if (result.success) {
-        alert("博客更新成功！");
+        alert("博客创建成功！");
         router.push("/blog/manage");
       } else {
-        alert(`更新失败: ${result.message}`);
+        alert(`创建失败: ${result.message}`);
       }
     } catch (error) {
-      console.error("更新博客失败:", error);
-      alert("更新博客失败，请重试");
+      console.error("创建博客失败:", error);
+      alert("创建博客失败，请重试");
     } finally {
-      setSaving(false);
+      setLoading(false);
     }
   };
-
-  if (loading) {
-    return (
-      <div className="container mx-auto py-6">
-        <div className="text-center py-8">
-          <Loader2 className="animate-spin rounded-full h-8 w-8 blog-border-y-box-shadow-2 border-primary mx-auto" />
-          <p className="mt-2 text-muted-foreground">加载中...</p>
-        </div>
-      </div>
-    );
-  }
-
-  if (!post) {
-    return (
-      <div className="container mx-auto py-6">
-        <div className="text-center py-8">
-          <p className="text-muted-foreground">博客不存在</p>
-          <Button onClick={() => router.push("/blog/manage")} className="mt-4">
-            返回管理页面
-          </Button>
-        </div>
-      </div>
-    );
-  }
 
   return (
     <div className="container mx-auto py-6 space-y-6">
@@ -173,8 +102,8 @@ export default function EditBlogPage() {
           返回
         </Button>
         <div>
-          <h1 className="text-3xl font-bold">编辑博客</h1>
-          <p className="text-muted-foreground">编辑博客文章: {post.title}</p>
+          <h1 className="text-3xl font-bold">创建新博客</h1>
+          <p className="text-muted-foreground">创建一篇新的博客文章</p>
         </div>
       </div>
 
@@ -262,7 +191,7 @@ export default function EditBlogPage() {
                 <Label htmlFor="status">状态</Label>
                 <Select
                   value={formData.status}
-                  onValueChange={(value) => handleInputChange("status", value as PostStatus)}
+                  onValueChange={(value: string) => handleInputChange("status", value as PostStatus)}
                 >
                   <SelectTrigger>
                     <SelectValue placeholder="选择状态" />
@@ -279,7 +208,7 @@ export default function EditBlogPage() {
                 <Label htmlFor="visibility">可见性</Label>
                 <Select
                   value={formData.visibility}
-                  onValueChange={(value) => handleInputChange("visibility", value as PostVisibility)}
+                  onValueChange={(value: string) => handleInputChange("visibility", value as PostVisibility)}
                 >
                   <SelectTrigger>
                     <SelectValue placeholder="选择可见性" />
@@ -335,16 +264,16 @@ export default function EditBlogPage() {
           <Button type="button" variant="outline" onClick={() => router.back()}>
             取消
           </Button>
-          <Button type="submit" disabled={saving}>
-            {saving ? (
+          <Button type="submit" disabled={loading}>
+            {loading ? (
               <>
                 <div className="animate-spin rounded-full h-4 w-4 blog-border-y-box-shadow-2 border-white mr-2"></div>
-                保存中...
+                创建中...
               </>
             ) : (
               <>
                 <Save className="mr-2 h-4 w-4" />
-                保存更改
+                创建博客
               </>
             )}
           </Button>

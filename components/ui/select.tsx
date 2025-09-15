@@ -6,6 +6,11 @@ import { Check, ChevronDown } from "lucide-react";
 
 import { cn } from "@/lib/utils";
 
+// 主 Select 组件
+export const Select = ({ children, ...props }: React.PropsWithChildren<any>) => {
+  return <div {...props}>{children}</div>;
+};
+
 export const SelectItem = ({ children, value, ...props }: any) => {
   // 确保value是有效的字符串
   if (!value || typeof value !== "string") {

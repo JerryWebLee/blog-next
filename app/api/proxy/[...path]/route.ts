@@ -1,6 +1,6 @@
 import { NextResponse } from "next/server";
 
-export async function GET(req: Request, { params }: { params: { path: string[] } }) {
+export async function GET(req: Request, { params }: { params: Promise<{ path: string[] }> }) {
   // 拼接目标 URL
   const targetUrl = `https://haowallpaper.com/${params.path.join("/")}`;
 

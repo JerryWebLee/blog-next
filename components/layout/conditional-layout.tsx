@@ -13,7 +13,9 @@ export function ConditionalLayout({ children }: ConditionalLayoutProps) {
   const pathname = usePathname();
 
   // 检查是否是认证页面
-  const isAuthPage = pathname.startsWith("/auth/");
+  // 国际化配置后，认证页面路径前会有语言前缀，如 /zh-CN/auth/、/en-US/auth/ 等
+  // 因此需要使用正则表达式来匹配认证页面路径
+  const isAuthPage = /^\/(zh-CN|en-US|ja-JP)\/auth\//.test(pathname);
 
   if (isAuthPage) {
     // 认证页面：不显示 Header 和 Footer，使用全屏布局

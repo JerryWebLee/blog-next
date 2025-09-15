@@ -18,9 +18,9 @@ import { UpdatePostRequest } from "@/types/blog";
  * 获取指定文章的详细信息
  * 支持包含关联数据（作者、分类、标签、评论等）
  */
-export async function GET(request: NextRequest, { params }: { params: { id: string } }) {
+export async function GET(request: NextRequest, { params }: { params: Promise<{ id: string }> }) {
   try {
-    const { id } = params;
+    const { id } = await params;
     const { searchParams } = new URL(request.url);
 
     // 验证ID参数
@@ -69,9 +69,9 @@ export async function GET(request: NextRequest, { params }: { params: { id: stri
  * 更新指定文章的信息
  * 需要用户认证和适当的权限（作者或管理员）
  */
-export async function PUT(request: NextRequest, { params }: { params: { id: string } }) {
+export async function PUT(request: NextRequest, { params }: { params: Promise<{ id: string }> }) {
   try {
-    const { id } = params;
+    const { id } = await params;
 
     // 验证ID参数
     const postId = parseInt(id);
@@ -132,9 +132,9 @@ export async function PUT(request: NextRequest, { params }: { params: { id: stri
  * 删除指定文章
  * 需要用户认证和适当的权限（作者或管理员）
  */
-export async function DELETE(request: NextRequest, { params }: { params: { id: string } }) {
+export async function DELETE(request: NextRequest, { params }: { params: Promise<{ id: string }> }) {
   try {
-    const { id } = params;
+    const { id } = await params;
 
     // 验证ID参数
     const postId = parseInt(id);
@@ -187,9 +187,9 @@ export async function DELETE(request: NextRequest, { params }: { params: { id: s
  * 部分更新文章信息
  * 主要用于更新文章状态、可见性等字段
  */
-export async function PATCH(request: NextRequest, { params }: { params: { id: string } }) {
+export async function PATCH(request: NextRequest, { params }: { params: Promise<{ id: string }> }) {
   try {
-    const { id } = params;
+    const { id } = await params;
 
     // 验证ID参数
     const postId = parseInt(id);

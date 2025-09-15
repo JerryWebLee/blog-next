@@ -14,7 +14,7 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { Input } from "@/components/ui/input";
-import { SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Post, PostStatus, PostVisibility } from "@/types/blog";
 
 export default function BlogManagePage() {
@@ -139,7 +139,7 @@ export default function BlogManagePage() {
                 className="pl-10"
               />
             </div>
-            <Select value={statusFilter} onValueChange={(value) => setStatusFilter(value as PostStatus | "all")}>
+            <Select value={statusFilter} onValueChange={(value: string) => setStatusFilter(value as PostStatus | "all")}>
               <SelectTrigger>
                 <SelectValue placeholder="选择状态" />
               </SelectTrigger>
