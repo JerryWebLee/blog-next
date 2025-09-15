@@ -21,11 +21,10 @@ export async function generateStaticParams() {
 }
 
 // 生成元数据
-export async function generateMetadata({ params }: { params: Promise<{ lang: string }> }): Promise<Metadata> {
+export async function generateMetadata({ params }: { params: Promise<{ lang: Locale }> }): Promise<Metadata> {
   const { lang } = await params;
-  console.log(lang, "lang");
 
-  const dict = await getDictionary(lang as Locale);
+  const dict = await getDictionary(lang);
 
   const metadata: Record<string, Metadata> = {
     "zh-CN": {
