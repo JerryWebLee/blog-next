@@ -1,5 +1,4 @@
 import Image from "next/image";
-import Link from "next/link";
 import { Avatar } from "@heroui/avatar";
 import { Button } from "@heroui/button";
 import { Card, CardBody, CardFooter, CardHeader } from "@heroui/card";
@@ -48,11 +47,7 @@ export function PostCard({ post, onView, onLike }: PostCardProps) {
   };
 
   return (
-    <Card
-      className="group hover:shadow-xl transition-all duration-300 border-0 bg-gradient-to-br from-background to-default-50"
-      isPressable
-      onPress={() => onView?.()}
-    >
+    <Card className="group hover:shadow-xl transition-all duration-300 border-0 bg-gradient-to-br from-background to-default-50">
       <CardHeader className="pb-2">
         <div className="flex flex-col gap-2 w-full">
           {/* 分类标签 */}
@@ -143,10 +138,7 @@ export function PostCard({ post, onView, onLike }: PostCardProps) {
             variant="flat"
             color="primary"
             startContent={<Heart className="w-4 h-4" />}
-            onPress={(e) => {
-              // e.preventDefault();
-              onLike?.();
-            }}
+            onPress={() => onLike?.()}
           >
             点赞
           </Button>
@@ -156,10 +148,7 @@ export function PostCard({ post, onView, onLike }: PostCardProps) {
             variant="flat"
             color="default"
             endContent={<ArrowRight className="w-4 h-4" />}
-            onPress={(e) => {
-              // e.preventDefault();
-              onView?.();
-            }}
+            onPress={() => onView?.()}
           >
             阅读更多
           </Button>

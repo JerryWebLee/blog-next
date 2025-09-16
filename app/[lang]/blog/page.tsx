@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import { useParams, useRouter } from "next/navigation";
 import { Button } from "@heroui/button";
 import { Card, CardBody, CardHeader } from "@heroui/card";
 import { Chip } from "@heroui/chip";
@@ -16,6 +17,8 @@ import { usePosts } from "@/lib/hooks/usePosts";
 import { Post } from "@/types/blog";
 
 export default function BlogWithAPIPage() {
+  const router = useRouter();
+  const params = useParams();
   const [searchValue, setSearchValue] = useState("");
   const [categoryFilter, setCategoryFilter] = useState("all");
   const [sortBy, setSortBy] = useState("publishedAt");
@@ -65,8 +68,13 @@ export default function BlogWithAPIPage() {
 
   // 处理文章交互
   const handleViewPost = async (post: Post) => {
-    await incrementViewCount(post.id);
-    console.log("查看文章:", post.slug);
+    console.log("post", post);
+    try {
+      await incrementViewCount(post.id);
+      router.push(`/${params.lang}/blog/${post.id}`);
+    } catch (error) {
+      console.error("增加浏览次数失败:", error);
+    }
   };
 
   const handleLikePost = async (post: Post) => {
