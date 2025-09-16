@@ -5,10 +5,10 @@ import { useRouter } from "next/navigation";
 import { Button } from "@heroui/button";
 import { Card, CardBody, CardHeader } from "@heroui/card";
 import { Input } from "@heroui/input";
+import { Textarea } from "@heroui/react";
 import { Select, SelectItem } from "@heroui/select";
 import { Spinner } from "@heroui/spinner";
 import { Switch } from "@heroui/switch";
-import { Textarea } from "@heroui/react";
 import { ArrowLeft, Eye, EyeOff, FileText, Save } from "lucide-react";
 
 import { CreatePostRequest, PostStatus, PostVisibility } from "@/types/blog";
@@ -196,15 +196,9 @@ export default function CreateBlogPage() {
                 }}
                 variant="bordered"
               >
-                <SelectItem key="draft">
-                  草稿
-                </SelectItem>
-                <SelectItem key="published">
-                  发布
-                </SelectItem>
-                <SelectItem key="archived">
-                  归档
-                </SelectItem>
+                <SelectItem key="draft">草稿</SelectItem>
+                <SelectItem key="published">发布</SelectItem>
+                <SelectItem key="archived">归档</SelectItem>
               </Select>
 
               <Select
@@ -217,15 +211,9 @@ export default function CreateBlogPage() {
                 }}
                 variant="bordered"
               >
-                <SelectItem key="public">
-                  公开
-                </SelectItem>
-                <SelectItem key="private">
-                  私有
-                </SelectItem>
-                <SelectItem key="password">
-                  密码保护
-                </SelectItem>
+                <SelectItem key="public">公开</SelectItem>
+                <SelectItem key="private">私有</SelectItem>
+                <SelectItem key="password">密码保护</SelectItem>
               </Select>
             </div>
 

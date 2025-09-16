@@ -134,9 +134,7 @@ function SearchAndFilter({
                 variant="bordered"
               >
                 {sortOptions.map((option) => (
-                  <SelectItem key={option.key}>
-                    {option.label}
-                  </SelectItem>
+                  <SelectItem key={option.key}>{option.label}</SelectItem>
                 ))}
               </Select>
 

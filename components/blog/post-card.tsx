@@ -37,11 +37,13 @@ interface PostCardProps {
 
 export function PostCard({ post, onView, onLike }: PostCardProps) {
   const formatDate = (date?: Date) => {
-    return date ? new Intl.DateTimeFormat("zh-CN", {
-      year: "numeric",
-      month: "long",
-      day: "numeric",
-    }).format(date) : "未知日期";
+    return date
+      ? new Intl.DateTimeFormat("zh-CN", {
+          year: "numeric",
+          month: "long",
+          day: "numeric",
+        }).format(date)
+      : "未知日期";
   };
 
   return (
@@ -54,12 +56,7 @@ export function PostCard({ post, onView, onLike }: PostCardProps) {
         <div className="flex flex-col gap-2 w-full">
           {/* 分类标签 */}
           {post.category && (
-            <Chip
-              size="sm"
-              variant="flat"
-              color="primary"
-              className="self-start"
-            >
+            <Chip size="sm" variant="flat" color="primary" className="self-start">
               <Tag className="w-3 h-3 mr-1" />
               {post.category.name}
             </Chip>
@@ -71,9 +68,7 @@ export function PostCard({ post, onView, onLike }: PostCardProps) {
           </h3>
 
           {/* 摘要 */}
-          <p className="text-small text-default-600 line-clamp-3">
-            {post.excerpt || "暂无摘要"}
-          </p>
+          <p className="text-small text-default-600 line-clamp-3">{post.excerpt || "暂无摘要"}</p>
         </div>
       </CardHeader>
 
@@ -94,13 +89,7 @@ export function PostCard({ post, onView, onLike }: PostCardProps) {
         {post.tags && post.tags.length > 0 && (
           <div className="flex flex-wrap gap-1 mb-4">
             {post.tags.map((tag) => (
-              <Chip
-                key={tag.slug}
-                size="sm"
-                variant="flat"
-                color="secondary"
-                className="text-xs"
-              >
+              <Chip key={tag.slug} size="sm" variant="flat" color="secondary" className="text-xs">
                 <Tag className="w-3 h-3 mr-1" />
                 {tag.name}
               </Chip>
@@ -113,11 +102,7 @@ export function PostCard({ post, onView, onLike }: PostCardProps) {
           <div className="flex items-center gap-4">
             {/* 作者 */}
             <div className="flex items-center gap-2">
-              <Avatar
-                size="sm"
-                icon={<User className="w-3 h-3" />}
-                className="w-6 h-6"
-              />
+              <Avatar size="sm" icon={<User className="w-3 h-3" />} className="w-6 h-6" />
               <span>{post.author.displayName}</span>
             </div>
 

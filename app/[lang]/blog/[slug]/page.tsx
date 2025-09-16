@@ -9,8 +9,8 @@ import { Card, CardBody, CardHeader } from "@heroui/card";
 import { Chip } from "@heroui/chip";
 import { Divider } from "@heroui/divider";
 import { Input } from "@heroui/input";
-import { Spinner } from "@heroui/spinner";
 import { Textarea } from "@heroui/react";
+import { Spinner } from "@heroui/spinner";
 import {
   ArrowLeft,
   BookOpen,

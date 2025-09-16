@@ -146,24 +146,12 @@ export default function BlogWithAPIPage() {
                   variant="bordered"
                   size="md"
                 >
-                  <SelectItem key="all">
-                    全部分类
-                  </SelectItem>
-                  <SelectItem key="1">
-                    技术分享
-                  </SelectItem>
-                  <SelectItem key="2">
-                    前端开发
-                  </SelectItem>
-                  <SelectItem key="3">
-                    后端开发
-                  </SelectItem>
-                  <SelectItem key="4">
-                    数据库
-                  </SelectItem>
-                  <SelectItem key="5">
-                    DevOps
-                  </SelectItem>
+                  <SelectItem key="all">全部分类</SelectItem>
+                  <SelectItem key="1">技术分享</SelectItem>
+                  <SelectItem key="2">前端开发</SelectItem>
+                  <SelectItem key="3">后端开发</SelectItem>
+                  <SelectItem key="4">数据库</SelectItem>
+                  <SelectItem key="5">DevOps</SelectItem>
                 </Select>
 
                 {/* 排序 */}
@@ -177,21 +165,11 @@ export default function BlogWithAPIPage() {
                   variant="bordered"
                   size="md"
                 >
-                  <SelectItem key="publishedAt">
-                    最新发布
-                  </SelectItem>
-                  <SelectItem key="createdAt">
-                    创建时间
-                  </SelectItem>
-                  <SelectItem key="viewCount">
-                    浏览次数
-                  </SelectItem>
-                  <SelectItem key="likeCount">
-                    点赞次数
-                  </SelectItem>
-                  <SelectItem key="title">
-                    标题排序
-                  </SelectItem>
+                  <SelectItem key="publishedAt">最新发布</SelectItem>
+                  <SelectItem key="createdAt">创建时间</SelectItem>
+                  <SelectItem key="viewCount">浏览次数</SelectItem>
+                  <SelectItem key="likeCount">点赞次数</SelectItem>
+                  <SelectItem key="title">标题排序</SelectItem>
                 </Select>
               </div>
             </CardBody>
@@ -231,26 +209,30 @@ export default function BlogWithAPIPage() {
                   <PostCard
                     key={post.id}
                     post={{
-                    ...post,
-                    author: post.author ? {
-                      displayName: post.author.displayName || post.author.username,
-                      username: post.author.username
-                    } : {
-                      displayName: "未知作者",
-                      username: "unknown"
-                    },
-                    category: post.category ? {
-                      name: post.category.name,
-                      slug: post.category.slug
-                    } : undefined,
-                    tags: post.tags?.map(tag => ({
-                      name: tag.name,
-                      slug: tag.slug,
-                      color: tag.color
-                    })),
-                    commentCount: (post as any).commentCount || 0,
-                    readTime: (post as any).readTime || 5
-                  }}
+                      ...post,
+                      author: post.author
+                        ? {
+                            displayName: post.author.displayName || post.author.username,
+                            username: post.author.username,
+                          }
+                        : {
+                            displayName: "未知作者",
+                            username: "unknown",
+                          },
+                      category: post.category
+                        ? {
+                            name: post.category.name,
+                            slug: post.category.slug,
+                          }
+                        : undefined,
+                      tags: post.tags?.map((tag) => ({
+                        name: tag.name,
+                        slug: tag.slug,
+                        color: tag.color,
+                      })),
+                      commentCount: (post as any).commentCount || 0,
+                      readTime: (post as any).readTime || 5,
+                    }}
                     onView={() => handleViewPost(post)}
                     onLike={() => handleLikePost(post)}
                   />
