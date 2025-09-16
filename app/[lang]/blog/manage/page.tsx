@@ -1,20 +1,29 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { Edit, Eye, Filter, MoreHorizontal, Plus, Search, Trash2 } from "lucide-react";
+import { Avatar } from "@heroui/avatar";
+import { Button } from "@heroui/button";
+import { Card, CardBody, CardHeader } from "@heroui/card";
+import { Chip } from "@heroui/chip";
+import { Dropdown, DropdownItem, DropdownMenu, DropdownTrigger } from "@heroui/dropdown";
+import { Input } from "@heroui/input";
+import { Select, SelectItem } from "@heroui/select";
+import { Spinner } from "@heroui/spinner";
+import {
+  Bookmark,
+  Calendar,
+  Edit,
+  Eye,
+  Filter,
+  MoreHorizontal,
+  Plus,
+  Search,
+  Trash2,
+  TrendingUp,
+  User,
+} from "lucide-react";
 
 import { BlogNavigation } from "@/components/blog/blog-navigation";
-import { Badge } from "@/components/ui/badge";
-import { Button } from "@/components/ui/button";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu";
-import { Input } from "@/components/ui/input";
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Post, PostStatus, PostVisibility } from "@/types/blog";
 
 export default function BlogManagePage() {
@@ -66,7 +75,7 @@ export default function BlogManagePage() {
       });
 
       if (response.ok) {
-        fetchPosts(); // 重新获取列表
+        fetchPosts();
       }
     } catch (error) {
       console.error("删除博客失败:", error);
@@ -74,30 +83,30 @@ export default function BlogManagePage() {
   };
 
   // 获取状态标签颜色
-  const getStatusBadgeVariant = (status: PostStatus) => {
+  const getStatusColor = (status: PostStatus) => {
     switch (status) {
       case "published":
-        return "default";
+        return "success";
       case "draft":
-        return "secondary";
+        return "warning";
       case "archived":
-        return "outline";
+        return "default";
       default:
-        return "secondary";
+        return "default";
     }
   };
 
   // 获取可见性标签颜色
-  const getVisibilityBadgeVariant = (visibility: PostVisibility) => {
+  const getVisibilityColor = (visibility: PostVisibility) => {
     switch (visibility) {
       case "public":
-        return "default";
+        return "primary";
       case "private":
         return "secondary";
       case "password":
-        return "outline";
+        return "warning";
       default:
-        return "secondary";
+        return "default";
     }
   };
 
@@ -107,162 +116,198 @@ export default function BlogManagePage() {
       <BlogNavigation />
 
       {/* 页面标题和操作按钮 */}
-      <div className="flex justify-between items-center">
+      <div className="flex justify-between items-start gap-4">
         <div>
-          <h1 className="text-3xl font-bold">博客管理</h1>
-          <p className="text-muted-foreground">管理您的所有博客文章</p>
+          <h1 className="text-3xl font-bold mb-2">博客管理</h1>
+          <p className="text-default-500">管理您的所有博客文章</p>
         </div>
-        <Button asChild>
-          <a href="/blog/manage/create">
-            <Plus className="mr-2 h-4 w-4" />
-            创建博客
-          </a>
+        <Button as="a" href="/blog/manage/create" color="primary" size="lg" startContent={<Plus className="w-5 h-5" />}>
+          创建博客
         </Button>
       </div>
 
       {/* 搜索和过滤 */}
       <Card>
-        <CardHeader>
-          <CardTitle className="flex items-center gap-2">
-            <Filter className="h-5 w-5" />
-            搜索和过滤
-          </CardTitle>
+        <CardHeader className="flex gap-3">
+          <Filter className="w-5 h-5 text-primary" />
+          <div className="flex flex-col">
+            <p className="text-lg font-semibold">搜索和过滤</p>
+            <p className="text-small text-default-500">快速找到您需要的文章</p>
+          </div>
         </CardHeader>
-        <CardContent className="space-y-4">
+        <CardBody>
           <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
-            <div className="relative">
-              <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-muted-foreground h-4 w-4" />
-              <Input
-                placeholder="搜索博客标题..."
-                value={searchTerm}
-                onChange={(e) => setSearchTerm(e.target.value)}
-                className="pl-10"
-              />
-            </div>
-            <Select value={statusFilter} onValueChange={(value: string) => setStatusFilter(value as PostStatus | "all")}>
-              <SelectTrigger>
-                <SelectValue placeholder="选择状态" />
-              </SelectTrigger>
-              <SelectContent>
-                <SelectItem value="all">所有状态</SelectItem>
-                <SelectItem value="draft">草稿</SelectItem>
-                <SelectItem value="published">已发布</SelectItem>
-                <SelectItem value="archived">已归档</SelectItem>
-              </SelectContent>
+            <Input
+              placeholder="搜索博客标题..."
+              value={searchTerm}
+              onValueChange={setSearchTerm}
+              startContent={<Search className="w-4 h-4 text-default-400" />}
+              variant="bordered"
+            />
+            <Select
+              placeholder="选择状态"
+              selectedKeys={[statusFilter]}
+              onSelectionChange={(keys) => {
+                const selectedKey = Array.from(keys)[0] as string;
+                setStatusFilter(selectedKey as PostStatus | "all");
+              }}
+              variant="bordered"
+            >
+              <SelectItem key="all">所有状态</SelectItem>
+              <SelectItem key="draft">草稿</SelectItem>
+              <SelectItem key="published">已发布</SelectItem>
+              <SelectItem key="archived">已归档</SelectItem>
             </Select>
             <Select
-              value={visibilityFilter}
-              onValueChange={(value) => setVisibilityFilter(value as PostVisibility | "all")}
+              placeholder="选择可见性"
+              selectedKeys={[visibilityFilter]}
+              onSelectionChange={(keys) => {
+                const selectedKey = Array.from(keys)[0] as string;
+                setVisibilityFilter(selectedKey as PostVisibility | "all");
+              }}
+              variant="bordered"
             >
-              <SelectTrigger>
-                <SelectValue placeholder="选择可见性" />
-              </SelectTrigger>
-              <SelectContent>
-                <SelectItem value="all">所有可见性</SelectItem>
-                <SelectItem value="public">公开</SelectItem>
-                <SelectItem value="private">私有</SelectItem>
-                <SelectItem value="password">密码保护</SelectItem>
-              </SelectContent>
+              <SelectItem key="all">所有可见性</SelectItem>
+              <SelectItem key="public">公开</SelectItem>
+              <SelectItem key="private">私有</SelectItem>
+              <SelectItem key="password">密码保护</SelectItem>
             </Select>
-            <Button variant="outline" onClick={fetchPosts}>
+            <Button color="primary" variant="flat" onPress={fetchPosts}>
               应用过滤
             </Button>
           </div>
-        </CardContent>
+        </CardBody>
       </Card>
 
       {/* 博客列表 */}
       <Card>
         <CardHeader>
-          <CardTitle>博客列表</CardTitle>
+          <div className="flex items-center justify-between w-full">
+            <p className="text-lg font-semibold">博客列表</p>
+            {!loading && posts.length > 0 && (
+              <Chip color="primary" variant="flat">
+                共 {posts.length} 篇文章
+              </Chip>
+            )}
+          </div>
         </CardHeader>
-        <CardContent>
+        <CardBody>
           {loading ? (
             <div className="text-center py-8">
-              <div className="animate-spin rounded-full h-8 w-8 blog-border-y-box-shadow-2 border-primary mx-auto"></div>
-              <p className="mt-2 text-muted-foreground">加载中...</p>
+              <Spinner size="lg" color="primary" />
+              <p className="mt-4 text-default-500">加载中...</p>
             </div>
           ) : posts.length === 0 ? (
             <div className="text-center py-8">
-              <p className="text-muted-foreground">暂无博客文章</p>
+              <Bookmark className="w-16 h-16 mx-auto mb-4 text-default-300" />
+              <p className="text-default-500">暂无博客文章</p>
             </div>
           ) : (
             <div className="space-y-4">
-              {posts.map((post) => (
-                <div
-                  key={post.id}
-                  className="flex items-center justify-between p-4 border rounded-lg hover:bg-accent/50 transition-colors"
-                >
-                  <div className="flex-1">
-                    <div className="flex items-center gap-2 mb-2">
-                      <h3 className="font-semibold text-lg">{post.title}</h3>
-                      <Badge variant={getStatusBadgeVariant(post.status)}>
-                        {post.status === "published" ? "已发布" : post.status === "draft" ? "草稿" : "已归档"}
-                      </Badge>
-                      <Badge variant={getVisibilityBadgeVariant(post.visibility)}>
-                        {post.visibility === "public" ? "公开" : post.visibility === "private" ? "私有" : "密码保护"}
-                      </Badge>
-                    </div>
-                    <p className="text-muted-foreground text-sm mb-2">{post.excerpt || "暂无摘要"}</p>
-                    <div className="flex items-center gap-4 text-sm text-muted-foreground">
-                      <span>作者: {post.author?.displayName || "未知"}</span>
-                      <span>分类: {post.category?.name || "未分类"}</span>
-                      <span>浏览量: {post.viewCount}</span>
-                      <span>创建时间: {new Date(post.createdAt).toLocaleDateString()}</span>
-                    </div>
-                  </div>
-                  <div className="flex items-center gap-2">
-                    <Button variant="outline" size="sm" asChild>
-                      <a href={`/blog/${post.slug}`}>
-                        <Eye className="h-4 w-4" />
-                      </a>
-                    </Button>
-                    <Button variant="outline" size="sm" asChild>
-                      <a href={`/blog/manage/edit/${post.id}`}>
-                        <Edit className="h-4 w-4" />
-                      </a>
-                    </Button>
-                    <DropdownMenu>
-                      <DropdownMenuTrigger asChild>
-                        <Button variant="outline" size="sm">
-                          <MoreHorizontal className="h-4 w-4" />
+              {(posts || []).map((post) => (
+                <Card key={post.id} className="border-1 hover:border-primary transition-colors">
+                  <CardBody className="p-4">
+                    <div className="flex items-start justify-between gap-4">
+                      <div className="flex-1 min-w-0">
+                        <div className="flex items-center gap-2 mb-2">
+                          <h3 className="font-semibold text-lg line-clamp-1">{post.title}</h3>
+                          <Chip size="sm" color={getStatusColor(post.status)} variant="flat">
+                            {post.status === "published" ? "已发布" : post.status === "draft" ? "草稿" : "已归档"}
+                          </Chip>
+                          <Chip size="sm" color={getVisibilityColor(post.visibility)} variant="flat">
+                            {post.visibility === "public"
+                              ? "公开"
+                              : post.visibility === "private"
+                                ? "私有"
+                                : "密码保护"}
+                          </Chip>
+                        </div>
+
+                        <p className="text-default-500 text-sm line-clamp-2 mb-3">{post.excerpt || "暂无摘要"}</p>
+
+                        <div className="flex items-center gap-4 text-sm text-default-400">
+                          <div className="flex items-center gap-1">
+                            <Avatar size="sm" name={post.author?.displayName || "未知"} className="w-4 h-4" />
+                            <span>作者: {post.author?.displayName || "未知"}</span>
+                          </div>
+                          <div className="flex items-center gap-1">
+                            <Bookmark className="w-4 h-4" />
+                            <span>分类: {post.category?.name || "未分类"}</span>
+                          </div>
+                          <div className="flex items-center gap-1">
+                            <TrendingUp className="w-4 h-4" />
+                            <span>浏览: {post.viewCount}</span>
+                          </div>
+                          <div className="flex items-center gap-1">
+                            <Calendar className="w-4 h-4" />
+                            <span>{new Date(post.createdAt).toLocaleDateString()}</span>
+                          </div>
+                        </div>
+                      </div>
+
+                      <div className="flex items-center gap-2">
+                        <Button isIconOnly size="sm" variant="flat" color="default" as="a" href={`/blog/${post.slug}`}>
+                          <Eye className="w-4 h-4" />
                         </Button>
-                      </DropdownMenuTrigger>
-                      <DropdownMenuContent>
-                        <DropdownMenuItem onClick={() => handleDelete(post.id)}>
-                          <Trash2 className="mr-2 h-4 w-4" />
-                          删除
-                        </DropdownMenuItem>
-                      </DropdownMenuContent>
-                    </DropdownMenu>
-                  </div>
-                </div>
+                        <Button
+                          isIconOnly
+                          size="sm"
+                          variant="flat"
+                          color="primary"
+                          as="a"
+                          href={`/blog/manage/edit/${post.id}`}
+                        >
+                          <Edit className="w-4 h-4" />
+                        </Button>
+                        <Dropdown>
+                          <DropdownTrigger>
+                            <Button isIconOnly size="sm" variant="flat" color="default">
+                              <MoreHorizontal className="w-4 h-4" />
+                            </Button>
+                          </DropdownTrigger>
+                          <DropdownMenu>
+                            <DropdownItem
+                              key="delete"
+                              color="danger"
+                              startContent={<Trash2 className="w-4 h-4" />}
+                              onPress={() => handleDelete(post.id)}
+                            >
+                              删除
+                            </DropdownItem>
+                          </DropdownMenu>
+                        </Dropdown>
+                      </div>
+                    </div>
+                  </CardBody>
+                </Card>
               ))}
             </div>
           )}
-        </CardContent>
+        </CardBody>
       </Card>
 
       {/* 分页 */}
       {totalPages > 1 && (
-        <div className="flex justify-center gap-2">
-          <Button
-            variant="outline"
-            onClick={() => setCurrentPage(Math.max(1, currentPage - 1))}
-            disabled={currentPage === 1}
-          >
-            上一页
-          </Button>
-          <span className="flex items-center px-4">
-            第 {currentPage} 页，共 {totalPages} 页
-          </span>
-          <Button
-            variant="outline"
-            onClick={() => setCurrentPage(Math.min(totalPages, currentPage + 1))}
-            disabled={currentPage === totalPages}
-          >
-            下一页
-          </Button>
+        <div className="flex justify-center">
+          <div className="flex items-center gap-4">
+            <Button
+              variant="bordered"
+              onPress={() => setCurrentPage(Math.max(1, currentPage - 1))}
+              isDisabled={currentPage === 1}
+            >
+              上一页
+            </Button>
+            <Chip color="primary" variant="flat">
+              第 {currentPage} 页 / 共 {totalPages} 页
+            </Chip>
+            <Button
+              variant="bordered"
+              onPress={() => setCurrentPage(Math.min(totalPages, currentPage + 1))}
+              isDisabled={currentPage === totalPages}
+            >
+              下一页
+            </Button>
+          </div>
         </div>
       )}
     </div>

@@ -7,63 +7,63 @@ import { Image } from "@heroui/react";
 import clsx from "clsx";
 import { BookImageIcon, ClipboardPlus, HouseIcon, LibraryBig, TagIcon } from "lucide-react";
 
+import { LanguageSwitcher } from "@/components/layout/language-switcher";
 import { SearchBar } from "@/components/layout/search-bar";
 import { ThemeToggle } from "@/components/layout/theme-toggle";
 import { UserNav } from "@/components/layout/user-nav";
-import { LanguageSwitcher } from "@/components/layout/language-switcher";
 
 export function Header() {
   const pathname = usePathname();
 
   // 从路径中提取当前语言
-  const currentLang = pathname.split('/')[1] || 'zh-CN';
-  
+  const currentLang = pathname.split("/")[1] || "zh-CN";
+
   // 多语言导航配置
   const navigation = [
-    { 
+    {
       name: {
-        'zh-CN': "首页",
-        'en-US': "Home", 
-        'ja-JP': "ホーム"
-      }, 
-      href: `/${currentLang}`, 
-      icon: <HouseIcon width={"1em"} height={"1em"} /> 
+        "zh-CN": "首页",
+        "en-US": "Home",
+        "ja-JP": "ホーム",
+      },
+      href: `/${currentLang}`,
+      icon: <HouseIcon width={"1em"} height={"1em"} />,
     },
-    { 
+    {
       name: {
-        'zh-CN': "博客",
-        'en-US': "Blog",
-        'ja-JP': "ブログ"
-      }, 
-      href: `/${currentLang}/blog`, 
-      icon: <BookImageIcon width={"1em"} height={"1em"} /> 
+        "zh-CN": "博客",
+        "en-US": "Blog",
+        "ja-JP": "ブログ",
+      },
+      href: `/${currentLang}/blog`,
+      icon: <BookImageIcon width={"1em"} height={"1em"} />,
     },
-    { 
+    {
       name: {
-        'zh-CN': "分类",
-        'en-US': "Categories",
-        'ja-JP': "カテゴリー"
-      }, 
-      href: `/${currentLang}/categories`, 
-      icon: <LibraryBig width={"1em"} height={"1em"} /> 
+        "zh-CN": "分类",
+        "en-US": "Categories",
+        "ja-JP": "カテゴリー",
+      },
+      href: `/${currentLang}/categories`,
+      icon: <LibraryBig width={"1em"} height={"1em"} />,
     },
-    { 
+    {
       name: {
-        'zh-CN': "标签",
-        'en-US': "Tags",
-        'ja-JP': "タグ"
-      }, 
-      href: `/${currentLang}/tags`, 
-      icon: <TagIcon width={"1em"} height={"1em"} /> 
+        "zh-CN": "标签",
+        "en-US": "Tags",
+        "ja-JP": "タグ",
+      },
+      href: `/${currentLang}/tags`,
+      icon: <TagIcon width={"1em"} height={"1em"} />,
     },
-    { 
+    {
       name: {
-        'zh-CN': "关于",
-        'en-US': "About",
-        'ja-JP': "について"
-      }, 
-      href: `/${currentLang}/about`, 
-      icon: <ClipboardPlus width={"1em"} height={"1em"} /> 
+        "zh-CN": "关于",
+        "en-US": "About",
+        "ja-JP": "について",
+      },
+      href: `/${currentLang}/about`,
+      icon: <ClipboardPlus width={"1em"} height={"1em"} />,
     },
   ];
 
@@ -71,9 +71,9 @@ export function Header() {
 
   // 多语言标题
   const siteTitle = {
-    'zh-CN': "荒野博客",
-    'en-US': "Wilderness Blog",
-    'ja-JP': "ワイルドネスブログ"
+    "zh-CN": "荒野博客",
+    "en-US": "Wilderness Blog",
+    "ja-JP": "ワイルドネスブログ",
   };
 
   return (
@@ -90,11 +90,9 @@ export function Header() {
           fallbackSrc="/images/fallback.svg"
           as={NextImage}
         />
-        <span className="text-xl font-bold md:block hidden">
-          {siteTitle[currentLang as keyof typeof siteTitle]}
-        </span>
+        <span className="text-xl font-bold md:block hidden">{siteTitle[currentLang as keyof typeof siteTitle]}</span>
       </Link>
-      
+
       {/* 主导航 */}
       <nav className="w-[60%] relative flex items-center h-[48px] bg-[hsla(var(--blog-nav-background))] blog-box-shadow rounded-full">
         <div
@@ -118,9 +116,7 @@ export function Header() {
             )}
           >
             {item.icon}
-            <span className="ml-1 hidden md:block">
-              {item.name[currentLang as keyof typeof item.name]}
-            </span>
+            <span className="ml-1 hidden md:block">{item.name[currentLang as keyof typeof item.name]}</span>
           </Link>
         ))}
       </nav>

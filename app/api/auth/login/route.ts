@@ -69,7 +69,7 @@ export async function POST(request: NextRequest) {
     const accessToken = generateAccessToken({
       userId: userData.id,
       username: userData.username,
-      role: userData.role,
+      role: userData.role || "user",
     });
 
     const refreshToken = generateRefreshToken({
@@ -81,7 +81,7 @@ export async function POST(request: NextRequest) {
     const { password: _, ...userWithoutPassword } = userData;
 
     const response: LoginResponse = {
-      user: userWithoutPassword,
+      user: userWithoutPassword as any,
       token: accessToken,
       refreshToken: refreshToken,
     };

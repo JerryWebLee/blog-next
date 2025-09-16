@@ -19,14 +19,14 @@ const seedData = {
       username: "admin",
       email: "admin@example.com",
       password: "$2b$10$example.hash", // 实际使用时需要加密
-      role: "admin",
+      role: "admin" as const,
       isActive: true,
     },
     {
       username: "author",
       email: "author@example.com",
       password: "$2b$10$example.hash",
-      role: "author",
+      role: "author" as const,
       isActive: true,
     },
   ],
@@ -143,8 +143,8 @@ Next.js 15 带来了许多激动人心的新特性，包括：
 ## 总结
 
 Next.js 15 为构建现代化博客系统提供了强大的基础，结合 Drizzle ORM 和 MySQL，我们可以创建一个高性能、易维护的博客平台。`,
-      status: "published",
-      visibility: "public",
+      status: "published" as const,
+      visibility: "public" as const,
       allowComments: true,
       authorId: 1,
       categoryId: 1,
@@ -183,8 +183,8 @@ interface Repository<T extends { id: number }> {
 ## 总结
 
 TypeScript 的正确使用可以大大提高代码质量和开发效率。`,
-      status: "published",
-      visibility: "public",
+      status: "published" as const,
+      visibility: "public" as const,
       allowComments: true,
       authorId: 1,
       categoryId: 3,

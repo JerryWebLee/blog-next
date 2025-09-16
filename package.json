@@ -22,7 +22,6 @@
   },
   "dependencies": {
     "@formatjs/intl-localematcher": "^0.6.1",
-    "@heroicons/react": "^2.2.0",
     "@heroui/button": "2.2.25",
     "@heroui/code": "2.2.19",
     "@heroui/input": "2.4.26",

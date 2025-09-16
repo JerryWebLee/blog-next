@@ -128,13 +128,13 @@ function SearchAndFilter({
               <Select
                 size="sm"
                 placeholder="选择排序方式"
-                selectedKeys={[sortBy]}
+                selectedKeys={new Set([sortBy])}
                 onSelectionChange={(keys) => onSortChange(Array.from(keys)[0] as string)}
                 className="max-w-xs"
                 variant="bordered"
               >
                 {sortOptions.map((option) => (
-                  <SelectItem key={option.key} value={option.key}>
+                  <SelectItem key={option.key}>
                     {option.label}
                   </SelectItem>
                 ))}

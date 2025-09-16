@@ -32,7 +32,7 @@ export async function verifyPassword(password: string, hashedPassword: string): 
  * @returns JWT令牌
  */
 export function generateAccessToken(payload: { userId: number; username: string; role: string }): string {
-  return jwt.sign(payload, JWT_SECRET, { expiresIn: JWT_EXPIRES_IN });
+  return jwt.sign(payload, JWT_SECRET, { expiresIn: JWT_EXPIRES_IN } as jwt.SignOptions);
 }
 
 /**
@@ -41,7 +41,7 @@ export function generateAccessToken(payload: { userId: number; username: string;
  * @returns JWT刷新令牌
  */
 export function generateRefreshToken(payload: { userId: number; username: string }): string {
-  return jwt.sign(payload, JWT_REFRESH_SECRET, { expiresIn: JWT_REFRESH_EXPIRES_IN });
+  return jwt.sign(payload, JWT_REFRESH_SECRET, { expiresIn: JWT_REFRESH_EXPIRES_IN } as jwt.SignOptions);
 }
 
 /**

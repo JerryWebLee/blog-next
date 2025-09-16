@@ -1,10 +1,12 @@
 import Link from "next/link";
-import { Clock, FolderOpen, Tag, TrendingUp } from "lucide-react";
+import { Button } from "@heroui/button";
+import { Card, CardBody, CardHeader } from "@heroui/card";
+import { Chip } from "@heroui/chip";
+import { Divider } from "@heroui/divider";
+import { Input } from "@heroui/input";
+import { ArrowRight, Bookmark, Clock, Eye, FolderOpen, Hash, Mail, Tag, TrendingUp } from "lucide-react";
 
-import { Badge } from "@/components/ui/badge";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-
-// 模拟数据 - 后续会从数据库获取
+// 模拟数据
 const mockCategories = [
   { name: "技术分享", slug: "tech", count: 15 },
   { name: "前端开发", slug: "frontend", count: 12 },
@@ -50,106 +52,130 @@ export function BlogSidebar() {
     <div className="space-y-6">
       {/* 分类 */}
       <Card>
-        <CardHeader>
-          <CardTitle className="flex items-center space-x-2">
-            <FolderOpen className="h-5 w-5" />
-            <span>文章分类</span>
-          </CardTitle>
+        <CardHeader className="flex gap-3">
+          <FolderOpen className="w-5 h-5 text-primary" />
+          <div className="flex flex-col">
+            <p className="text-md font-semibold">文章分类</p>
+            <p className="text-small text-default-500">按主题浏览文章</p>
+          </div>
         </CardHeader>
-        <CardContent>
-          <div className="space-y-2">
+        <CardBody className="pt-0">
+          <div className="space-y-1">
             {mockCategories.map((category) => (
               <Link
                 key={category.slug}
                 href={`/categories/${category.slug}`}
-                className="flex items-center justify-between p-2 rounded-md hover:bg-muted transition-colors"
+                className="flex items-center justify-between p-3 rounded-lg hover:bg-default-100 transition-colors group"
               >
-                <span className="text-sm">{category.name}</span>
-                <Badge variant="secondary" className="text-xs">
+                <div className="flex items-center gap-2">
+                  <Bookmark className="w-4 h-4 text-default-400 group-hover:text-primary transition-colors" />
+                  <span className="text-sm font-medium group-hover:text-primary transition-colors">
+                    {category.name}
+                  </span>
+                </div>
+                <Chip size="sm" variant="flat" color="default">
                   {category.count}
-                </Badge>
+                </Chip>
               </Link>
             ))}
           </div>
-        </CardContent>
+        </CardBody>
       </Card>
 
-      {/* 标签云 */}
+      {/* 热门标签 */}
       <Card>
-        <CardHeader>
-          <CardTitle className="flex items-center space-x-2">
-            <Tag className="h-5 w-5" />
-            <span>热门标签</span>
-          </CardTitle>
+        <CardHeader className="flex gap-3">
+          <Hash className="w-5 h-5 text-secondary" />
+          <div className="flex flex-col">
+            <p className="text-md font-semibold">热门标签</p>
+            <p className="text-small text-default-500">快速找到相关内容</p>
+          </div>
         </CardHeader>
-        <CardContent>
+        <CardBody className="pt-0">
           <div className="flex flex-wrap gap-2">
             {mockTags.map((tag) => (
               <Link key={tag.slug} href={`/tags/${tag.slug}`}>
-                <Badge
-                  variant="secondary"
-                  className="text-xs hover:bg-primary hover:text-primary-foreground transition-colors cursor-pointer"
+                <Chip
+                  startContent={<Tag className="w-3 h-3" />}
+                  variant="flat"
+                  className="hover:scale-105 transition-transform cursor-pointer"
                   style={{
-                    backgroundColor: tag.color + "20",
+                    backgroundColor: `${tag.color}20`,
                     color: tag.color,
                   }}
                 >
                   {tag.name} ({tag.count})
-                </Badge>
+                </Chip>
               </Link>
             ))}
           </div>
-        </CardContent>
+        </CardBody>
       </Card>
 
       {/* 热门文章 */}
       <Card>
-        <CardHeader>
-          <CardTitle className="flex items-center space-x-2">
-            <TrendingUp className="h-5 w-5" />
-            <span>热门文章</span>
-          </CardTitle>
+        <CardHeader className="flex gap-3">
+          <TrendingUp className="w-5 h-5 text-success" />
+          <div className="flex flex-col">
+            <p className="text-md font-semibold">热门文章</p>
+            <p className="text-small text-default-500">最受欢迎的内容</p>
+          </div>
         </CardHeader>
-        <CardContent>
-          <div className="space-y-3">
+        <CardBody className="pt-0">
+          <div className="space-y-4">
             {mockPopularPosts.map((post, index) => (
-              <Link key={post.slug} href={`/blog/${post.slug}`} className="block group">
-                <div className="flex items-start space-x-3">
-                  <span className="text-sm font-bold text-muted-foreground min-w-[20px]">{index + 1}</span>
-                  <div className="flex-1 min-w-0">
-                    <h4 className="text-sm font-medium line-clamp-2 group-hover:text-primary transition-colors">
-                      {post.title}
-                    </h4>
-                    <div className="flex items-center space-x-1 mt-1 text-xs text-muted-foreground">
-                      <Clock className="h-3 w-3" />
-                      <span>{post.viewCount} 阅读</span>
+              <div key={post.slug}>
+                <Link href={`/blog/${post.slug}`} className="block group">
+                  <div className="flex items-start gap-3">
+                    <div className="flex-shrink-0">
+                      <Chip
+                        size="sm"
+                        color={index === 0 ? "warning" : index === 1 ? "secondary" : "default"}
+                        variant="solid"
+                      >
+                        {index + 1}
+                      </Chip>
                     </div>
+                    <div className="flex-1 min-w-0">
+                      <h4 className="text-sm font-medium line-clamp-2 group-hover:text-primary transition-colors">
+                        {post.title}
+                      </h4>
+                      <div className="flex items-center gap-1 mt-1 text-xs text-default-400">
+                        <Eye className="w-3 h-3" />
+                        <span>{post.viewCount.toLocaleString()} 阅读</span>
+                      </div>
+                    </div>
+                    <ArrowRight className="w-4 h-4 text-default-300 group-hover:text-primary transition-colors opacity-0 group-hover:opacity-100" />
                   </div>
-                </div>
-              </Link>
+                </Link>
+                {index < mockPopularPosts.length - 1 && <Divider className="mt-4" />}
+              </div>
             ))}
           </div>
-        </CardContent>
+        </CardBody>
       </Card>
 
       {/* 订阅 */}
-      <Card>
-        <CardHeader>
-          <CardTitle>订阅更新</CardTitle>
-        </CardHeader>
-        <CardContent>
-          <p className="text-sm text-muted-foreground mb-3">获取最新的技术文章和更新通知</p>
-          <div className="space-y-2">
-            <input
-              type="email"
-              placeholder="输入邮箱地址"
-              className="w-full px-3 py-2 text-sm border rounded-md focus:outline-none focus:ring-2 focus:ring-primary"
-            />
-            <button className="w-full px-4 py-2 text-sm bg-primary text-primary-foreground rounded-md hover:bg-primary/90 transition-colors">
-              订阅
-            </button>
+      <Card className="bg-gradient-to-br from-primary-50 to-secondary-50">
+        <CardHeader className="flex gap-3">
+          <Mail className="w-5 h-5 text-primary" />
+          <div className="flex flex-col">
+            <p className="text-md font-semibold">订阅更新</p>
+            <p className="text-small text-default-500">获取最新文章通知</p>
           </div>
-        </CardContent>
+        </CardHeader>
+        <CardBody className="pt-0 space-y-3">
+          <Input type="email" placeholder="输入邮箱地址" variant="bordered" size="sm" />
+          <Button
+            color="primary"
+            variant="solid"
+            size="sm"
+            className="w-full"
+            endContent={<Mail className="w-4 h-4" />}
+          >
+            订阅
+          </Button>
+        </CardBody>
       </Card>
     </div>
   );

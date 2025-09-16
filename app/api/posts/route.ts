@@ -37,13 +37,13 @@ export async function GET(request: NextRequest) {
     };
 
     // 验证分页参数
-    if (queryParams.page < 1) {
+    if ((queryParams.page || 1) < 1) {
       return NextResponse.json(createErrorResponse("页码必须大于0"), {
         status: 400,
       });
     }
 
-    if (queryParams.limit < 1 || queryParams.limit > 100) {
+    if ((queryParams.limit || 10) < 1 || (queryParams.limit || 10) > 100) {
       return NextResponse.json(createErrorResponse("每页数量必须在1-100之间"), {
         status: 400,
       });

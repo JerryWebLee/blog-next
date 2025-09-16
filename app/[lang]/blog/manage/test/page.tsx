@@ -41,7 +41,7 @@ export default function TestPage() {
       const result = await response.json();
       setApiResponse(result);
     } catch (error) {
-      setApiResponse({ error: error.message });
+      setApiResponse({ error: error instanceof Error ? error.message : String(error) });
     } finally {
       setLoading(false);
     }
@@ -55,7 +55,7 @@ export default function TestPage() {
       const result = await response.json();
       setApiResponse(result);
     } catch (error) {
-      setApiResponse({ error: error.message });
+      setApiResponse({ error: error instanceof Error ? error.message : String(error) });
     } finally {
       setLoading(false);
     }

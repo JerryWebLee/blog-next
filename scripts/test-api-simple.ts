@@ -95,7 +95,7 @@ Next.js 15 带来了许多激动人心的新特性，包括：
 Next.js 15 为构建现代化博客系统提供了强大的基础，结合 Drizzle ORM 和 MySQL，我们可以创建一个高性能、易维护的博客平台。
     `,
     status: "published",
-    visibility: "public",
+    visibility: "public" as const,
     allowComments: true,
   },
 };
@@ -198,7 +198,7 @@ async function testCreatePost(categoryId: number, tagIds: number[]) {
       categoryId,
     };
 
-    await db.insert(posts).values(postData);
+    await db.insert(posts).values(postData as any);
 
     // 获取新创建的文章
     const [post] = await db
@@ -332,7 +332,7 @@ async function testUpdatePostStatus(postId: number) {
   try {
     await db
       .update(posts)
-      .set({ status: "draft" })
+      .set({ status: "draft" as const })
       .where(sql`id = ${postId}`);
 
     // 重新获取文章

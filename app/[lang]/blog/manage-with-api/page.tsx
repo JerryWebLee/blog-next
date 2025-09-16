@@ -227,7 +227,7 @@ export default function BlogManageWithAPIPage() {
         </div>
       ) : (
         <div className="space-y-4">
-          {posts.map((post) => (
+          {(posts || []).map((post) => (
             <Card key={post.id} className="hover:shadow-md transition-shadow">
               <CardContent className="p-6">
                 <div className="flex items-start justify-between">

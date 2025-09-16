@@ -1,4 +1,34 @@
 {
+  "auth": {
+    "login": "Login",
+    "register": "Register",
+    "forgotPassword": "Forgot Password",
+    "resetPassword": "Reset Password",
+    "email": "Email",
+    "password": "Password",
+    "confirmPassword": "Confirm Password",
+    "username": "Username",
+    "loginSuccess": "Login successful",
+    "registerSuccess": "Registration successful",
+    "logoutSuccess": "Logout successful",
+    "invalidCredentials": "Invalid username or password",
+    "userExists": "User already exists",
+    "passwordMismatch": "Passwords do not match",
+    "emailRequired": "Email is required",
+    "passwordRequired": "Password is required",
+    "usernameRequired": "Username is required"
+  },
+  "blog": {
+    "title": "Wilderness Blog",
+    "subtitle": "Exploring technology in the digital wilderness, seeking truth in the forest of thought",
+    "noPosts": "No posts available",
+    "loadMore": "Load More",
+    "searchPlaceholder": "Search posts...",
+    "filterByCategory": "Filter by Category",
+    "filterByTag": "Filter by Tag",
+    "allCategories": "All Categories",
+    "allTags": "All Tags"
+  },
   "common": {
     "home": "Home",
     "about": "About",
@@ -30,6 +60,12 @@
     "likes": "Likes",
     "comments": "Comments"
   },
+  "footer": {
+    "copyright": "Copyright",
+    "allRightsReserved": "All rights reserved",
+    "builtWith": "Built with Next.js",
+    "poweredBy": "Powered by Vercel"
+  },
   "navigation": {
     "home": "Home",
     "about": "About",
@@ -39,36 +75,6 @@
     "manage": "Manage",
     "create": "Create Post",
     "edit": "Edit Post"
-  },
-  "blog": {
-    "title": "Wilderness Blog",
-    "subtitle": "Exploring technology in the digital wilderness, seeking truth in the forest of thought",
-    "noPosts": "No posts available",
-    "loadMore": "Load More",
-    "searchPlaceholder": "Search posts...",
-    "filterByCategory": "Filter by Category",
-    "filterByTag": "Filter by Tag",
-    "allCategories": "All Categories",
-    "allTags": "All Tags"
-  },
-  "auth": {
-    "login": "Login",
-    "register": "Register",
-    "forgotPassword": "Forgot Password",
-    "resetPassword": "Reset Password",
-    "email": "Email",
-    "password": "Password",
-    "confirmPassword": "Confirm Password",
-    "username": "Username",
-    "loginSuccess": "Login successful",
-    "registerSuccess": "Registration successful",
-    "logoutSuccess": "Logout successful",
-    "invalidCredentials": "Invalid username or password",
-    "userExists": "User already exists",
-    "passwordMismatch": "Passwords do not match",
-    "emailRequired": "Email is required",
-    "passwordRequired": "Password is required",
-    "usernameRequired": "Username is required"
   },
   "post": {
     "title": "Title",
@@ -88,11 +94,5 @@
     "postDeleted": "Post deleted successfully",
     "titleRequired": "Title is required",
     "contentRequired": "Content is required"
-  },
-  "footer": {
-    "copyright": "Copyright",
-    "allRightsReserved": "All rights reserved",
-    "builtWith": "Built with Next.js",
-    "poweredBy": "Powered by Vercel"
   }
 }

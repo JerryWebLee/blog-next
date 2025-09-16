@@ -142,7 +142,7 @@ async function main() {
   }
 
   // 测试数据库连接
-  const success = await testDatabaseConnection(env);
+  const success = await testDatabaseConnection(env as Record<string, string>);
 
   if (success) {
     console.log("\n🎉 数据库连接测试成功！");

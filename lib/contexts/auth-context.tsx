@@ -33,7 +33,7 @@ export function AuthProvider({ children }: AuthProviderProps) {
 
         if (storedUser && storedToken) {
           const userData = JSON.parse(storedUser);
-          setUser(userData);
+          setUser(userData as User);
           setIsAuthenticated(true);
         }
       } catch (error) {
@@ -72,7 +72,7 @@ export function AuthProvider({ children }: AuthProviderProps) {
         localStorage.setItem("accessToken", token);
         localStorage.setItem("refreshToken", refreshToken);
 
-        setUser(userData);
+        setUser(userData as User);
         setIsAuthenticated(true);
 
         return { success: true, message: data.message };

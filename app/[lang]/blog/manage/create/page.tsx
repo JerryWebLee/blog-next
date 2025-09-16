@@ -2,14 +2,15 @@
 
 import { useState } from "react";
 import { useRouter } from "next/navigation";
-import { ArrowLeft, Eye, EyeOff, Save } from "lucide-react";
+import { Button } from "@heroui/button";
+import { Card, CardBody, CardHeader } from "@heroui/card";
+import { Input } from "@heroui/input";
+import { Select, SelectItem } from "@heroui/select";
+import { Spinner } from "@heroui/spinner";
+import { Switch } from "@heroui/switch";
+import { Textarea } from "@heroui/react";
+import { ArrowLeft, Eye, EyeOff, FileText, Save } from "lucide-react";
 
-import { Button } from "@/components/ui/button";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { Textarea } from "@/components/ui/textarea";
 import { CreatePostRequest, PostStatus, PostVisibility } from "@/types/blog";
 
 export default function CreateBlogPage() {
@@ -97,185 +98,174 @@ export default function CreateBlogPage() {
     <div className="container mx-auto py-6 space-y-6">
       {/* 页面标题和返回按钮 */}
       <div className="flex items-center gap-4">
-        <Button variant="outline" size="sm" onClick={() => router.back()}>
-          <ArrowLeft className="mr-2 h-4 w-4" />
+        <Button
+          variant="bordered"
+          size="sm"
+          onPress={() => router.back()}
+          startContent={<ArrowLeft className="w-4 h-4" />}
+        >
           返回
         </Button>
         <div>
           <h1 className="text-3xl font-bold">创建新博客</h1>
-          <p className="text-muted-foreground">创建一篇新的博客文章</p>
+          <p className="text-default-500">创建一篇新的博客文章</p>
         </div>
       </div>
 
       <form onSubmit={handleSubmit} className="space-y-6">
         {/* 基本信息 */}
         <Card>
-          <CardHeader>
-            <CardTitle>基本信息</CardTitle>
+          <CardHeader className="flex gap-3">
+            <FileText className="w-5 h-5 text-primary" />
+            <div className="flex flex-col">
+              <p className="text-lg font-semibold">基本信息</p>
+              <p className="text-small text-default-500">填写博客的基本信息</p>
+            </div>
           </CardHeader>
-          <CardContent className="space-y-4">
+          <CardBody className="space-y-4">
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-              <div className="space-y-2">
-                <Label htmlFor="title">标题 *</Label>
-                <Input
-                  id="title"
-                  value={formData.title}
-                  onChange={(e) => handleTitleChange(e.target.value)}
-                  placeholder="输入博客标题"
-                  required
-                />
-              </div>
-              <div className="space-y-2">
-                <Label htmlFor="slug">别名</Label>
-                <Input
-                  id="slug"
-                  value={formData.slug}
-                  onChange={(e) => handleInputChange("slug", e.target.value)}
-                  placeholder="自动生成或手动输入"
-                />
-              </div>
-            </div>
-
-            <div className="space-y-2">
-              <Label htmlFor="excerpt">摘要</Label>
-              <Textarea
-                id="excerpt"
-                value={formData.excerpt}
-                onChange={(e) => handleInputChange("excerpt", e.target.value)}
-                placeholder="博客摘要（可选）"
-                rows={3}
-              />
-            </div>
-
-            <div className="space-y-2">
-              <Label htmlFor="featuredImage">特色图片URL</Label>
               <Input
-                id="featuredImage"
-                value={formData.featuredImage}
-                onChange={(e) => handleInputChange("featuredImage", e.target.value)}
-                placeholder="图片链接地址"
-                type="url"
+                label="标题"
+                placeholder="输入博客标题"
+                value={formData.title}
+                onValueChange={handleTitleChange}
+                variant="bordered"
+                isRequired
+              />
+              <Input
+                label="别名"
+                placeholder="自动生成或手动输入"
+                value={formData.slug}
+                onValueChange={(value: string) => handleInputChange("slug", value)}
+                variant="bordered"
               />
             </div>
-          </CardContent>
+
+            <Textarea
+              label="摘要"
+              placeholder="博客摘要（可选）"
+              value={formData.excerpt}
+              onValueChange={(value: string) => handleInputChange("excerpt", value)}
+              variant="bordered"
+              minRows={3}
+            />
+
+            <Input
+              label="特色图片URL"
+              placeholder="图片链接地址"
+              value={formData.featuredImage}
+              onValueChange={(value: string) => handleInputChange("featuredImage", value)}
+              variant="bordered"
+              type="url"
+            />
+          </CardBody>
         </Card>
 
         {/* 内容 */}
         <Card>
           <CardHeader>
-            <CardTitle>内容</CardTitle>
+            <p className="text-lg font-semibold">内容</p>
           </CardHeader>
-          <CardContent>
-            <div className="space-y-2">
-              <Label htmlFor="content">内容 *</Label>
-              <Textarea
-                id="content"
-                value={formData.content}
-                onChange={(e) => handleInputChange("content", e.target.value)}
-                placeholder="输入博客内容..."
-                rows={15}
-                required
-              />
-            </div>
-          </CardContent>
+          <CardBody>
+            <Textarea
+              label="内容"
+              placeholder="输入博客内容..."
+              value={formData.content}
+              onValueChange={(value: string) => handleInputChange("content", value)}
+              variant="bordered"
+              minRows={15}
+              isRequired
+            />
+          </CardBody>
         </Card>
 
         {/* 设置 */}
         <Card>
           <CardHeader>
-            <CardTitle>设置</CardTitle>
+            <p className="text-lg font-semibold">设置</p>
           </CardHeader>
-          <CardContent className="space-y-4">
+          <CardBody className="space-y-4">
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-              <div className="space-y-2">
-                <Label htmlFor="status">状态</Label>
-                <Select
-                  value={formData.status}
-                  onValueChange={(value: string) => handleInputChange("status", value as PostStatus)}
-                >
-                  <SelectTrigger>
-                    <SelectValue placeholder="选择状态" />
-                  </SelectTrigger>
-                  <SelectContent>
-                    <SelectItem value="draft">草稿</SelectItem>
-                    <SelectItem value="published">发布</SelectItem>
-                    <SelectItem value="archived">归档</SelectItem>
-                  </SelectContent>
-                </Select>
-              </div>
+              <Select
+                label="状态"
+                placeholder="选择状态"
+                selectedKeys={formData.status ? new Set([formData.status]) : new Set()}
+                onSelectionChange={(keys) => {
+                  const selectedKey = Array.from(keys)[0] as string;
+                  handleInputChange("status", selectedKey as PostStatus);
+                }}
+                variant="bordered"
+              >
+                <SelectItem key="draft">
+                  草稿
+                </SelectItem>
+                <SelectItem key="published">
+                  发布
+                </SelectItem>
+                <SelectItem key="archived">
+                  归档
+                </SelectItem>
+              </Select>
 
-              <div className="space-y-2">
-                <Label htmlFor="visibility">可见性</Label>
-                <Select
-                  value={formData.visibility}
-                  onValueChange={(value: string) => handleInputChange("visibility", value as PostVisibility)}
-                >
-                  <SelectTrigger>
-                    <SelectValue placeholder="选择可见性" />
-                  </SelectTrigger>
-                  <SelectContent>
-                    <SelectItem value="public">公开</SelectItem>
-                    <SelectItem value="private">私有</SelectItem>
-                    <SelectItem value="password">密码保护</SelectItem>
-                  </SelectContent>
-                </Select>
-              </div>
+              <Select
+                label="可见性"
+                placeholder="选择可见性"
+                selectedKeys={formData.visibility ? new Set([formData.visibility]) : new Set()}
+                onSelectionChange={(keys) => {
+                  const selectedKey = Array.from(keys)[0] as string;
+                  handleInputChange("visibility", selectedKey as PostVisibility);
+                }}
+                variant="bordered"
+              >
+                <SelectItem key="public">
+                  公开
+                </SelectItem>
+                <SelectItem key="private">
+                  私有
+                </SelectItem>
+                <SelectItem key="password">
+                  密码保护
+                </SelectItem>
+              </Select>
             </div>
 
             {formData.visibility === "password" && (
-              <div className="space-y-2">
-                <Label htmlFor="password">访问密码</Label>
-                <div className="relative">
-                  <Input
-                    id="password"
-                    type={showPassword ? "text" : "password"}
-                    value={formData.password}
-                    onChange={(e) => handleInputChange("password", e.target.value)}
-                    placeholder="设置访问密码"
-                  />
-                  <Button
-                    type="button"
-                    variant="ghost"
-                    size="sm"
-                    className="absolute right-0 top-0 h-full px-3"
-                    onClick={() => setShowPassword(!showPassword)}
-                  >
-                    {showPassword ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
+              <Input
+                label="访问密码"
+                placeholder="设置访问密码"
+                type={showPassword ? "text" : "password"}
+                value={formData.password}
+                onValueChange={(value: string) => handleInputChange("password", value)}
+                variant="bordered"
+                endContent={
+                  <Button isIconOnly variant="light" size="sm" onPress={() => setShowPassword(!showPassword)}>
+                    {showPassword ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
                   </Button>
-                </div>
-              </div>
+                }
+              />
             )}
 
-            <div className="flex items-center space-x-2">
-              <input
-                type="checkbox"
-                id="allowComments"
-                checked={formData.allowComments}
-                onChange={(e) => handleInputChange("allowComments", e.target.checked)}
-                className="rounded"
-              />
-              <Label htmlFor="allowComments">允许评论</Label>
-            </div>
-          </CardContent>
+            <Switch
+              isSelected={formData.allowComments}
+              onValueChange={(checked) => handleInputChange("allowComments", checked)}
+            >
+              允许评论
+            </Switch>
+          </CardBody>
         </Card>
 
         {/* 操作按钮 */}
         <div className="flex justify-end gap-4">
-          <Button type="button" variant="outline" onClick={() => router.back()}>
+          <Button variant="bordered" onPress={() => router.back()}>
             取消
           </Button>
-          <Button type="submit" disabled={loading}>
-            {loading ? (
-              <>
-                <div className="animate-spin rounded-full h-4 w-4 blog-border-y-box-shadow-2 border-white mr-2"></div>
-                创建中...
-              </>
-            ) : (
-              <>
-                <Save className="mr-2 h-4 w-4" />
-                创建博客
-              </>
-            )}
+          <Button
+            type="submit"
+            color="primary"
+            isLoading={loading}
+            startContent={!loading && <Save className="w-4 h-4" />}
+          >
+            {loading ? "创建中..." : "创建博客"}
           </Button>
         </div>
       </form>

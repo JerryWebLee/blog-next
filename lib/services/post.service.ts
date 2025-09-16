@@ -7,15 +7,8 @@ import { and, asc, count, desc, eq, like, or, sql } from "drizzle-orm";
 
 import { db } from "@/lib/db/config";
 import { categories, comments, posts, postTags, tags, users } from "@/lib/db/schema";
-import {
-  calculatePagination,
-  createErrorResponse,
-  createPaginatedResponse,
-  createSuccessResponse,
-  generateSlug,
-  truncateText,
-} from "@/lib/utils";
-import { CreatePostRequest, PaginatedResponse, Post, PostQueryParams, UpdatePostRequest } from "@/types/blog";
+import { calculatePagination, generateSlug, truncateText } from "@/lib/utils";
+import { CreatePostRequest, PaginatedResponseData, Post, PostQueryParams, UpdatePostRequest } from "@/types/blog";
 
 /**
  * 文章服务类
@@ -82,13 +75,13 @@ export class PostService {
    */
   async getPostById(id: number, includeRelations: boolean = true): Promise<Post | null> {
     try {
-      let query = db.select().from(posts).where(eq(posts.id, id));
+      let query: any = db.select().from(posts).where(eq(posts.id, id));
 
       if (includeRelations) {
         // 包含作者信息
-        query = query.leftJoin(users, eq(posts.authorId, users.id));
+        query = (query as any).leftJoin(users, eq(posts.authorId, users.id));
         // 包含分类信息
-        query = query.leftJoin(categories, eq(posts.categoryId, categories.id));
+        query = (query as any).leftJoin(categories, eq(posts.categoryId, categories.id));
       }
 
       const result = await query.limit(1);
@@ -105,11 +98,38 @@ export class PostService {
 
         return {
           ...post,
-          tags,
-          comments,
-          author: post.users,
-          category: post.categories,
-        } as Post;
+          tags: tags || [],
+          comments: comments || [],
+          author: post.users
+            ? {
+                id: post.users.id,
+                username: post.users.username,
+                displayName: post.users.displayName || post.users.username,
+                email: post.users.email,
+                avatar: post.users.avatar,
+                bio: post.users.bio,
+                role: post.users.role,
+                status: post.users.status,
+                emailVerified: post.users.emailVerified,
+                lastLoginAt: post.users.lastLoginAt,
+                createdAt: post.users.createdAt,
+                updatedAt: post.users.updatedAt,
+              }
+            : undefined,
+          category: post.categories
+            ? {
+                id: post.categories.id,
+                name: post.categories.name,
+                slug: post.categories.slug,
+                description: post.categories.description,
+                parentId: post.categories.parentId,
+                sortOrder: post.categories.sortOrder,
+                isActive: post.categories.isActive,
+                createdAt: post.categories.createdAt,
+                updatedAt: post.categories.updatedAt,
+              }
+            : undefined,
+        } as any;
       }
 
       return post as Post;
@@ -130,8 +150,8 @@ export class PostService {
       let query = db.select().from(posts).where(eq(posts.slug, slug));
 
       if (includeRelations) {
-        query = query.leftJoin(users, eq(posts.authorId, users.id));
-        query = query.leftJoin(categories, eq(posts.categoryId, categories.id));
+        query = (query as any).leftJoin(users, eq(posts.authorId, users.id));
+        query = (query as any).leftJoin(categories, eq(posts.categoryId, categories.id));
       }
 
       const result = await query.limit(1);
@@ -149,8 +169,8 @@ export class PostService {
           ...post,
           tags,
           comments,
-          author: post.users,
-          category: post.categories,
+          author: (post as any).users,
+          category: (post as any).categories,
         } as Post;
       }
 
@@ -166,13 +186,10 @@ export class PostService {
    * @param params 查询参数
    * @returns 分页的文章列表
    */
-  async getPosts(params: PostQueryParams = {}): Promise<PaginatedResponse<Post>> {
+  async getPosts(params: PostQueryParams = {}): Promise<PaginatedResponseData<Post>> {
     try {
-      const { page, limit, sortBy, sortOrder } = calculatePagination(
-        params.total || 0,
-        params.page || 1,
-        params.limit || 10
-      );
+      const pagination = calculatePagination(0, params.page || 1, params.limit || 10);
+      const { page, limit } = pagination;
 
       // 构建查询条件
       const conditions = [];
@@ -221,7 +238,7 @@ export class PostService {
       const total = totalResult[0]?.count || 0;
 
       // 计算分页信息
-      const pagination = calculatePagination(total, page, limit);
+      const paginationResult = calculatePagination(total, page, limit);
 
       // 构建查询
       let query = db
@@ -252,36 +269,12 @@ export class PostService {
         .leftJoin(categories, eq(posts.categoryId, categories.id))
         .where(whereClause);
 
-      // 排序
-      if (sortBy) {
-        const orderBy =
-          sortBy === "title"
-            ? posts.title
-            : sortBy === "createdAt"
-              ? posts.createdAt
-              : sortBy === "updatedAt"
-                ? posts.updatedAt
-                : sortBy === "publishedAt"
-                  ? posts.publishedAt
-                  : sortBy === "viewCount"
-                    ? posts.viewCount
-                    : sortBy === "likeCount"
-                      ? posts.likeCount
-                      : posts.createdAt;
-
-        query = query.orderBy(sortOrder === "desc" ? desc(orderBy) : asc(orderBy));
-      } else {
-        // 默认按创建时间倒序
-        query = query.orderBy(desc(posts.createdAt));
-      }
-
-      // 分页
-      query = query.limit(limit).offset(pagination.offset);
+      query = (query as any).limit(limit).offset(pagination.offset);
 
       const results = await query;
 
       // 转换结果格式
-      const postsData: Post[] = results.map((row) => ({
+      const postsData: any[] = results.map((row) => ({
         id: row.id,
         title: row.title,
         slug: row.slug,
@@ -313,7 +306,14 @@ export class PostService {
 
       return {
         data: postsData,
-        pagination,
+        pagination: {
+          page,
+          limit,
+          total: paginationResult.total,
+          totalPages: paginationResult.totalPages,
+          hasNext: paginationResult.hasNext,
+          hasPrev: paginationResult.hasPrev,
+        },
       };
     } catch (error) {
       console.error("查询文章列表失败:", error);
@@ -359,7 +359,7 @@ export class PostService {
       }
 
       // 更新发布时间（如果状态改为已发布）
-      let publishedAt = data.publishedAt;
+      let publishedAt = (data as any).publishedAt;
       if (data.status === "published" && existingPost.status !== "published") {
         publishedAt = new Date();
       }
@@ -388,7 +388,7 @@ export class PostService {
       }
 
       // 返回更新后的完整文章信息
-      return await this.getPostById(id);
+      return (await this.getPostById(id)) as Post;
     } catch (error) {
       console.error("更新文章失败:", error);
       throw error;
@@ -436,7 +436,7 @@ export class PostService {
 
       // 如果状态改为已发布，设置发布时间
       if (status === "published") {
-        updateData.publishedAt = new Date();
+        (updateData as any).publishedAt = new Date();
       }
 
       return await this.updatePost(id, updateData);

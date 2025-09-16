@@ -26,22 +26,24 @@ export interface PaginationParams {
   sortOrder?: "asc" | "desc"; // 排序方向
 }
 
+export interface PaginatedResponseData<T> {
+  data: T[];
+  pagination: {
+    page: number;
+    limit: number;
+    total: number;
+    totalPages: number;
+    hasNext: boolean;
+    hasPrev: boolean;
+  };
+}
+
 /**
  * 分页响应接口
  * 包含分页信息和数据列表
  */
 export interface PaginatedResponse<T> {
-  data: {
-    data: T[]; // 数据列表
-    pagination: {
-      page: number; // 当前页码
-      limit: number; // 每页数量
-      total: number; // 总记录数
-      totalPages: number; // 总页数
-      hasNext: boolean; // 是否有下一页
-      hasPrev: boolean; // 是否有上一页
-    };
-  };
+  data: PaginatedResponseData<T>;
   message: string;
   success: boolean;
 }

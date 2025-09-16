@@ -2,7 +2,7 @@ import { NextResponse } from "next/server";
 
 export async function GET(req: Request, { params }: { params: Promise<{ path: string[] }> }) {
   // 拼接目标 URL
-  const targetUrl = `https://haowallpaper.com/${params.path.join("/")}`;
+  const targetUrl = `https://haowallpaper.com/${(await params).path.join("/")}`;
 
   // 代理请求
   const res = await fetch(targetUrl, {

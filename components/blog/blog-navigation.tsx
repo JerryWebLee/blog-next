@@ -2,10 +2,10 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { BarChart3, FileText, Home, Plus, Settings } from "lucide-react";
-
-import { Button } from "@/components/ui/button";
-import { Card, CardContent } from "@/components/ui/card";
+import { Button } from "@heroui/button";
+import { Card, CardBody } from "@heroui/card";
+import { Chip } from "@heroui/chip";
+import { BarChart3, BookOpen, FileText, Home, Plus, Settings } from "lucide-react";
 
 const navigationItems = [
   {
@@ -13,30 +13,35 @@ const navigationItems = [
     href: "/blog",
     icon: Home,
     description: "查看所有博客文章",
+    color: "primary" as const,
   },
   {
     title: "博客管理",
     href: "/blog/manage",
     icon: FileText,
     description: "管理您的博客文章",
+    color: "secondary" as const,
   },
   {
     title: "创建博客",
     href: "/blog/manage/create",
     icon: Plus,
     description: "创建新的博客文章",
+    color: "success" as const,
   },
   {
     title: "统计分析",
     href: "/blog/manage/stats",
     icon: BarChart3,
     description: "查看博客统计数据",
+    color: "warning" as const,
   },
   {
     title: "系统设置",
     href: "/blog/manage/settings",
     icon: Settings,
     description: "配置博客系统",
+    color: "default" as const,
   },
 ];
 
@@ -45,7 +50,15 @@ export function BlogNavigation() {
 
   return (
     <Card className="mb-6">
-      <CardContent className="p-4">
+      <CardBody className="p-4">
+        <div className="flex items-center gap-3 mb-4">
+          <BookOpen className="w-6 h-6 text-primary" />
+          <div>
+            <h2 className="text-lg font-semibold">博客管理中心</h2>
+            <p className="text-sm text-default-500">管理和创建您的博客内容</p>
+          </div>
+        </div>
+
         <nav className="flex flex-wrap gap-2">
           {navigationItems.map((item) => {
             const Icon = item.icon;
@@ -54,20 +67,21 @@ export function BlogNavigation() {
             return (
               <Button
                 key={item.href}
-                variant={isActive ? "default" : "outline"}
+                as={Link}
+                href={item.href}
+                color={isActive ? item.color : "default"}
+                variant={isActive ? "solid" : "bordered"}
                 size="sm"
-                asChild
-                className="flex items-center gap-2"
+                startContent={<Icon className="w-4 h-4" />}
+                className="flex items-center gap-2 relative"
               >
-                <Link href={item.href}>
-                  <Icon className="h-4 w-4" />
-                  {item.title}
-                </Link>
+                {item.title}
+                {isActive && <Chip size="sm" color="success" variant="dot" className="absolute -top-1 -right-1" />}
               </Button>
             );
           })}
         </nav>
-      </CardContent>
+      </CardBody>
     </Card>
   );
 }

@@ -47,7 +47,7 @@ const nextConfig: NextConfig = {
     ignoreDuringBuilds: true,
   },
   // 国际化配置
-  serverExternalPackages: ['@formatjs/intl-localematcher', 'negotiator'],
+  serverExternalPackages: ["@formatjs/intl-localematcher", "negotiator"],
 };
 
 export default nextConfig;

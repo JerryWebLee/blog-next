@@ -3,19 +3,32 @@
 import { useEffect, useState } from "react";
 import Image from "next/image";
 import { useParams, useRouter } from "next/navigation";
-import { ArrowLeft, Calendar, Edit, Eye, Heart, Lock, MessageCircle, Share2, User } from "lucide-react";
+import { Avatar } from "@heroui/avatar";
+import { Button } from "@heroui/button";
+import { Card, CardBody, CardHeader } from "@heroui/card";
+import { Chip } from "@heroui/chip";
+import { Divider } from "@heroui/divider";
+import { Input } from "@heroui/input";
+import { Spinner } from "@heroui/spinner";
+import { Textarea } from "@heroui/react";
+import {
+  ArrowLeft,
+  BookOpen,
+  Calendar,
+  Clock,
+  Edit,
+  Eye,
+  Heart,
+  Lock,
+  MessageCircle,
+  Share2,
+  User,
+} from "lucide-react";
 
-import { Badge } from "@/components/ui/badge";
-import { Button } from "@/components/ui/button";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Input } from "@/components/ui/input";
-import { Textarea } from "@/components/ui/textarea";
 import { Post } from "@/types/blog";
 
-export default async function BlogDetailPage({ params }: { params: Promise<{ lang: string; slug: string }> }) {
-  const { lang, slug } = await params;
-
-  // const params = useParams();
+export default function BlogDetailPage({ params }: { params: Promise<{ lang: string; slug: string }> }) {
+  const [resolvedParams, setResolvedParams] = useState<{ lang: string; slug: string } | null>(null);
   const router = useRouter();
 
   const [post, setPost] = useState<Post | null>(null);
@@ -26,12 +39,19 @@ export default async function BlogDetailPage({ params }: { params: Promise<{ lan
   const [comment, setComment] = useState("");
   const [submittingComment, setSubmittingComment] = useState(false);
 
+  // 解析params
+  useEffect(() => {
+    params.then(setResolvedParams);
+  }, [params]);
+
   // 获取博客详情
   useEffect(() => {
+    if (!resolvedParams?.slug) return;
+
     const fetchPost = async () => {
       try {
         setLoading(true);
-        const response = await fetch(`/api/posts/${slug}?includeRelations=true`);
+        const response = await fetch(`/api/posts/${resolvedParams.slug}?includeRelations=true`);
         const result = await response.json();
 
         if (result.success) {
@@ -60,10 +80,8 @@ export default async function BlogDetailPage({ params }: { params: Promise<{ lan
       }
     };
 
-    if (slug) {
-      fetchPost();
-    }
-  }, [slug, router]);
+    fetchPost();
+  }, [resolvedParams?.slug, router]);
 
   // 验证密码
   const handlePasswordSubmit = async (e: React.FormEvent) => {
@@ -71,7 +89,7 @@ export default async function BlogDetailPage({ params }: { params: Promise<{ lan
     setPasswordError("");
 
     try {
-      const response = await fetch(`/api/posts/${slug}`, {
+      const response = await fetch(`/api/posts/${resolvedParams?.slug}`, {
         method: "PATCH",
         headers: {
           "Content-Type": "application/json",
@@ -84,7 +102,7 @@ export default async function BlogDetailPage({ params }: { params: Promise<{ lan
       if (result.success) {
         setShowPasswordForm(false);
         // 重新获取博客数据
-        const postResponse = await fetch(`/api/posts/${slug}?includeRelations=true`);
+        const postResponse = await fetch(`/api/posts/${resolvedParams?.slug}?includeRelations=true`);
         const postResult = await postResponse.json();
         if (postResult.success) {
           setPost(postResult.data);
@@ -118,7 +136,7 @@ export default async function BlogDetailPage({ params }: { params: Promise<{ lan
         body: JSON.stringify({
           postId: post?.id,
           content: comment,
-          authorName: "访客", // 实际应用中应该从用户认证获取
+          authorName: "访客",
         }),
       });
 
@@ -128,7 +146,7 @@ export default async function BlogDetailPage({ params }: { params: Promise<{ lan
         setComment("");
         alert("评论提交成功！");
         // 重新获取博客数据以显示新评论
-        const postResponse = await fetch(`/api/posts/${slug}?includeRelations=true`);
+        const postResponse = await fetch(`/api/posts/${resolvedParams?.slug}?includeRelations=true`);
         const postResult = await postResponse.json();
         if (postResult.success) {
           setPost(postResult.data);
@@ -145,26 +163,28 @@ export default async function BlogDetailPage({ params }: { params: Promise<{ lan
   };
 
   // 获取状态标签颜色
-  const getStatusBadgeVariant = (status: string) => {
+  const getStatusColor = (status: string) => {
     switch (status) {
       case "published":
-        return "default";
+        return "success";
       case "draft":
-        return "secondary";
+        return "warning";
       case "archived":
-        return "outline";
+        return "default";
       default:
-        return "secondary";
+        return "default";
     }
   };
 
   if (loading) {
     return (
       <div className="container mx-auto py-6">
-        <div className="text-center py-8">
-          <div className="animate-spin rounded-full h-8 w-8 blog-border-y-box-shadow-2 border-primary mx-auto"></div>
-          <p className="mt-2 text-muted-foreground">加载中...</p>
-        </div>
+        <Card>
+          <CardBody className="text-center py-8">
+            <Spinner size="lg" color="primary" />
+            <p className="mt-4 text-default-500">加载中...</p>
+          </CardBody>
+        </Card>
       </div>
     );
   }
@@ -173,33 +193,31 @@ export default async function BlogDetailPage({ params }: { params: Promise<{ lan
     return (
       <div className="container mx-auto py-6">
         <Card className="max-w-md mx-auto">
-          <CardHeader>
-            <CardTitle className="flex items-center gap-2">
-              <Lock className="h-5 w-5" />
-              需要密码访问
-            </CardTitle>
+          <CardHeader className="flex gap-3">
+            <Lock className="w-5 h-5 text-warning" />
+            <div className="flex flex-col">
+              <p className="text-lg font-semibold">需要密码访问</p>
+              <p className="text-small text-default-500">请输入访问密码</p>
+            </div>
           </CardHeader>
-          <CardContent>
+          <CardBody>
             <form onSubmit={handlePasswordSubmit} className="space-y-4">
-              <div className="space-y-2">
-                <label htmlFor="password" className="text-sm font-medium">
-                  请输入访问密码
-                </label>
-                <Input
-                  id="password"
-                  type="password"
-                  value={password}
-                  onChange={(e) => setPassword(e.target.value)}
-                  placeholder="输入密码"
-                  required
-                />
-                {passwordError && <p className="text-sm text-red-500">{passwordError}</p>}
-              </div>
-              <Button type="submit" className="w-full">
+              <Input
+                label="访问密码"
+                type="password"
+                value={password}
+                onValueChange={setPassword}
+                placeholder="输入密码"
+                variant="bordered"
+                isRequired
+                errorMessage={passwordError}
+                isInvalid={!!passwordError}
+              />
+              <Button type="submit" color="primary" className="w-full">
                 验证密码
               </Button>
             </form>
-          </CardContent>
+          </CardBody>
         </Card>
       </div>
     );
@@ -208,12 +226,15 @@ export default async function BlogDetailPage({ params }: { params: Promise<{ lan
   if (!post) {
     return (
       <div className="container mx-auto py-6">
-        <div className="text-center py-8">
-          <p className="text-muted-foreground">博客不存在</p>
-          <Button onClick={() => router.push("/blog")} className="mt-4">
-            返回博客列表
-          </Button>
-        </div>
+        <Card>
+          <CardBody className="text-center py-8">
+            <BookOpen className="w-16 h-16 mx-auto mb-4 text-default-300" />
+            <p className="text-default-500">博客不存在</p>
+            <Button onPress={() => router.push("/blog")} className="mt-4" color="primary">
+              返回博客列表
+            </Button>
+          </CardBody>
+        </Card>
       </div>
     );
   }
@@ -221,89 +242,107 @@ export default async function BlogDetailPage({ params }: { params: Promise<{ lan
   return (
     <div className="container mx-auto py-6 space-y-6">
       {/* 返回按钮 */}
-      <Button variant="outline" size="sm" onClick={() => router.back()}>
-        <ArrowLeft className="mr-2 h-4 w-4" />
+      <Button
+        variant="bordered"
+        size="sm"
+        onPress={() => router.back()}
+        startContent={<ArrowLeft className="w-4 h-4" />}
+      >
         返回
       </Button>
 
       {/* 博客标题和元信息 */}
-      <div className="space-y-4">
-        <div className="flex items-center justify-between">
-          <div className="space-y-2">
-            <h1 className="text-4xl font-bold">{post.title}</h1>
-            {post.excerpt && <p className="text-xl text-muted-foreground">{post.excerpt}</p>}
-          </div>
-          <div className="flex items-center gap-2">
-            <Badge variant={getStatusBadgeVariant(post.status)}>
-              {post.status === "published" ? "已发布" : post.status === "draft" ? "草稿" : "已归档"}
-            </Badge>
-            {post.visibility === "private" && <Badge variant="secondary">私有</Badge>}
-            {post.visibility === "password" && <Badge variant="outline">密码保护</Badge>}
-          </div>
-        </div>
-
-        {/* 特色图片 */}
-        {post.featuredImage && (
-          <div className="w-full h-64 rounded-lg overflow-hidden">
-            <Image
-              src={post.featuredImage}
-              alt={post.title}
-              width={800}
-              height={400}
-              className="w-full h-full object-cover"
-              priority
-            />
-          </div>
-        )}
-
-        {/* 博客元信息 */}
-        <div className="flex items-center gap-6 text-sm text-muted-foreground">
-          <div className="flex items-center gap-2">
-            <User className="h-4 w-4" />
-            <span>{post.author?.displayName || "未知作者"}</span>
-          </div>
-          <div className="flex items-center gap-2">
-            <Calendar className="h-4 w-4" />
-            <span>{new Date(post.createdAt).toLocaleDateString()}</span>
-          </div>
-          <div className="flex items-center gap-2">
-            <Eye className="h-4 w-4" />
-            <span>{post.viewCount} 次浏览</span>
-          </div>
-          <div className="flex items-center gap-2">
-            <MessageCircle className="h-4 w-4" />
-            <span>{post.comments?.length || 0} 条评论</span>
-          </div>
-          <div className="flex items-center gap-2">
-            <Heart className="h-4 w-4" />
-            <span>{post.likeCount} 个赞</span>
-          </div>
-        </div>
-
-        {/* 分类和标签 */}
-        <div className="flex items-center gap-4">
-          {post.category && (
+      <Card>
+        <CardBody className="space-y-4">
+          <div className="flex items-center justify-between">
+            <div className="space-y-2">
+              <h1 className="text-4xl font-bold">{post.title}</h1>
+              {post.excerpt && <p className="text-xl text-default-500">{post.excerpt}</p>}
+            </div>
             <div className="flex items-center gap-2">
-              <span className="text-sm text-muted-foreground">分类:</span>
-              <Badge variant="outline">{post.category.name}</Badge>
+              <Chip color={getStatusColor(post.status)} variant="flat">
+                {post.status === "published" ? "已发布" : post.status === "draft" ? "草稿" : "已归档"}
+              </Chip>
+              {post.visibility === "private" && (
+                <Chip color="secondary" variant="flat">
+                  私有
+                </Chip>
+              )}
+              {post.visibility === "password" && (
+                <Chip color="warning" variant="flat">
+                  密码保护
+                </Chip>
+              )}
+            </div>
+          </div>
+
+          {/* 特色图片 */}
+          {post.featuredImage && (
+            <div className="w-full h-64 rounded-lg overflow-hidden">
+              <Image
+                src={post.featuredImage}
+                alt={post.title}
+                width={800}
+                height={400}
+                className="w-full h-full object-cover"
+                priority
+              />
             </div>
           )}
-          {post.tags && post.tags.length > 0 && (
+
+          {/* 博客元信息 */}
+          <div className="flex items-center gap-6 text-sm text-default-500">
             <div className="flex items-center gap-2">
-              <span className="text-sm text-muted-foreground">标签:</span>
-              {post.tags.map((tag) => (
-                <Badge key={tag.id} variant="secondary">
-                  {tag.name}
-                </Badge>
-              ))}
+              <Avatar size="sm" name={post.author?.displayName || "未知作者"} className="w-6 h-6" />
+              <span>{post.author?.displayName || "未知作者"}</span>
             </div>
-          )}
-        </div>
-      </div>
+            <div className="flex items-center gap-2">
+              <Calendar className="w-4 h-4" />
+              <span>{new Date(post.createdAt).toLocaleDateString()}</span>
+            </div>
+            <div className="flex items-center gap-2">
+              <Eye className="w-4 h-4" />
+              <span>{post.viewCount} 次浏览</span>
+            </div>
+            <div className="flex items-center gap-2">
+              <MessageCircle className="w-4 h-4" />
+              <span>{post.comments?.length || 0} 条评论</span>
+            </div>
+            <div className="flex items-center gap-2">
+              <Heart className="w-4 h-4" />
+              <span>{post.likeCount} 个赞</span>
+            </div>
+          </div>
+
+          {/* 分类和标签 */}
+          <div className="flex items-center gap-4">
+            {post.category && (
+              <div className="flex items-center gap-2">
+                <span className="text-sm text-default-500">分类:</span>
+                <Chip variant="flat" color="primary">
+                  {post.category.name}
+                </Chip>
+              </div>
+            )}
+            {post.tags && post.tags.length > 0 && (
+              <div className="flex items-center gap-2">
+                <span className="text-sm text-default-500">标签:</span>
+                <div className="flex gap-2">
+                  {post.tags.map((tag) => (
+                    <Chip key={tag.id} variant="flat" color="secondary">
+                      {tag.name}
+                    </Chip>
+                  ))}
+                </div>
+              </div>
+            )}
+          </div>
+        </CardBody>
+      </Card>
 
       {/* 博客内容 */}
       <Card>
-        <CardContent className="py-6">
+        <CardBody className="py-6">
           <div className="prose prose-lg max-w-none">
             {post.contentHtml ? (
               <div dangerouslySetInnerHTML={{ __html: post.contentHtml }} />
@@ -311,28 +350,29 @@ export default async function BlogDetailPage({ params }: { params: Promise<{ lan
               <div className="whitespace-pre-wrap">{post.content}</div>
             )}
           </div>
-        </CardContent>
+        </CardBody>
       </Card>
 
       {/* 操作按钮 */}
       <div className="flex items-center justify-between">
         <div className="flex items-center gap-2">
-          <Button variant="outline" size="sm">
-            <Heart className="mr-2 h-4 w-4" />
+          <Button variant="flat" color="danger" size="sm" startContent={<Heart className="w-4 h-4" />}>
             点赞
           </Button>
-          <Button variant="outline" size="sm">
-            <Share2 className="mr-2 h-4 w-4" />
+          <Button variant="flat" color="primary" size="sm" startContent={<Share2 className="w-4 h-4" />}>
             分享
           </Button>
         </div>
 
-        {/* 编辑按钮（仅对作者显示） */}
-        <Button variant="outline" size="sm" asChild>
-          <a href={`/blog/manage/edit/${post.id}`}>
-            <Edit className="mr-2 h-4 w-4" />
-            编辑
-          </a>
+        {/* 编辑按钮 */}
+        <Button
+          variant="bordered"
+          size="sm"
+          as="a"
+          href={`/blog/manage/edit/${post.id}`}
+          startContent={<Edit className="w-4 h-4" />}
+        >
+          编辑
         </Button>
       </div>
 
@@ -340,51 +380,59 @@ export default async function BlogDetailPage({ params }: { params: Promise<{ lan
       {post.allowComments && (
         <Card>
           <CardHeader>
-            <CardTitle>评论</CardTitle>
+            <p className="text-lg font-semibold">评论</p>
           </CardHeader>
-          <CardContent className="space-y-4">
+          <CardBody className="space-y-4">
             {/* 发表评论 */}
             <form onSubmit={handleCommentSubmit} className="space-y-4">
-              <div className="space-y-2">
-                <label htmlFor="comment" className="text-sm font-medium">
-                  发表评论
-                </label>
-                <Textarea
-                  id="comment"
-                  value={comment}
-                  onChange={(e) => setComment(e.target.value)}
-                  placeholder="写下您的评论..."
-                  rows={3}
-                  required
-                />
-              </div>
-              <Button type="submit" disabled={submittingComment}>
+              <Textarea
+                label="发表评论"
+                placeholder="写下您的评论..."
+                value={comment}
+                onValueChange={setComment}
+                variant="bordered"
+                minRows={3}
+                isRequired
+              />
+              <Button type="submit" color="primary" isLoading={submittingComment}>
                 {submittingComment ? "提交中..." : "发表评论"}
               </Button>
             </form>
 
+            <Divider />
+
             {/* 评论列表 */}
             {post.comments && post.comments.length > 0 ? (
-              <div className="space-y-4 mt-6">
+              <div className="space-y-4">
                 <h3 className="text-lg font-semibold">评论列表</h3>
                 {post.comments.map((comment) => (
-                  <div key={comment.id} className="border-l-4 border-primary pl-4 py-2">
-                    <div className="flex items-center gap-2 mb-2">
-                      <span className="font-medium">
-                        {comment.author?.displayName || comment.authorName || "匿名用户"}
-                      </span>
-                      <span className="text-sm text-muted-foreground">
-                        {new Date(comment.createdAt).toLocaleDateString()}
-                      </span>
-                    </div>
-                    <p className="text-sm">{comment.content}</p>
-                  </div>
+                  <Card key={comment.id} className="border-l-4 border-primary">
+                    <CardBody className="py-4">
+                      <div className="flex items-center gap-2 mb-2">
+                        <Avatar
+                          size="sm"
+                          name={comment.author?.displayName || comment.authorName || "匿名用户"}
+                          className="w-6 h-6"
+                        />
+                        <span className="font-medium">
+                          {comment.author?.displayName || comment.authorName || "匿名用户"}
+                        </span>
+                        <span className="text-sm text-default-400">
+                          {new Date(comment.createdAt).toLocaleDateString()}
+                        </span>
+                      </div>
+                      <p className="text-sm">{comment.content}</p>
+                    </CardBody>
+                  </Card>
                 ))}
               </div>
             ) : (
-              <p className="text-muted-foreground text-center py-4">暂无评论，成为第一个评论的人吧！</p>
+              <div className="text-center py-8">
+                <MessageCircle className="w-16 h-16 mx-auto mb-4 text-default-300" />
+                <p className="text-default-500">暂无评论，成为第一个评论的人吧！</p>
+              </div>
             )}
-          </CardContent>
+          </CardBody>
         </Card>
       )}
     </div>

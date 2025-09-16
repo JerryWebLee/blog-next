@@ -1,118 +1,277 @@
-import { Suspense } from "react";
+"use client";
 
-import { BlogFilters } from "@/components/blog/blog-filters";
+import { useState } from "react";
+import { Button } from "@heroui/button";
+import { Card, CardBody, CardHeader } from "@heroui/card";
+import { Chip } from "@heroui/chip";
+import { Input } from "@heroui/input";
+import { Pagination } from "@heroui/pagination";
+import { Select, SelectItem } from "@heroui/select";
+import { Spinner } from "@heroui/spinner";
+import { BookOpenIcon, CalendarIcon, FilterIcon, RefreshCwIcon, SearchIcon, TrendingUpIcon } from "lucide-react";
+
 import { BlogSidebar } from "@/components/blog/blog-sidebar";
 import { PostCard } from "@/components/blog/post-card";
+import { usePosts } from "@/lib/hooks/usePosts";
+import { Post } from "@/types/blog";
 
-// 模拟博客数据 - 后续会从数据库获取
-const mockPosts = [
-  {
-    id: 1,
-    title: "使用 Next.js 15 构建现代化博客系统",
-    slug: "building-modern-blog-with-nextjs-15",
-    excerpt:
-      "本文介绍如何使用 Next.js 15 和 Drizzle ORM 构建一个功能完整的博客系统，包括数据库设计、API 开发、前端界面等...",
-    featuredImage: "https://images.unsplash.com/photo-1555066931-4365d14bab8c?w=800&h=400&fit=crop",
-    author: {
-      displayName: "张三",
-      username: "zhangsan",
-    },
-    category: {
-      name: "技术分享",
-      slug: "tech",
-    },
-    tags: [
-      { name: "Next.js", slug: "nextjs", color: "#8B5CF6" },
-      { name: "React", slug: "react", color: "#10B981" },
-      { name: "TypeScript", slug: "typescript", color: "#3B82F6" },
-    ],
-    publishedAt: new Date("2024-01-15"),
-    viewCount: 1250,
-    commentCount: 23,
-    readTime: 8,
-  },
-  {
-    id: 2,
-    title: "Drizzle ORM 入门指南：从零开始学习",
-    slug: "drizzle-orm-getting-started",
-    excerpt:
-      "Drizzle ORM 是一个现代化的 TypeScript ORM，本文将从基础概念开始，逐步介绍如何使用 Drizzle ORM 进行数据库操作...",
-    featuredImage: "https://images.unsplash.com/photo-1518709268805-4e9042af2176?w=800&h=400&fit=crop",
-    author: {
-      displayName: "李四",
-      username: "lisi",
-    },
-    category: {
-      name: "数据库",
-      slug: "database",
-    },
-    tags: [
-      { name: "Drizzle", slug: "drizzle", color: "#F59E0B" },
-      { name: "ORM", slug: "orm", color: "#EF4444" },
-      { name: "MySQL", slug: "mysql", color: "#06B6D4" },
-    ],
-    publishedAt: new Date("2024-01-10"),
-    viewCount: 890,
-    commentCount: 15,
-    readTime: 12,
-  },
-  {
-    id: 3,
-    title: "Tailwind CSS 4.0 新特性详解",
-    slug: "tailwind-css-4-new-features",
-    excerpt: "Tailwind CSS 4.0 带来了许多激动人心的新特性，包括新的颜色系统、改进的响应式设计、更好的性能等...",
-    featuredImage: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=800&h=400&fit=crop",
-    author: {
-      displayName: "王五",
-      username: "wangwu",
-    },
-    category: {
-      name: "前端开发",
-      slug: "frontend",
-    },
-    tags: [
-      { name: "Tailwind CSS", slug: "tailwind", color: "#06B6D4" },
-      { name: "CSS", slug: "css", color: "#8B5CF6" },
-      { name: "设计系统", slug: "design-system", color: "#10B981" },
-    ],
-    publishedAt: new Date("2024-01-05"),
-    viewCount: 1560,
-    commentCount: 31,
-    readTime: 10,
-  },
-];
+export default function BlogWithAPIPage() {
+  const [searchValue, setSearchValue] = useState("");
+  const [categoryFilter, setCategoryFilter] = useState("all");
+  const [sortBy, setSortBy] = useState("publishedAt");
 
-export default function BlogPage() {
+  const {
+    posts,
+    loading,
+    error,
+    pagination,
+    searchPosts,
+    filterByCategory,
+    sortPosts,
+    goToPage,
+    incrementViewCount,
+    incrementLikeCount,
+  } = usePosts({
+    initialParams: {
+      status: "published",
+      visibility: "public",
+      limit: 6,
+    },
+  });
+
+  // 处理搜索
+  const handleSearch = (value: string) => {
+    setSearchValue(value);
+    searchPosts(value);
+  };
+
+  // 处理分类筛选
+  const handleCategoryFilter = (value: string) => {
+    setCategoryFilter(value);
+    const categoryId = value === "all" ? null : Number(value);
+    filterByCategory(categoryId);
+  };
+
+  // 处理排序
+  const handleSort = (value: string) => {
+    setSortBy(value);
+    sortPosts(value, "desc");
+  };
+
+  // 处理分页
+  const handlePageChange = (page: number) => {
+    goToPage(page);
+  };
+
+  // 处理文章交互
+  const handleViewPost = async (post: Post) => {
+    await incrementViewCount(post.id);
+    console.log("查看文章:", post.slug);
+  };
+
+  const handleLikePost = async (post: Post) => {
+    await incrementLikeCount(post.id);
+  };
+
+  if (error) {
+    return (
+      <div className="container mx-auto py-8">
+        <Card className="max-w-md mx-auto">
+          <CardBody className="text-center p-8">
+            <div className="text-danger mb-4">
+              <RefreshCwIcon className="w-12 h-12 mx-auto mb-4" />
+              <h2 className="text-2xl font-bold mb-2">加载失败</h2>
+              <p className="text-default-500">{error}</p>
+            </div>
+            <Button
+              color="primary"
+              variant="solid"
+              startContent={<RefreshCwIcon className="w-4 h-4" />}
+              onPress={() => window.location.reload()}
+            >
+              重新加载
+            </Button>
+          </CardBody>
+        </Card>
+      </div>
+    );
+  }
+
   return (
     <div className="container mx-auto px-4 py-8">
-      <div className="mb-8">
-        <h1 className="text-4xl font-bold mb-4">博客文章</h1>
-        <p className="text-xl text-muted-foreground">分享技术见解、学习心得和项目经验</p>
+      {/* 页面标题 */}
+      <div className="mb-8 text-center">
+        <div className="flex items-center justify-center gap-3 mb-4">
+          <BookOpenIcon className="w-10 h-10 text-primary" />
+          <h1 className="text-4xl font-bold bg-gradient-to-r from-primary to-secondary bg-clip-text text-transparent">
+            博客文章
+          </h1>
+        </div>
+        <p className="text-xl text-default-500">分享技术见解、学习心得和项目经验</p>
       </div>
 
       <div className="grid grid-cols-1 lg:grid-cols-4 gap-8">
         {/* 主内容区 */}
         <div className="lg:col-span-3">
-          <BlogFilters />
+          {/* 筛选器 */}
+          <Card className="mb-6">
+            <CardHeader className="flex gap-3">
+              <FilterIcon className="w-5 h-5 text-primary" />
+              <div className="flex flex-col">
+                <p className="text-lg font-semibold">筛选文章</p>
+                <p className="text-small text-default-500">通过搜索、分类和排序找到您需要的文章</p>
+              </div>
+            </CardHeader>
+            <CardBody>
+              <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                {/* 搜索 */}
+                <Input
+                  type="text"
+                  placeholder="搜索文章标题或内容..."
+                  value={searchValue}
+                  onValueChange={handleSearch}
+                  startContent={<SearchIcon className="w-4 h-4 text-default-400" />}
+                  variant="bordered"
+                  size="md"
+                />
 
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mt-6">
-            <Suspense fallback={<div>加载中...</div>}>
-              {mockPosts.map((post) => (
-                <PostCard key={post.id} post={post} />
-              ))}
-            </Suspense>
-          </div>
+                {/* 分类筛选 */}
+                <Select
+                  placeholder="选择分类"
+                  selectedKeys={new Set([categoryFilter])}
+                  onSelectionChange={(keys) => {
+                    const selectedKey = Array.from(keys)[0] as string;
+                    handleCategoryFilter(selectedKey);
+                  }}
+                  variant="bordered"
+                  size="md"
+                >
+                  <SelectItem key="all">
+                    全部分类
+                  </SelectItem>
+                  <SelectItem key="1">
+                    技术分享
+                  </SelectItem>
+                  <SelectItem key="2">
+                    前端开发
+                  </SelectItem>
+                  <SelectItem key="3">
+                    后端开发
+                  </SelectItem>
+                  <SelectItem key="4">
+                    数据库
+                  </SelectItem>
+                  <SelectItem key="5">
+                    DevOps
+                  </SelectItem>
+                </Select>
 
-          {/* 分页 */}
-          <div className="mt-8 flex justify-center">
-            <nav className="flex items-center space-x-2">
-              <button className="px-3 py-2 text-sm border rounded-md hover:bg-muted transition-colors">上一页</button>
-              <button className="px-3 py-2 text-sm bg-primary text-primary-foreground rounded-md">1</button>
-              <button className="px-3 py-2 text-sm border rounded-md hover:bg-muted transition-colors">2</button>
-              <button className="px-3 py-2 text-sm border rounded-md hover:bg-muted transition-colors">3</button>
-              <button className="px-3 py-2 text-sm border rounded-md hover:bg-muted transition-colors">下一页</button>
-            </nav>
-          </div>
+                {/* 排序 */}
+                <Select
+                  placeholder="选择排序"
+                  selectedKeys={new Set([sortBy])}
+                  onSelectionChange={(keys) => {
+                    const selectedKey = Array.from(keys)[0] as string;
+                    handleSort(selectedKey);
+                  }}
+                  variant="bordered"
+                  size="md"
+                >
+                  <SelectItem key="publishedAt">
+                    最新发布
+                  </SelectItem>
+                  <SelectItem key="createdAt">
+                    创建时间
+                  </SelectItem>
+                  <SelectItem key="viewCount">
+                    浏览次数
+                  </SelectItem>
+                  <SelectItem key="likeCount">
+                    点赞次数
+                  </SelectItem>
+                  <SelectItem key="title">
+                    标题排序
+                  </SelectItem>
+                </Select>
+              </div>
+            </CardBody>
+          </Card>
+
+          {/* 文章列表 */}
+          {loading ? (
+            <Card>
+              <CardBody className="text-center py-12">
+                <Spinner size="lg" color="primary" />
+                <p className="mt-4 text-default-500">加载中...</p>
+              </CardBody>
+            </Card>
+          ) : posts.length === 0 ? (
+            <Card>
+              <CardBody className="text-center py-12">
+                <BookOpenIcon className="w-16 h-16 mx-auto mb-4 text-default-300" />
+                <h3 className="text-xl font-semibold mb-2">暂无文章</h3>
+                <p className="text-default-500">当前没有找到符合条件的文章</p>
+              </CardBody>
+            </Card>
+          ) : (
+            <>
+              {/* 文章统计 */}
+              <div className="flex items-center gap-4 mb-6">
+                <Chip startContent={<TrendingUpIcon className="w-4 h-4" />} variant="flat" color="primary">
+                  共找到 {pagination.total} 篇文章
+                </Chip>
+                <Chip startContent={<CalendarIcon className="w-4 h-4" />} variant="flat" color="secondary">
+                  第 {pagination.page} 页 / 共 {pagination.totalPages} 页
+                </Chip>
+              </div>
+
+              {/* 文章网格 */}
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8">
+                {(posts || []).map((post) => (
+                  <PostCard
+                    key={post.id}
+                    post={{
+                    ...post,
+                    author: post.author ? {
+                      displayName: post.author.displayName || post.author.username,
+                      username: post.author.username
+                    } : {
+                      displayName: "未知作者",
+                      username: "unknown"
+                    },
+                    category: post.category ? {
+                      name: post.category.name,
+                      slug: post.category.slug
+                    } : undefined,
+                    tags: post.tags?.map(tag => ({
+                      name: tag.name,
+                      slug: tag.slug,
+                      color: tag.color
+                    })),
+                    commentCount: (post as any).commentCount || 0,
+                    readTime: (post as any).readTime || 5
+                  }}
+                    onView={() => handleViewPost(post)}
+                    onLike={() => handleLikePost(post)}
+                  />
+                ))}
+              </div>
+
+              {/* 分页 */}
+              {pagination.totalPages > 1 && (
+                <div className="flex justify-center">
+                  <Pagination
+                    total={pagination.totalPages}
+                    page={pagination.page}
+                    onChange={handlePageChange}
+                    showControls
+                    showShadow
+                    color="primary"
+                  />
+                </div>
+              )}
+            </>
+          )}
         </div>
 
         {/* 侧边栏 */}
