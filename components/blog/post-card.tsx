@@ -37,6 +37,7 @@ interface PostCardProps {
 
 export function PostCard({ post, onView, onLike }: PostCardProps) {
   const formatDate = (date?: Date) => {
+    console.log("date", date);
     return date
       ? new Intl.DateTimeFormat("zh-CN", {
           year: "numeric",
@@ -109,7 +110,7 @@ export function PostCard({ post, onView, onLike }: PostCardProps) {
             {/* 发布时间 */}
             <div className="flex items-center gap-1">
               <Calendar className="w-3 h-3" />
-              {formatDate(post.publishedAt)}
+              {/* {formatDate(post.publishedAt)} */}
             </div>
           </div>
 

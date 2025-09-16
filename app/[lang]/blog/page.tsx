@@ -99,17 +99,6 @@ export default function BlogWithAPIPage() {
 
   return (
     <div className="container mx-auto px-4 py-8">
-      {/* 页面标题 */}
-      <div className="mb-8 text-center">
-        <div className="flex items-center justify-center gap-3 mb-4">
-          <BookOpenIcon className="w-10 h-10 text-primary" />
-          <h1 className="text-4xl font-bold bg-gradient-to-r from-primary to-secondary bg-clip-text text-transparent">
-            博客文章
-          </h1>
-        </div>
-        <p className="text-xl text-default-500">分享技术见解、学习心得和项目经验</p>
-      </div>
-
       <div className="grid grid-cols-1 lg:grid-cols-4 gap-8">
         {/* 主内容区 */}
         <div className="lg:col-span-3">
