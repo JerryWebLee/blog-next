@@ -2,6 +2,7 @@
 
 import Image from "next/image";
 import Link from "next/link";
+import { useParams } from "next/navigation";
 import { Button } from "@heroui/button";
 import { Avatar, Dropdown, DropdownItem, DropdownMenu, DropdownSection, DropdownTrigger } from "@heroui/react";
 import { FileIcon, LogInIcon, LogOutIcon, MailIcon, SettingsIcon, User, UserCircleIcon } from "lucide-react";
@@ -16,7 +17,7 @@ const FALLBACK_AVATAR = "/images/fallback.svg";
 
 export function UserNav() {
   const { isAuthenticated, user, logout, isLoading } = useAuth();
-
+  const params = useParams();
   if (isLoading) {
     return (
       <div className="flex items-center space-x-2">
@@ -81,7 +82,7 @@ export function UserNav() {
             key="write-article"
             description="文章编辑入口"
             startContent={<FileIcon className={iconClasses} width="1em" height="1em" />}
-            href="/dashboard/posts/new"
+            href={`/${params.lang}/blog/manage/create`}
           >
             写文章
           </DropdownItem>
