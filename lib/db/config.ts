@@ -3,9 +3,36 @@ import { drizzle } from "drizzle-orm/mysql2";
 import mysql, { PoolOptions } from "mysql2/promise";
 
 /**
+ * 读取环境变量文件
+ */
+function loadEnvFile(filePath: string): Record<string, string> {
+  if (!fs.existsSync(filePath)) {
+    return {};
+  }
+
+  const content = fs.readFileSync(filePath, "utf-8");
+  const env: Record<string, string> = {};
+
+  content.split("\n").forEach((line) => {
+    const trimmed = line.trim();
+    if (trimmed && !trimmed.startsWith("#")) {
+      const [key, ...valueParts] = trimmed.split("=");
+      if (key && valueParts.length > 0) {
+        env[key] = valueParts.join("=");
+      }
+    }
+  });
+
+  return env;
+}
+
+/**
  * 加载环境变量
  */
 const env = {
+  ...loadEnvFile(".env"),
+  ...loadEnvFile(".env.local"),
+  ...loadEnvFile(".env.development"),
   ...process.env,
 };
 

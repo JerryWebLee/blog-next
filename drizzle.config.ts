@@ -58,10 +58,13 @@ export default defineConfig({
   // 迁移配置
   migrations: {
     table: "drizzle_migrations",
-    schema: "./drizzle/schema.ts",
+    schema: "./drizzle",
   },
 
   // 代码生成配置
   verbose: true,
   strict: true,
+
+  // Studio 配置
+  // ⚠️ drizzle.config.ts 的配置对象不支持 "studio" 字段，已移除该配置。
 } satisfies Config);
