@@ -101,9 +101,7 @@ type Locale = "zh-CN" | "en-US" | "ja-JP";
 
 export default async function HomePage({ params }: { params: Promise<{ lang: Locale }> }) {
   const { lang } = await params;
-  console.log(lang, "lang");
   const dict = await getDictionary(lang);
-  console.log(dict, "dict");
 
   return (
     <div>

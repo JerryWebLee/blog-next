@@ -66,6 +66,38 @@
     "builtWith": "Built with Next.js",
     "poweredBy": "Powered by Vercel"
   },
+  "metadata": {
+    "title": "Wilderness Blog | Exploring technology in the digital wilderness, seeking truth in the forest of thought",
+    "description": "Exploring technology in the digital wilderness, seeking truth in the forest of thought",
+    "applicationName": "Wilderness Blog",
+    "generator": "Next.js",
+    "authors": [{ "name": "Wilderness", "url": "https://blog.wilderness.cn" }],
+    "keywords": [
+      "Wilderness Blog",
+      "Technology Blog",
+      "Thinking Blog",
+      "blog",
+      "technology",
+      "thinking",
+      "Frontend Development",
+      "Backend Development",
+      "Full Stack Development",
+      "Frontend Framework",
+      "Backend Framework",
+      "Full Stack Framework",
+      "Frontend Technology",
+      "Backend Technology",
+      "Full Stack Technology"
+    ],
+    "robots": "none",
+    "viewport": { "width": "device-width", "initialScale": 1 },
+    "colorScheme": "light dark",
+    "openGraph": {
+      "title": "Wilderness Blog",
+      "description": "Exploring technology in the digital wilderness, seeking truth in the forest of thought"
+    },
+    "category": "technology"
+  },
   "navigation": {
     "home": "Home",
     "about": "About",
@@ -94,5 +126,6 @@
     "postDeleted": "Post deleted successfully",
     "titleRequired": "Title is required",
     "contentRequired": "Content is required"
-  }
+  },
+  "title": "Wilderness"
 }

@@ -7,9 +7,10 @@ import { Header } from "./header";
 
 interface ConditionalLayoutProps {
   children: React.ReactNode;
+  lang: string;
 }
 
-export function ConditionalLayout({ children }: ConditionalLayoutProps) {
+export function ConditionalLayout({ children, lang }: ConditionalLayoutProps) {
   const pathname = usePathname();
 
   // 检查是否是认证页面
@@ -36,7 +37,7 @@ export function ConditionalLayout({ children }: ConditionalLayoutProps) {
   // 普通页面：显示完整的布局
   return (
     <div className="min-h-screen flex flex-col">
-      <Header />
+      <Header lang={lang} />
       <main className="flex-1 min-h-[80vh] relative">{children}</main>
       <Footer />
     </div>

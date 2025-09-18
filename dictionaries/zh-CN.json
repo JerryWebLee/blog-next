@@ -19,7 +19,7 @@
     "usernameRequired": "用户名是必填项"
   },
   "blog": {
-    "title": "荒野博客",
+    "title": "荒野",
     "subtitle": "在数字荒野中探索技术，在思考森林中寻找真理",
     "noPosts": "暂无文章",
     "loadMore": "加载更多",
@@ -66,6 +66,38 @@
     "builtWith": "使用 Next.js 构建",
     "poweredBy": "由 Vercel 提供支持"
   },
+  "metadata": {
+    "title": "荒野博客 | 在数字荒野中探索技术 - 在思考森林中寻找真理",
+    "description": "在数字荒野中探索技术，在思考森林中寻找真理",
+    "applicationName": "荒野博客",
+    "generator": "Next.js",
+    "authors": [{ "name": "荒野", "url": "https://blog.huangye.cn" }],
+    "keywords": [
+      "荒野博客",
+      "技术博客",
+      "思考博客",
+      "blog",
+      "technology",
+      "thinking",
+      "前端开发",
+      "后端开发",
+      "全栈开发",
+      "前端框架",
+      "后端框架",
+      "全栈框架",
+      "前端技术",
+      "后端技术",
+      "全栈技术"
+    ],
+    "robots": "none",
+    "viewport": { "width": "device-width", "initialScale": 1 },
+    "colorScheme": "light dark",
+    "openGraph": {
+      "title": "荒野博客",
+      "description": "在数字荒野中探索技术，在思考森林中寻找真理"
+    },
+    "category": "technology"
+  },
   "navigation": {
     "home": "首页",
     "about": "关于",
@@ -94,5 +126,6 @@
     "postDeleted": "文章删除成功",
     "titleRequired": "标题是必填项",
     "contentRequired": "内容是必填项"
-  }
+  },
+  "title": "荒野"
 }
