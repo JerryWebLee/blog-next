@@ -2,6 +2,7 @@
 
 import { usePathname } from "next/navigation";
 
+import { Locale } from "@/types";
 import { Footer } from "./footer";
 import { Header } from "./header";
 
@@ -37,7 +38,7 @@ export function ConditionalLayout({ children, lang }: ConditionalLayoutProps) {
   // 普通页面：显示完整的布局
   return (
     <div className="min-h-screen flex flex-col">
-      <Header lang={lang} />
+      <Header lang={lang as Locale} />
       <main className="flex-1 min-h-[80vh] relative">{children}</main>
       <Footer />
     </div>
