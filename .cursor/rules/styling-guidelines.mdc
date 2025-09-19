@@ -1,0 +1,401 @@
+---
+description: 
+globs: 
+alwaysApply: true
+---
+# 项目概览
+
+这是一个基于 Next.js 15 构建的现代化多语言博客系统，名为"荒野博客"。
+
+## 技术栈
+- **框架**: Next.js 15 (App Router)
+- **语言**: TypeScript
+- **数据库**: MySQL + Drizzle ORM
+- **样式**: Tailwind CSS + SCSS
+- **UI组件**: HeroUI + 自定义组件
+- **国际化**: 支持中文、英文、日文
+- **认证**: JWT + bcryptjs
+- **部署**: Vercel
+
+## 项目结构
+- [app/](mdc:app) - Next.js App Router 页面和API路由
+- [components/](mdc:components) - React 组件库
+- [lib/](mdc:lib) - 工具函数、数据库配置、服务层
+- [types/](mdc:types) - TypeScript 类型定义
+- [dictionaries/](mdc:dictionaries) - 国际化字典文件
+- [public/](mdc:public) - 静态资源
+- [styles/](mdc:styles) - 全局样式文件
+
+## 核心功能
+- 多语言支持 (zh-CN, en-US, ja-JP)
+- 用户认证和权限管理
+- 文章管理系统 (CRUD)
+- 分类和标签系统
+- 评论系统
+- 响应式设计
+- 主题切换 (明暗模式)
+- SEO 优化
+
+```mdc:.cursor/rules/database-schema.mdc
+# 数据库架构
+
+项目使用 MySQL 数据库，通过 Drizzle ORM 进行管理。
+
+## 核心表结构
+参考 [lib/db/schema.ts](mdc:lib/db/schema.ts) 了解完整的数据库架构。
+
+### 主要表
+- **users** - 用户表 (管理员、作者、普通用户)
+- **posts** - 文章表 (支持草稿、发布、归档状态)
+- **categories** - 分类表 (支持层级结构)
+- **tags** - 标签表 (多对多关联)
+- **comments** - 评论表 (支持嵌套评论)
+- **media** - 媒体文件表
+- **settings** - 系统设置表
+
+### 关系
+- 用户 → 文章 (一对多)
+- 文章 → 分类 (多对一)
+- 文章 → 标签 (多对多)
+- 文章 → 评论 (一对多)
+- 评论 → 评论 (自引用，支持嵌套)
+
+## 数据库操作
+- 使用 Drizzle ORM 进行类型安全的数据库操作
+- 配置文件: [drizzle.config.ts](mdc:drizzle.config.ts)
+- 数据库连接: [lib/db/config.ts](mdc:lib/db/config.ts)
+
+## 脚本命令
+```bash
+pnpm db:generate  # 生成迁移文件
+pnpm db:migrate   # 执行迁移
+pnpm db:push      # 推送到数据库
+pnpm db:studio    # 打开数据库管理界面
+pnpm db:seed      # 填充测试数据
+```
+
+```mdc:.cursor/rules/type-definitions.mdc
+# 类型定义
+
+项目使用 TypeScript 进行类型安全开发，所有类型定义在 [types/](mdc:types) 目录中。
+
+## 核心类型文件
+- [types/blog.ts](mdc:types/blog.ts) - 博客系统相关类型
+- [types/common.d.ts](mdc:types/common.d.ts) - 通用类型定义
+- [types/index.ts](mdc:types/index.ts) - 类型导出入口
+
+## 主要类型接口
+
+### 基础类型
+- `BaseEntity` - 所有实体的基础接口
+- `PaginationParams` - 分页查询参数
+- `ApiResponse<T>` - 统一API响应格式
+
+### 业务类型
+- `User` - 用户实体
+- `Post` - 文章实体
+- `Category` - 分类实体
+- `Tag` - 标签实体
+- `Comment` - 评论实体
+- `Media` - 媒体文件实体
+
+### 请求/响应类型
+- `CreatePostRequest` - 创建文章请求
+- `UpdatePostRequest` - 更新文章请求
+- `PostQueryParams` - 文章查询参数
+- `LoginRequest` - 登录请求
+- `LoginResponse` - 登录响应
+
+## 使用建议
+- 所有API接口都应该使用预定义的类型
+- 新增功能时先定义类型接口
+- 使用泛型提高代码复用性
+- 保持类型定义与数据库schema同步
+
+```mdc:.cursor/rules/component-architecture.mdc
+# 组件架构
+
+项目采用模块化的组件架构，所有组件位于 [components/](mdc:components) 目录。
+
+## 组件分类
+
+### 布局组件 ([components/layout/](mdc:components/layout))
+- `ConditionalLayout` - 条件布局组件
+- `Header` - 页面头部
+- `Footer` - 页面底部
+- `LanguageSwitcher` - 语言切换器
+- `ThemeToggle` - 主题切换器
+- `UserNav` - 用户导航
+
+### 博客组件 ([components/blog/](mdc:components/blog))
+- `PostCard` - 文章卡片
+- `BlogSidebar` - 博客侧边栏
+- `BlogNavigation` - 博客导航
+- `BlogFilters` - 博客过滤器
+
+### 自定义UI组件 ([components/ui/](mdc:components/ui))
+- `Button` - 按钮组件
+- `Card` - 卡片组件
+- `Badge` - 徽章组件
+- `Input` - 输入框组件
+- `Select` - 选择器组件
+- `Textarea` - 文本域组件
+- `DropdownMenu` - 下拉菜单组件
+
+## 组件设计原则
+- 使用 TypeScript 进行类型安全
+- 支持主题切换 (明暗模式)
+- 响应式设计
+- 可复用性和可组合性
+- 遵循 HeroUI 设计系统
+- 支持国际化
+- 如果 HeroUI 中存在满足功能需求的 UI 组件，就使用 HeroUI 提供的组件，如果不存在满足需求的组件，就使用自定义 UI 组件，非必要的情况下，不要引入额外的 UI 组件库
+
+## 样式规范
+- 使用 Tailwind CSS 进行样式设计
+- 自定义样式放在 [styles/](mdc:styles) 目录
+- 使用 CSS 变量支持主题切换
+- 遵循移动优先的响应式设计
+
+```mdc:.cursor/rules/api-routes.mdc
+# API 路由
+
+项目使用 Next.js App Router 的 API 路由，所有API端点位于 [app/api/](mdc:app/api) 目录。
+
+## API 结构
+
+### 认证相关 ([app/api/auth/](mdc:app/api/auth))
+- `POST /api/auth/login` - 用户登录
+- `POST /api/auth/register` - 用户注册
+- `POST /api/auth/forgot-password` - 忘记密码
+- `POST /api/auth/reset-password` - 重置密码
+
+### 文章相关 ([app/api/posts/](mdc:app/api/posts))
+- `GET /api/posts` - 获取文章列表
+- `POST /api/posts` - 创建文章
+- `GET /api/posts/[id]` - 获取单篇文章
+- `PUT /api/posts/[id]` - 更新文章
+- `DELETE /api/posts/[id]` - 删除文章
+- `POST /api/posts/[id]/view` - 记录文章浏览
+
+### 其他API
+- `GET /api/proxy/[...path]` - 代理API
+- `POST /api/seed` - 数据填充
+- `GET /api/test-db` - 数据库测试
+- `GET /api/test-env` - 环境测试
+
+## API 设计规范
+- 统一的响应格式: `ApiResponse<T>`
+- 使用 TypeScript 类型定义
+- 错误处理和状态码规范
+- 支持分页查询
+- JWT 认证保护
+- 输入验证和清理
+
+## 使用示例
+```typescript
+// 获取文章列表
+const response = await fetch('/api/posts?page=1&limit=10');
+const data: ApiResponse<PaginatedResponseData<Post>> = await response.json();
+```
+
+```mdc:.cursor/rules/internationalization.mdc
+# 国际化 (i18n)
+
+项目支持多语言，包括中文、英文和日文。
+
+## 语言支持
+- `zh-CN` - 简体中文 (默认)
+- `en-US` - 英文
+- `ja-JP` - 日文
+
+## 文件结构
+- [dictionaries/](mdc:dictionaries) - 语言字典文件
+  - [zh-CN.json](mdc:dictionaries/zh-CN.json) - 中文翻译
+  - [en-US.json](mdc:dictionaries/en-US.json) - 英文翻译
+  - [ja-JP.json](mdc:dictionaries/ja-JP.json) - 日文翻译
+
+## 核心文件
+- [lib/dictionaries.ts](mdc:lib/dictionaries.ts) - 字典加载函数
+- [middleware.ts](mdc:middleware.ts) - 语言检测中间件
+
+## 使用方法
+```typescript
+// 在组件中获取字典
+const dict = await getDictionary(lang);
+
+// 使用翻译
+<h1>{dict.about.title}</h1>
+<p>{dict.about.description}</p>
+```
+
+## 路由结构
+- `/[lang]/` - 语言前缀路由
+- `/[lang]/about` - 关于页面
+- `/[lang]/blog` - 博客页面
+- `/[lang]/auth` - 认证页面
+
+## 语言切换
+使用 `LanguageSwitcher` 组件进行语言切换，支持URL参数和本地存储。
+
+```mdc:.cursor/rules/development-workflow.mdc
+# 开发工作流
+
+## 开发环境设置
+```bash
+# 安装依赖
+pnpm install
+
+# 启动开发服务器
+pnpm dev
+
+# 构建项目
+pnpm build
+
+# 启动生产服务器
+pnpm start
+```
+
+## 代码质量
+```bash
+# 代码检查
+pnpm lint
+
+# 自动修复
+pnpm lint:fix
+
+# 代码格式化
+pnpm format
+
+# 格式化检查
+pnpm format:check
+```
+
+## 数据库操作
+```bash
+# 生成迁移文件
+pnpm db:generate
+
+# 执行迁移
+pnpm db:migrate
+
+# 推送到数据库
+pnpm db:push
+
+# 打开数据库管理界面
+pnpm db:studio
+
+# 填充测试数据
+pnpm db:seed
+```
+
+## 测试
+```bash
+# 测试API
+pnpm test:api
+
+# 测试数据库连接
+pnpm test:db:connect
+
+# 测试环境变量
+pnpm test:db:env
+```
+
+## 项目配置
+- [next.config.ts](mdc:next.config.ts) - Next.js 配置
+- [tailwind.config.mjs](mdc:tailwind.config.mjs) - Tailwind CSS 配置
+- [tsconfig.json](mdc:tsconfig.json) - TypeScript 配置
+- [eslint.config.mjs](mdc:eslint.config.mjs) - ESLint 配置
+- [drizzle.config.ts](mdc:drizzle.config.ts) - Drizzle ORM 配置
+
+```mdc:.cursor/rules/styling-guidelines.mdc
+# 样式指南
+
+项目使用 Tailwind CSS 和 SCSS 进行样式设计。
+
+## 样式文件
+- [styles/globals.scss](mdc:styles/globals.scss) - 全局样式
+- [styles/class.scss](mdc:styles/class.scss) - 类样式定义
+- [tailwind.config.mjs](mdc:tailwind.config.mjs) - Tailwind 配置
+
+## 设计系统
+- 基于 HeroUI 组件库
+- 支持明暗主题切换
+- 响应式设计 (移动优先)
+- 使用 CSS 变量支持主题
+
+## 颜色系统
+- `primary` - 主色调
+- `secondary` - 辅助色
+- `accent` - 强调色
+- `muted` - 柔和色
+- `background` - 背景色
+- `foreground` - 前景色
+
+## 组件样式规范
+- 使用 Tailwind 工具类
+- 自定义样式使用 SCSS
+- 支持主题变量
+- 保持一致的间距和尺寸
+- 使用语义化的颜色名称
+
+## 动画效果
+- 使用 Tailwind 的 transition 类
+- 支持 hover 和 focus 状态
+- 使用 transform 进行动画
+- 保持动画的一致性
+
+## 响应式设计
+- 移动优先的设计方法
+- 使用 Tailwind 的响应式前缀
+- 测试不同屏幕尺寸
+- 保持内容的可读性
+
+```mdc:.cursor/rules/authentication.mdc
+# 认证系统
+
+项目使用 JWT 进行用户认证和授权。
+
+## 认证流程
+1. 用户注册/登录
+2. 服务器验证凭据
+3. 生成 JWT token
+4. 客户端存储 token
+5. 后续请求携带 token
+
+## 相关文件
+- [lib/utils/auth.ts](mdc:lib/utils/auth.ts) - 认证工具函数
+- [lib/contexts/auth-context.tsx](mdc:lib/contexts/auth-context.tsx) - 认证上下文
+- [app/api/auth/](mdc:app/api/auth) - 认证API路由
+
+## 用户角色
+- `admin` - 管理员 (全部权限)
+- `author` - 作者 (文章管理权限)
+- `user` - 普通用户 (基础权限)
+
+## 权限控制
+- 使用中间件进行路由保护
+- 组件级别的权限检查
+- API 端点的权限验证
+- 基于角色的访问控制
+
+## 安全措施
+- 密码加密存储 (bcryptjs)
+- JWT token 过期机制
+- 刷新 token 机制
+- 输入验证和清理
+- CSRF 保护
+
+## 使用示例
+```typescript
+// 检查用户认证状态
+const { user, isAuthenticated } = useAuth();
+
+// 保护路由
+if (!isAuthenticated) {
+  redirect('/auth/login');
+}
+```
+
+这些Cursor规则文件将帮助AI更好地理解您的项目结构、技术栈和开发规范，从而提供更准确和有用的代码建议和帮助。每个规则文件都专注于项目的特定方面，使AI能够快速定位相关代码和文件。
+

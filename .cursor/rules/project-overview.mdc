@@ -1,0 +1,37 @@
+---
+description: 
+globs: 
+alwaysApply: true
+---
+# 项目概览
+
+这是一个基于 Next.js 15 构建的现代化多语言博客系统，名为"荒野博客"。
+
+## 技术栈
+- **框架**: Next.js 15 (App Router)
+- **语言**: TypeScript
+- **数据库**: MySQL + Drizzle ORM
+- **样式**: Tailwind CSS + SCSS
+- **UI组件**: HeroUI + 自定义组件
+- **国际化**: 支持中文、英文、日文
+- **认证**: JWT + bcryptjs
+- **部署**: Vercel
+
+## 项目结构
+- [app/](mdc:app) - Next.js App Router 页面和API路由
+- [components/](mdc:components) - React 组件库
+- [lib/](mdc:lib) - 工具函数、数据库配置、服务层
+- [types/](mdc:types) - TypeScript 类型定义
+- [dictionaries/](mdc:dictionaries) - 国际化字典文件
+- [public/](mdc:public) - 静态资源
+- [styles/](mdc:styles) - 全局样式文件
+
+## 核心功能
+- 多语言支持 (zh-CN, en-US, ja-JP)
+- 用户认证和权限管理
+- 文章管理系统 (CRUD)
+- 分类和标签系统
+- 评论系统
+- 响应式设计
+- 主题切换 (明暗模式)
+- SEO 优化

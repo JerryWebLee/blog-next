@@ -1,0 +1,156 @@
+---
+description: 
+globs: 
+alwaysApply: true
+---
+# API 路由
+
+项目使用 Next.js App Router 的 API 路由，所有API端点位于 [app/api/](mdc:app/api) 目录。
+
+## API 结构
+
+### 认证相关 ([app/api/auth/](mdc:app/api/auth))
+- `POST /api/auth/login` - 用户登录
+- `POST /api/auth/register` - 用户注册
+- `POST /api/auth/forgot-password` - 忘记密码
+- `POST /api/auth/reset-password` - 重置密码
+
+### 文章相关 ([app/api/posts/](mdc:app/api/posts))
+- `GET /api/posts` - 获取文章列表
+- `POST /api/posts` - 创建文章
+- `GET /api/posts/[id]` - 获取单篇文章
+- `PUT /api/posts/[id]` - 更新文章
+- `DELETE /api/posts/[id]` - 删除文章
+- `POST /api/posts/[id]/view` - 记录文章浏览
+
+### 其他API
+- `GET /api/proxy/[...path]` - 代理API
+- `POST /api/seed` - 数据填充
+- `GET /api/test-db` - 数据库测试
+- `GET /api/test-env` - 环境测试
+
+## API 设计规范
+- 统一的响应格式: `ApiResponse<T>`
+- 使用 TypeScript 类型定义
+- 错误处理和状态码规范
+- 支持分页查询
+- JWT 认证保护
+- 输入验证和清理
+
+## 使用示例
+```typescript
+// 获取文章列表
+const response = await fetch('/api/posts?page=1&limit=10');
+const data: ApiResponse<PaginatedResponseData<Post>> = await response.json();
+```
+```
+
+```mdc:.cursor/rules/internationalization.mdc
+# 国际化 (i18n)
+
+项目支持多语言，包括中文、英文和日文。
+
+## 语言支持
+- `zh-CN` - 简体中文 (默认)
+- `en-US` - 英文
+- `ja-JP` - 日文
+
+## 文件结构
+- [dictionaries/](mdc:dictionaries) - 语言字典文件
+  - [zh-CN.json](mdc:dictionaries/zh-CN.json) - 中文翻译
+  - [en-US.json](mdc:dictionaries/en-US.json) - 英文翻译
+  - [ja-JP.json](mdc:dictionaries/ja-JP.json) - 日文翻译
+
+## 核心文件
+- [lib/dictionaries.ts](mdc:lib/dictionaries.ts) - 字典加载函数
+- [middleware.ts](mdc:middleware.ts) - 语言检测中间件
+
+## 使用方法
+```typescript
+// 在组件中获取字典
+const dict = await getDictionary(lang);
+
+// 使用翻译
+<h1>{dict.about.title}</h1>
+<p>{dict.about.description}</p>
+```
+
+## 路由结构
+- `/[lang]/` - 语言前缀路由
+- `/[lang]/about` - 关于页面
+- `/[lang]/blog` - 博客页面
+- `/[lang]/auth` - 认证页面
+
+## 语言切换
+使用 `LanguageSwitcher` 组件进行语言切换，支持URL参数和本地存储。
+```
+
+```mdc:.cursor/rules/development-workflow.mdc
+# 开发工作流
+
+## 开发环境设置
+```bash
+# 安装依赖
+pnpm install
+
+# 启动开发服务器
+pnpm dev
+
+# 构建项目
+pnpm build
+
+# 启动生产服务器
+pnpm start
+```
+
+## 代码质量
+```bash
+# 代码检查
+pnpm lint
+
+# 自动修复
+pnpm lint:fix
+
+# 代码格式化
+pnpm format
+
+# 格式化检查
+pnpm format:check
+```
+
+## 数据库操作
+```bash
+# 生成迁移文件
+pnpm db:generate
+
+# 执行迁移
+pnpm db:migrate
+
+# 推送到数据库
+pnpm db:push
+
+# 打开数据库管理界面
+pnpm db:studio
+
+# 填充测试数据
+pnpm db:seed
+```
+
+## 测试
+```bash
+# 测试API
+pnpm test:api
+
+# 测试数据库连接
+pnpm test:db:connect
+
+# 测试环境变量
+pnpm test:db:env
+```
+
+## 项目配置
+- [next.config.ts](mdc:next.config.ts) - Next.js 配置
+- [tailwind.config.mjs](mdc:tailwind.config.mjs) - Tailwind CSS 配置
+- [tsconfig.json](mdc:tsconfig.json) - TypeScript 配置
+- [eslint.config.mjs](mdc:eslint.config.mjs) - ESLint 配置
+- [drizzle.config.ts](mdc:drizzle.config.ts) - Drizzle ORM 配置

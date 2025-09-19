@@ -1,0 +1,49 @@
+---
+description: 
+globs: 
+alwaysApply: true
+---
+# 认证系统
+
+项目使用 JWT 进行用户认证和授权。
+
+## 认证流程
+1. 用户注册/登录
+2. 服务器验证凭据
+3. 生成 JWT token
+4. 客户端存储 token
+5. 后续请求携带 token
+
+## 相关文件
+- [lib/utils/auth.ts](mdc:lib/utils/auth.ts) - 认证工具函数
+- [lib/contexts/auth-context.tsx](mdc:lib/contexts/auth-context.tsx) - 认证上下文
+- [app/api/auth/](mdc:app/api/auth) - 认证API路由
+
+## 用户角色
+- `admin` - 管理员 (全部权限)
+- `author` - 作者 (文章管理权限)
+- `user` - 普通用户 (基础权限)
+
+## 权限控制
+- 使用中间件进行路由保护
+- 组件级别的权限检查
+- API 端点的权限验证
+- 基于角色的访问控制
+
+## 安全措施
+- 密码加密存储 (bcryptjs)
+- JWT token 过期机制
+- 刷新 token 机制
+- 输入验证和清理
+- CSRF 保护
+
+## 使用示例
+```typescript
+// 检查用户认证状态
+const { user, isAuthenticated } = useAuth();
+
+// 保护路由
+if (!isAuthenticated) {
+  redirect('/auth/login');
+}
+```

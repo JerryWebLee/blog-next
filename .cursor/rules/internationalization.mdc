@@ -1,0 +1,42 @@
+---
+description: 
+globs: 
+alwaysApply: true
+---
+# 国际化 (i18n)
+
+项目支持多语言，包括中文、英文和日文。
+
+## 语言支持
+- `zh-CN` - 简体中文 (默认)
+- `en-US` - 英文
+- `ja-JP` - 日文
+
+## 文件结构
+- [dictionaries/](mdc:dictionaries) - 语言字典文件
+  - [zh-CN.json](mdc:dictionaries/zh-CN.json) - 中文翻译
+  - [en-US.json](mdc:dictionaries/en-US.json) - 英文翻译
+  - [ja-JP.json](mdc:dictionaries/ja-JP.json) - 日文翻译
+
+## 核心文件
+- [lib/dictionaries.ts](mdc:lib/dictionaries.ts) - 字典加载函数
+- [middleware.ts](mdc:middleware.ts) - 语言检测中间件
+
+## 使用方法
+```typescript
+// 在组件中获取字典
+const dict = await getDictionary(lang);
+
+// 使用翻译
+<h1>{dict.about.title}</h1>
+<p>{dict.about.description}</p>
+```
+
+## 路由结构
+- `/[lang]/` - 语言前缀路由
+- `/[lang]/about` - 关于页面
+- `/[lang]/blog` - 博客页面
+- `/[lang]/auth` - 认证页面
+
+## 语言切换
+使用 `LanguageSwitcher` 组件进行语言切换，支持URL参数和本地存储。

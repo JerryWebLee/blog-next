@@ -1,0 +1,128 @@
+---
+description: 
+globs: 
+alwaysApply: true
+---
+# 数据库架构
+
+项目使用 MySQL 数据库，通过 Drizzle ORM 进行管理。
+
+## 核心表结构
+参考 [lib/db/schema.ts](mdc:lib/db/schema.ts) 了解完整的数据库架构。
+
+### 主要表
+- **users** - 用户表 (管理员、作者、普通用户)
+- **posts** - 文章表 (支持草稿、发布、归档状态)
+- **categories** - 分类表 (支持层级结构)
+- **tags** - 标签表 (多对多关联)
+- **comments** - 评论表 (支持嵌套评论)
+- **media** - 媒体文件表
+- **settings** - 系统设置表
+
+### 关系
+- 用户 → 文章 (一对多)
+- 文章 → 分类 (多对一)
+- 文章 → 标签 (多对多)
+- 文章 → 评论 (一对多)
+- 评论 → 评论 (自引用，支持嵌套)
+
+## 数据库操作
+- 使用 Drizzle ORM 进行类型安全的数据库操作
+- 配置文件: [drizzle.config.ts](mdc:drizzle.config.ts)
+- 数据库连接: [lib/db/config.ts](mdc:lib/db/config.ts)
+
+## 脚本命令
+```bash
+pnpm db:generate  # 生成迁移文件
+pnpm db:migrate   # 执行迁移
+pnpm db:push      # 推送到数据库
+pnpm db:studio    # 打开数据库管理界面
+pnpm db:seed      # 填充测试数据
+```
+```
+
+```mdc:.cursor/rules/type-definitions.mdc
+# 类型定义
+
+项目使用 TypeScript 进行类型安全开发，所有类型定义在 [types/](mdc:types) 目录中。
+
+## 核心类型文件
+- [types/blog.ts](mdc:types/blog.ts) - 博客系统相关类型
+- [types/common.d.ts](mdc:types/common.d.ts) - 通用类型定义
+- [types/index.ts](mdc:types/index.ts) - 类型导出入口
+
+## 主要类型接口
+
+### 基础类型
+- `BaseEntity` - 所有实体的基础接口
+- `PaginationParams` - 分页查询参数
+- `ApiResponse<T>` - 统一API响应格式
+
+### 业务类型
+- `User` - 用户实体
+- `Post` - 文章实体
+- `Category` - 分类实体
+- `Tag` - 标签实体
+- `Comment` - 评论实体
+- `Media` - 媒体文件实体
+
+### 请求/响应类型
+- `CreatePostRequest` - 创建文章请求
+- `UpdatePostRequest` - 更新文章请求
+- `PostQueryParams` - 文章查询参数
+- `LoginRequest` - 登录请求
+- `LoginResponse` - 登录响应
+
+## 使用建议
+- 所有API接口都应该使用预定义的类型
+- 新增功能时先定义类型接口
+- 使用泛型提高代码复用性
+- 保持类型定义与数据库schema同步
+```
+
+```mdc:.cursor/rules/component-architecture.mdc
+# 组件架构
+
+项目采用模块化的组件架构，所有组件位于 [components/](mdc:components) 目录。
+
+## 组件分类
+
+### 布局组件 ([components/layout/](mdc:components/layout))
+- `ConditionalLayout` - 条件布局组件
+- `Header` - 页面头部
+- `Footer` - 页面底部
+- `LanguageSwitcher` - 语言切换器
+- `ThemeToggle` - 主题切换器
+- `UserNav` - 用户导航
+
+### 博客组件 ([components/blog/](mdc:components/blog))
+- `PostCard` - 文章卡片
+- `BlogSidebar` - 博客侧边栏
+- `BlogNavigation` - 博客导航
+- `BlogFilters` - 博客过滤器
+
+### UI组件 ([components/ui/](mdc:components/ui))
+- `Button` - 按钮组件
+- `Card` - 卡片组件
+- `Badge` - 徽章组件
+- `Input` - 输入框组件
+- `Select` - 选择器组件
+- `Textarea` - 文本域组件
+- `DropdownMenu` - 下拉菜单组件
+
+## 组件设计原则
+- 使用 TypeScript 进行类型安全
+- 支持主题切换 (明暗模式)
+- 响应式设计
+- 可复用性和可组合性
+- 遵循 HeroUI 设计系统
+- 支持国际化
+- 如果 HeroUI 中存在满足功能需求的 UI 组件，就使用 HeroUI 提供的组件，如果不存在满足需求的组件，就使用自定义 UI 组件，非必要的情况下，不要引入额外的 UI 组件库
+
+## 样式规范
+- 使用 Tailwind CSS 进行样式设计
+- 自定义样式放在 [styles/](mdc:styles) 目录
+- 使用 CSS 变量支持主题切换
+- 遵循移动优先的响应式设计
+```
+
