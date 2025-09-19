@@ -170,7 +170,12 @@ export default function RegisterPage() {
                 placeholder="请输入密码"
                 startContent={<Lock className="w-4 h-4 text-gray-200" />}
                 endContent={
-                  <button type="button" onClick={() => setShowPassword(!showPassword)} className="focus:outline-none">
+                  <button
+                    type="button"
+                    onClick={() => setShowPassword(!showPassword)}
+                    className="focus:outline-none"
+                    aria-label={showPassword ? "隐藏密码" : "显示密码"}
+                  >
                     {showPassword ? (
                       <EyeOff className="w-4 h-4 text-gray-200" />
                     ) : (
@@ -219,6 +224,7 @@ export default function RegisterPage() {
                     type="button"
                     onClick={() => setShowConfirmPassword(!showConfirmPassword)}
                     className="focus:outline-none"
+                    aria-label={showConfirmPassword ? "隐藏确认密码" : "显示确认密码"}
                   >
                     {showConfirmPassword ? (
                       <EyeOff className="w-4 h-4 text-gray-400" />

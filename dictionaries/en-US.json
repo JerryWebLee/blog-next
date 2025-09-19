@@ -90,8 +90,6 @@
       "Full Stack Technology"
     ],
     "robots": "none",
-    "viewport": { "width": "device-width", "initialScale": 1 },
-    "colorScheme": "light dark",
     "openGraph": {
       "title": "Wilderness Blog",
       "description": "Exploring technology in the digital wilderness, seeking truth in the forest of thought"

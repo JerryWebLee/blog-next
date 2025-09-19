@@ -1,6 +1,6 @@
 import "@/styles/globals.scss";
 
-import { Metadata } from "next";
+import { Metadata, Viewport } from "next";
 
 import { ConditionalLayout } from "@/components/layout/conditional-layout";
 import { getDictionary } from "@/lib/dictionaries";
@@ -13,6 +13,15 @@ export async function generateMetadata({ params }: { params: Promise<{ lang: Loc
   const dict = await getDictionary(lang);
 
   return dict.metadata as Metadata;
+}
+
+// 生成视口配置
+export async function generateViewport({ params }: { params: Promise<{ lang: Locale }> }): Promise<Viewport> {
+  return {
+    width: "device-width",
+    initialScale: 1,
+    colorScheme: "light dark",
+  };
 }
 
 export default async function RootLayout({
