@@ -9,7 +9,21 @@ import { Textarea } from "@heroui/react";
 import { Select, SelectItem } from "@heroui/select";
 import { Spinner } from "@heroui/spinner";
 import { Switch } from "@heroui/switch";
-import { ArrowLeft, Eye, EyeOff, FileText, Save } from "lucide-react";
+import { Chip } from "@heroui/chip";
+import { 
+  ArrowLeft, 
+  Eye, 
+  EyeOff, 
+  FileText, 
+  Save, 
+  Image, 
+  Settings, 
+  Type,
+  Calendar,
+  Lock,
+  MessageSquare,
+  Sparkles
+} from "lucide-react";
 
 import { CreatePostRequest, PostStatus, PostVisibility } from "@/types/blog";
 
@@ -95,168 +109,291 @@ export default function CreateBlogPage() {
   };
 
   return (
-    <div className="container mx-auto py-6 space-y-6">
-      {/* 页面标题和返回按钮 */}
-      <div className="flex items-center gap-4">
-        <Button
-          variant="bordered"
-          size="sm"
-          onPress={() => router.back()}
-          startContent={<ArrowLeft className="w-4 h-4" />}
-        >
-          返回
-        </Button>
-        <div>
-          <h1 className="text-3xl font-bold">创建新博客</h1>
-          <p className="text-default-500">创建一篇新的博客文章</p>
-        </div>
-      </div>
-
-      <form onSubmit={handleSubmit} className="space-y-6">
-        {/* 基本信息 */}
-        <Card>
-          <CardHeader className="flex gap-3">
-            <FileText className="w-5 h-5 text-primary" />
-            <div className="flex flex-col">
-              <p className="text-lg font-semibold">基本信息</p>
-              <p className="text-small text-default-500">填写博客的基本信息</p>
-            </div>
-          </CardHeader>
-          <CardBody className="space-y-4">
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-              <Input
-                label="标题"
-                placeholder="输入博客标题"
-                value={formData.title}
-                onValueChange={handleTitleChange}
-                variant="bordered"
-                isRequired
-              />
-              <Input
-                label="别名"
-                placeholder="自动生成或手动输入"
-                value={formData.slug}
-                onValueChange={(value: string) => handleInputChange("slug", value)}
-                variant="bordered"
-              />
-            </div>
-
-            <Textarea
-              label="摘要"
-              placeholder="博客摘要（可选）"
-              value={formData.excerpt}
-              onValueChange={(value: string) => handleInputChange("excerpt", value)}
+    <div className="min-h-screen bg-gradient-to-br from-background to-default-50">
+      {/* 主容器 - 增加最大宽度 */}
+      <div className="container mx-auto px-4 py-8 max-w-6xl">
+        {/* 页面标题和返回按钮 */}
+        <div className="flex flex-col lg:flex-row justify-between items-start lg:items-center gap-6 mb-8">
+          <div className="flex items-center gap-4">
+            <Button
               variant="bordered"
-              minRows={3}
-            />
-
-            <Input
-              label="特色图片URL"
-              placeholder="图片链接地址"
-              value={formData.featuredImage}
-              onValueChange={(value: string) => handleInputChange("featuredImage", value)}
-              variant="bordered"
-              type="url"
-            />
-          </CardBody>
-        </Card>
-
-        {/* 内容 */}
-        <Card>
-          <CardHeader>
-            <p className="text-lg font-semibold">内容</p>
-          </CardHeader>
-          <CardBody>
-            <Textarea
-              label="内容"
-              placeholder="输入博客内容..."
-              value={formData.content}
-              onValueChange={(value: string) => handleInputChange("content", value)}
-              variant="bordered"
-              minRows={15}
-              isRequired
-            />
-          </CardBody>
-        </Card>
-
-        {/* 设置 */}
-        <Card>
-          <CardHeader>
-            <p className="text-lg font-semibold">设置</p>
-          </CardHeader>
-          <CardBody className="space-y-4">
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-              <Select
-                label="状态"
-                placeholder="选择状态"
-                selectedKeys={formData.status ? new Set([formData.status]) : new Set()}
-                onSelectionChange={(keys) => {
-                  const selectedKey = Array.from(keys)[0] as string;
-                  handleInputChange("status", selectedKey as PostStatus);
-                }}
-                variant="bordered"
-              >
-                <SelectItem key="draft">草稿</SelectItem>
-                <SelectItem key="published">发布</SelectItem>
-                <SelectItem key="archived">归档</SelectItem>
-              </Select>
-
-              <Select
-                label="可见性"
-                placeholder="选择可见性"
-                selectedKeys={formData.visibility ? new Set([formData.visibility]) : new Set()}
-                onSelectionChange={(keys) => {
-                  const selectedKey = Array.from(keys)[0] as string;
-                  handleInputChange("visibility", selectedKey as PostVisibility);
-                }}
-                variant="bordered"
-              >
-                <SelectItem key="public">公开</SelectItem>
-                <SelectItem key="private">私有</SelectItem>
-                <SelectItem key="password">密码保护</SelectItem>
-              </Select>
-            </div>
-
-            {formData.visibility === "password" && (
-              <Input
-                label="访问密码"
-                placeholder="设置访问密码"
-                type={showPassword ? "text" : "password"}
-                value={formData.password}
-                onValueChange={(value: string) => handleInputChange("password", value)}
-                variant="bordered"
-                endContent={
-                  <Button isIconOnly variant="light" size="sm" onPress={() => setShowPassword(!showPassword)}>
-                    {showPassword ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
-                  </Button>
-                }
-              />
-            )}
-
-            <Switch
-              isSelected={formData.allowComments}
-              onValueChange={(checked) => handleInputChange("allowComments", checked)}
+              size="lg"
+              onPress={() => router.back()}
+              startContent={<ArrowLeft className="w-5 h-5" />}
+              className="shadow-sm hover:shadow-md transition-all duration-300"
             >
-              允许评论
-            </Switch>
-          </CardBody>
-        </Card>
-
-        {/* 操作按钮 */}
-        <div className="flex justify-end gap-4">
-          <Button variant="bordered" onPress={() => router.back()}>
-            取消
-          </Button>
-          <Button
-            type="submit"
-            color="primary"
-            isLoading={loading}
-            startContent={!loading && <Save className="w-4 h-4" />}
-          >
-            {loading ? "创建中..." : "创建博客"}
-          </Button>
+              返回
+            </Button>
+            <div>
+              <h1 className="text-4xl font-bold bg-gradient-to-r from-primary to-secondary bg-clip-text text-transparent">
+                创建新博客
+              </h1>
+              <p className="text-default-500 text-lg mt-2">创作您的精彩内容，与世界分享您的想法</p>
+            </div>
+          </div>
+          
+          <div className="flex items-center gap-3">
+            <Chip color="primary" variant="flat" size="lg" startContent={<Sparkles className="w-4 h-4" />}>
+              创作模式
+            </Chip>
+          </div>
         </div>
-      </form>
+
+        <form onSubmit={handleSubmit} className="space-y-8">
+          {/* 基本信息 */}
+          <Card className="shadow-lg border-0 bg-gradient-to-r from-primary-50 to-secondary-50 dark:from-primary-900/20 dark:to-secondary-900/20">
+            <CardHeader className="pb-4">
+              <div className="flex items-center gap-3">
+                <div className="p-2 rounded-lg bg-primary/10">
+                  <FileText className="w-6 h-6 text-primary" />
+                </div>
+                <div>
+                  <h3 className="text-xl font-semibold">基本信息</h3>
+                  <p className="text-default-500">填写博客的基本信息</p>
+                </div>
+              </div>
+            </CardHeader>
+            <CardBody className="pt-0 space-y-6">
+              <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+                <div className="space-y-2">
+                  <Input
+                    label="标题"
+                    placeholder="输入吸引人的博客标题"
+                    value={formData.title}
+                    onValueChange={handleTitleChange}
+                    variant="bordered"
+                    size="lg"
+                    isRequired
+                    startContent={<Type className="w-4 h-4 text-default-400" />}
+                    className="w-full"
+                  />
+                  <p className="text-xs text-default-400">标题将自动生成URL别名</p>
+                </div>
+                
+                <div className="space-y-2">
+                  <Input
+                    label="URL别名"
+                    placeholder="自动生成或手动输入"
+                    value={formData.slug}
+                    onValueChange={(value: string) => handleInputChange("slug", value)}
+                    variant="bordered"
+                    size="lg"
+                    className="w-full"
+                  />
+                  <p className="text-xs text-default-400">用于生成博客链接</p>
+                </div>
+              </div>
+
+              <div className="space-y-2">
+                <Textarea
+                  label="摘要"
+                  placeholder="写一段吸引人的摘要，让读者了解文章内容..."
+                  value={formData.excerpt}
+                  onValueChange={(value: string) => handleInputChange("excerpt", value)}
+                  variant="bordered"
+                  size="lg"
+                  minRows={4}
+                  className="w-full"
+                />
+                <p className="text-xs text-default-400">摘要将显示在博客列表和搜索结果中</p>
+              </div>
+
+              <div className="space-y-2">
+                <Input
+                  label="特色图片"
+                  placeholder="输入图片链接地址"
+                  value={formData.featuredImage}
+                  onValueChange={(value: string) => handleInputChange("featuredImage", value)}
+                  variant="bordered"
+                  size="lg"
+                  type="url"
+                  startContent={<Image className="w-4 h-4 text-default-400" />}
+                  className="w-full"
+                />
+                <p className="text-xs text-default-400">建议使用高质量图片，尺寸推荐 1200x630</p>
+              </div>
+            </CardBody>
+          </Card>
+
+          {/* 内容编辑 */}
+          <Card className="shadow-lg border-0">
+            <CardHeader className="pb-4">
+              <div className="flex items-center gap-3">
+                <div className="p-2 rounded-lg bg-secondary/10">
+                  <Type className="w-6 h-6 text-secondary" />
+                </div>
+                <div>
+                  <h3 className="text-xl font-semibold">内容编辑</h3>
+                  <p className="text-default-500">编写您的博客内容</p>
+                </div>
+              </div>
+            </CardHeader>
+            <CardBody className="pt-0">
+              <div className="space-y-2">
+                <Textarea
+                  label="博客内容"
+                  placeholder="开始编写您的博客内容...支持Markdown格式"
+                  value={formData.content}
+                  onValueChange={(value: string) => handleInputChange("content", value)}
+                  variant="bordered"
+                  size="lg"
+                  minRows={20}
+                  className="w-full"
+                  isRequired
+                />
+                <p className="text-xs text-default-400">支持Markdown格式，建议内容不少于500字</p>
+              </div>
+            </CardBody>
+          </Card>
+
+          {/* 发布设置 */}
+          <Card className="shadow-lg border-0 bg-gradient-to-r from-warning-50 to-success-50 dark:from-warning-900/20 dark:to-success-900/20">
+            <CardHeader className="pb-4">
+              <div className="flex items-center gap-3">
+                <div className="p-2 rounded-lg bg-warning/10">
+                  <Settings className="w-6 h-6 text-warning" />
+                </div>
+                <div>
+                  <h3 className="text-xl font-semibold">发布设置</h3>
+                  <p className="text-default-500">配置博客的发布状态和可见性</p>
+                </div>
+              </div>
+            </CardHeader>
+            <CardBody className="pt-0 space-y-6">
+              <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+                <div className="space-y-2">
+                  <Select
+                    label="发布状态"
+                    placeholder="选择发布状态"
+                    selectedKeys={formData.status ? new Set([formData.status]) : new Set()}
+                    onSelectionChange={(keys) => {
+                      const selectedKey = Array.from(keys)[0] as string;
+                      handleInputChange("status", selectedKey as PostStatus);
+                    }}
+                    variant="bordered"
+                    size="lg"
+                    startContent={<Calendar className="w-4 h-4 text-default-400" />}
+                    className="w-full"
+                  >
+                    <SelectItem key="draft" startContent={<FileText className="w-4 h-4" />}>
+                      草稿
+                    </SelectItem>
+                    <SelectItem key="published" startContent={<Sparkles className="w-4 h-4" />}>
+                      发布
+                    </SelectItem>
+                    <SelectItem key="archived" startContent={<FileText className="w-4 h-4" />}>
+                      归档
+                    </SelectItem>
+                  </Select>
+                  <p className="text-xs text-default-400">草稿不会公开显示，发布后读者可以访问</p>
+                </div>
+
+                <div className="space-y-2">
+                  <Select
+                    label="可见性"
+                    placeholder="选择可见性"
+                    selectedKeys={formData.visibility ? new Set([formData.visibility]) : new Set()}
+                    onSelectionChange={(keys) => {
+                      const selectedKey = Array.from(keys)[0] as string;
+                      handleInputChange("visibility", selectedKey as PostVisibility);
+                    }}
+                    variant="bordered"
+                    size="lg"
+                    startContent={<Lock className="w-4 h-4 text-default-400" />}
+                    className="w-full"
+                  >
+                    <SelectItem key="public" startContent={<Eye className="w-4 h-4" />}>
+                      公开
+                    </SelectItem>
+                    <SelectItem key="private" startContent={<EyeOff className="w-4 h-4" />}>
+                      私有
+                    </SelectItem>
+                    <SelectItem key="password" startContent={<Lock className="w-4 h-4" />}>
+                      密码保护
+                    </SelectItem>
+                  </Select>
+                  <p className="text-xs text-default-400">控制谁可以访问您的博客</p>
+                </div>
+              </div>
+
+              {formData.visibility === "password" && (
+                <div className="space-y-2">
+                  <Input
+                    label="访问密码"
+                    placeholder="设置访问密码"
+                    type={showPassword ? "text" : "password"}
+                    value={formData.password}
+                    onValueChange={(value: string) => handleInputChange("password", value)}
+                    variant="bordered"
+                    size="lg"
+                    startContent={<Lock className="w-4 h-4 text-default-400" />}
+                    endContent={
+                      <Button 
+                        isIconOnly 
+                        variant="light" 
+                        size="sm" 
+                        onPress={() => setShowPassword(!showPassword)}
+                      >
+                        {showPassword ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
+                      </Button>
+                    }
+                    className="w-full"
+                  />
+                  <p className="text-xs text-default-400">设置密码后，访问者需要输入密码才能查看博客</p>
+                </div>
+              )}
+
+              <div className="flex items-center justify-between p-4 bg-default-50 rounded-lg">
+                <div className="flex items-center gap-3">
+                  <MessageSquare className="w-5 h-5 text-default-500" />
+                  <div>
+                    <p className="font-medium">允许评论</p>
+                    <p className="text-sm text-default-500">读者可以对此博客发表评论</p>
+                  </div>
+                </div>
+                <Switch
+                  isSelected={formData.allowComments}
+                  onValueChange={(checked) => handleInputChange("allowComments", checked)}
+                  size="lg"
+                />
+              </div>
+            </CardBody>
+          </Card>
+
+          {/* 操作按钮 */}
+          <Card className="shadow-lg border-0">
+            <CardBody className="p-6">
+              <div className="flex flex-col sm:flex-row justify-between items-center gap-4">
+                <div className="flex items-center gap-2 text-sm text-default-500">
+                  <FileText className="w-4 h-4" />
+                  <span>创建后可以随时编辑和修改</span>
+                </div>
+                
+                <div className="flex gap-4">
+                  <Button 
+                    variant="bordered" 
+                    size="lg"
+                    onPress={() => router.back()}
+                    className="min-w-24"
+                  >
+                    取消
+                  </Button>
+                  <Button
+                    type="submit"
+                    color="primary"
+                    size="lg"
+                    isLoading={loading}
+                    startContent={!loading && <Save className="w-5 h-5" />}
+                    className="min-w-32 font-semibold shadow-lg hover:shadow-xl transition-all duration-300"
+                  >
+                    {loading ? "创建中..." : "创建博客"}
+                  </Button>
+                </div>
+              </div>
+            </CardBody>
+          </Card>
+        </form>
+      </div>
     </div>
   );
 }
