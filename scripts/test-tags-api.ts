@@ -5,7 +5,7 @@
 
 import { ApiResponse, CreateTagRequest, UpdateTagRequest, PaginatedResponseData, Tag } from "../types/blog";
 
-const API_BASE = "http://localhost:3000/api"\;
+const API_BASE = "http://localhost:3000/api";
 
 /**
  * 测试获取标签列表
