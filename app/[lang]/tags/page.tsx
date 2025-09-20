@@ -1,5 +1,5 @@
 /**
- * 标签页面 - 优化版本
+ * 标签页面 - 基于真实API接口
  * 展示所有博客标签，支持标签云、搜索、筛选和排序
  * 添加玻璃态效果和交互动画
  */
@@ -27,17 +27,19 @@ import {
   Tag as TagIcon,
   TrendingUp,
   Zap,
+  AlertCircle,
+  RefreshCw,
 } from "lucide-react";
 
 import { TagCloud } from "@/components/ui/tag-cloud";
-import { mockTags } from "@/lib/data/mock-data";
+import { useTags } from "@/lib/hooks/useTags";
 import { Tag } from "@/types/blog";
 
 /**
  * 玻璃态标签卡片组件
  * 展示单个标签的信息和统计，具有玻璃态效果和交互动画
  */
-function TagCard({ tag, index }: { tag: Tag; index: number }) {
+function TagCard({ tag, index, onDelete }: { tag: Tag; index: number; onDelete?: (id: number) => void }) {
   const [isHovered, setIsHovered] = useState(false);
   const [isLiked, setIsLiked] = useState(false);
 
@@ -113,7 +115,7 @@ function TagCard({ tag, index }: { tag: Tag; index: number }) {
           <div className="grid grid-cols-2 gap-4 mb-4">
             <div className="flex items-center gap-2 text-sm text-default-600">
               <Calendar className="w-4 h-4" />
-              <span>创建于 {tag.createdAt.toLocaleDateString("zh-CN")}</span>
+              <span>创建于 {new Date(tag.createdAt).toLocaleDateString("zh-CN")}</span>
             </div>
             <div className="flex items-center gap-2 text-sm text-default-600">
               <Eye className="w-4 h-4" />
@@ -141,11 +143,22 @@ function TagCard({ tag, index }: { tag: Tag; index: number }) {
               >
                 <Star className="w-4 h-4" />
               </Button>
+              {onDelete && (
+                <Button
+                  size="sm"
+                  variant="light"
+                  isIconOnly
+                  className="text-default-500 hover:text-danger transition-colors duration-300"
+                  onPress={() => onDelete(tag.id)}
+                >
+                  <AlertCircle className="w-4 h-4" />
+                </Button>
+              )}
             </div>
 
             <div className="flex items-center gap-1 text-xs text-default-500">
               <Zap className="w-3 h-3" />
-              <span>活跃标签</span>
+              <span>{tag.isActive ? "活跃标签" : "非活跃标签"}</span>
             </div>
           </div>
 
@@ -173,6 +186,8 @@ function SearchAndFilter({
   onSortOrderChange,
   viewMode,
   onViewModeChange,
+  loading,
+  onRefresh,
 }: {
   searchQuery: string;
   onSearchChange: (query: string) => void;
@@ -184,6 +199,8 @@ function SearchAndFilter({
   onSortOrderChange: (order: "asc" | "desc") => void;
   viewMode: "grid" | "list";
   onViewModeChange: (mode: "grid" | "list") => void;
+  loading: boolean;
+  onRefresh: () => void;
 }) {
   const sortOptions = [
     { key: "name", label: "按名称排序", icon: TagIcon },
@@ -230,6 +247,16 @@ function SearchAndFilter({
                 className="backdrop-blur-xl bg-white/10 dark:bg-black/10 hover:bg-white/20 dark:hover:bg-black/20"
               >
                 仅显示活跃
+              </Button>
+              <Button
+                size="sm"
+                variant="bordered"
+                isIconOnly
+                onPress={onRefresh}
+                isLoading={loading}
+                className="backdrop-blur-xl bg-white/10 dark:bg-black/10 hover:bg-white/20 dark:hover:bg-black/20"
+              >
+                <RefreshCw className="w-4 h-4" />
               </Button>
             </div>
 
@@ -330,7 +357,7 @@ function PopularTags({ tags }: { tags: Tag[] }) {
                 <p className="text-sm font-semibold truncate group-hover:text-primary transition-colors duration-300">
                   {tag.name}
                 </p>
-                <p className="text-xs text-default-500">{tag.postCount} 篇文章</p>
+                <p className="text-xs text-default-500">{tag.postCount || 0} 篇文章</p>
               </div>
             </div>
           ))}
@@ -343,15 +370,15 @@ function PopularTags({ tags }: { tags: Tag[] }) {
 /**
  * 标签统计组件 - 玻璃态版本
  */
-function TagStats({ tags }: { tags: Tag[] }) {
+function TagStats({ tags, pagination }: { tags: Tag[]; pagination: any }) {
   const stats = useMemo(() => {
-    const total = tags.length;
+    const total = pagination?.total || tags.length;
     const active = tags.filter((tag) => tag.isActive).length;
     const totalPosts = tags.reduce((sum, tag) => sum + (tag.postCount || 0), 0);
-    const avgPosts = total > 0 ? Math.round(totalPosts / total) : 0;
+    const avgPosts = tags.length > 0 ? Math.round(totalPosts / tags.length) : 0;
 
     return { total, active, totalPosts, avgPosts };
-  }, [tags]);
+  }, [tags, pagination]);
 
   const statItems = [
     { label: "总标签数", value: stats.total, icon: TagIcon, color: "text-primary" },
@@ -382,20 +409,62 @@ function TagStats({ tags }: { tags: Tag[] }) {
 }
 
 /**
+ * 错误提示组件
+ */
+function ErrorAlert({ error, onRetry }: { error: string; onRetry: () => void }) {
+  return (
+    <Card className="mb-8 border-0 backdrop-blur-xl bg-red-500/10 dark:bg-red-500/5 animate-fade-in-up">
+      <CardBody className="p-6">
+        <div className="flex items-center gap-4">
+          <div className="p-2 rounded-full bg-red-500/20">
+            <AlertCircle className="w-6 h-6 text-red-500" />
+          </div>
+          <div className="flex-1">
+            <h3 className="text-lg font-semibold text-red-600 dark:text-red-400">加载失败</h3>
+            <p className="text-red-500 dark:text-red-400 mt-1">{error}</p>
+          </div>
+          <Button
+            color="danger"
+            variant="light"
+            onPress={onRetry}
+            startContent={<RefreshCw className="w-4 h-4" />}
+          >
+            重试
+          </Button>
+        </div>
+      </CardBody>
+    </Card>
+  );
+}
+
+/**
  * 主标签页面组件
  */
 export default function TagsPage() {
-  // 状态管理
-  const [searchQuery, setSearchQuery] = useState("");
-  const [showOnlyActive, setShowOnlyActive] = useState(false);
-  const [sortBy, setSortBy] = useState("postCount");
-  const [sortOrder, setSortOrder] = useState<"asc" | "desc">("desc");
-  const [viewMode, setViewMode] = useState<"grid" | "list">("grid");
-  const [isLoading, setIsLoading] = useState(false);
-  const [mounted, setMounted] = useState(false);
+  // 使用自定义 Hook 管理标签数据
+  const {
+    tags,
+    loading,
+    error,
+    pagination,
+    fetchTags,
+    deleteTag,
+    refreshTags,
+    setPage,
+    setLimit,
+    setSearchQuery,
+    setShowOnlyActive,
+    setSortBy,
+    setSortOrder,
+  } = useTags({
+    initialPage: 1,
+    initialLimit: 20,
+    autoFetch: true,
+  });
 
-  // 获取标签数据
-  const tags = mockTags;
+  // 本地状态
+  const [viewMode, setViewMode] = useState<"grid" | "list">("grid");
+  const [mounted, setMounted] = useState(false);
 
   // 组件挂载状态
   useEffect(() => {
@@ -406,77 +475,64 @@ export default function TagsPage() {
   const filteredAndSortedTags = useMemo(() => {
     let filtered = tags;
 
-    // 按搜索关键词筛选
-    if (searchQuery.trim()) {
-      const query = searchQuery.toLowerCase();
-      filtered = filtered.filter(
-        (tag) =>
-          tag.name.toLowerCase().includes(query) ||
-          tag.description?.toLowerCase().includes(query) ||
-          tag.slug.toLowerCase().includes(query)
-      );
-    }
-
-    // 按活跃状态筛选
-    if (showOnlyActive) {
-      filtered = filtered.filter((tag) => tag.isActive);
-    }
-
-    // 排序
-    filtered.sort((a, b) => {
-      let aValue: any, bValue: any;
-
-      switch (sortBy) {
-        case "name":
-          aValue = a.name.toLowerCase();
-          bValue = b.name.toLowerCase();
-          break;
-        case "postCount":
-          aValue = a.postCount || 0;
-          bValue = b.postCount || 0;
-          break;
-        case "createdAt":
-          aValue = new Date(a.createdAt).getTime();
-          bValue = new Date(b.createdAt).getTime();
-          break;
-        default:
-          aValue = a.postCount || 0;
-          bValue = b.postCount || 0;
-      }
-
-      if (sortOrder === "asc") {
-        return aValue > bValue ? 1 : -1;
-      } else {
-        return aValue < bValue ? 1 : -1;
-      }
-    });
-
+    // 排序已经在 API 层面处理，这里只需要返回数据
     return filtered;
-  }, [tags, searchQuery, showOnlyActive, sortBy, sortOrder]);
+  }, [tags]);
 
   // 处理搜索
   const handleSearch = (query: string) => {
     setSearchQuery(query);
+    // 搜索时重置到第一页
+    setPage(1);
+    // 触发 API 调用
+    fetchTags({ search: query, page: 1 });
   };
 
   // 处理筛选切换
   const handleToggleActive = (show: boolean) => {
     setShowOnlyActive(show);
+    // 筛选时重置到第一页
+    setPage(1);
+    // 触发 API 调用
+    fetchTags({ isActive: show ? true : undefined, page: 1 });
   };
 
   // 处理排序变化
   const handleSortChange = (sort: string) => {
     setSortBy(sort);
+    // 排序时重置到第一页
+    setPage(1);
+    // 触发 API 调用
+    fetchTags({ sortBy: sort, page: 1 });
   };
 
   // 处理排序顺序变化
   const handleSortOrderChange = (order: "asc" | "desc") => {
     setSortOrder(order);
+    // 排序时重置到第一页
+    setPage(1);
+    // 触发 API 调用
+    fetchTags({ sortOrder: order, page: 1 });
   };
 
   // 处理视图模式变化
   const handleViewModeChange = (mode: "grid" | "list") => {
     setViewMode(mode);
+  };
+
+  // 处理删除标签
+  const handleDeleteTag = async (id: number) => {
+    if (confirm("确定要删除这个标签吗？")) {
+      const success = await deleteTag(id);
+      if (success) {
+        console.log("标签删除成功");
+      }
+    }
+  };
+
+  // 处理刷新
+  const handleRefresh = () => {
+    refreshTags();
   };
 
   if (!mounted) {
@@ -505,50 +561,57 @@ export default function TagsPage() {
           <p className="text-lg text-default-600 max-w-2xl mx-auto">探索技术世界的标签海洋，发现您感兴趣的话题和内容</p>
         </div>
 
+        {/* 错误提示 */}
+        {error && <ErrorAlert error={error} onRetry={handleRefresh} />}
+
         {/* 统计信息 */}
-        <TagStats tags={tags} />
+        <TagStats tags={tags} pagination={pagination} />
 
         {/* 标签云 */}
-        <Card className="mb-8 border-0 backdrop-blur-xl bg-white/10 dark:bg-black/10 animate-fade-in-up">
-          <CardHeader className="pb-4">
-            <h2 className="text-2xl font-bold flex items-center gap-3">
-              <div className="p-2 rounded-full bg-gradient-to-br from-primary/20 to-secondary/20">
-                <Palette className="w-6 h-6 text-primary" />
-              </div>
-              <span className="bg-gradient-to-r from-primary to-secondary bg-clip-text text-transparent">标签云</span>
-            </h2>
-          </CardHeader>
-          <CardBody>
-            <TagCloud
-              tags={tags.filter((tag) => tag.isActive)}
-              maxTags={30}
-              minSize={12}
-              maxSize={20}
-              showPostCount={true}
-              onTagClick={(tag) => {
-                console.log("Clicked tag:", tag);
-              }}
-              layout="cloud"
-              sortBy="postCount"
-            />
-          </CardBody>
-        </Card>
+        {tags.length > 0 && (
+          <Card className="mb-8 border-0 backdrop-blur-xl bg-white/10 dark:bg-black/10 animate-fade-in-up">
+            <CardHeader className="pb-4">
+              <h2 className="text-2xl font-bold flex items-center gap-3">
+                <div className="p-2 rounded-full bg-gradient-to-br from-primary/20 to-secondary/20">
+                  <Palette className="w-6 h-6 text-primary" />
+                </div>
+                <span className="bg-gradient-to-r from-primary to-secondary bg-clip-text text-transparent">标签云</span>
+              </h2>
+            </CardHeader>
+            <CardBody>
+              <TagCloud
+                tags={tags.filter((tag) => tag.isActive)}
+                maxTags={30}
+                minSize={12}
+                maxSize={20}
+                showPostCount={true}
+                onTagClick={(tag) => {
+                  console.log("Clicked tag:", tag);
+                }}
+                layout="cloud"
+                sortBy="postCount"
+              />
+            </CardBody>
+          </Card>
+        )}
 
         {/* 热门标签 */}
-        <PopularTags tags={tags} />
+        {tags.length > 0 && <PopularTags tags={tags} />}
 
         {/* 搜索和筛选 */}
         <SearchAndFilter
-          searchQuery={searchQuery}
+          searchQuery=""
           onSearchChange={handleSearch}
-          showOnlyActive={showOnlyActive}
+          showOnlyActive={false}
           onToggleActive={handleToggleActive}
-          sortBy={sortBy}
+          sortBy="createdAt"
           onSortChange={handleSortChange}
-          sortOrder={sortOrder}
+          sortOrder="desc"
           onSortOrderChange={handleSortOrderChange}
           viewMode={viewMode}
           onViewModeChange={handleViewModeChange}
+          loading={loading}
+          onRefresh={handleRefresh}
         />
 
         {/* 标签列表 */}
@@ -557,7 +620,7 @@ export default function TagsPage() {
             viewMode === "grid" ? "grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4" : "grid-cols-1"
           }`}
         >
-          {isLoading ? (
+          {loading ? (
             <div className="col-span-full flex justify-center py-12">
               <div className="flex flex-col items-center gap-4">
                 <Spinner size="lg" color="primary" />
@@ -565,7 +628,9 @@ export default function TagsPage() {
               </div>
             </div>
           ) : filteredAndSortedTags.length > 0 ? (
-            filteredAndSortedTags.map((tag, index) => <TagCard key={tag.id} tag={tag} index={index} />)
+            filteredAndSortedTags.map((tag, index) => (
+              <TagCard key={tag.id} tag={tag} index={index} onDelete={handleDeleteTag} />
+            ))
           ) : (
             <div className="col-span-full">
               <Card className="border-0 backdrop-blur-xl bg-white/10 dark:bg-black/10">
@@ -576,19 +641,56 @@ export default function TagsPage() {
                     </div>
                     <h3 className="text-2xl font-bold text-foreground">未找到标签</h3>
                     <p className="text-default-600 max-w-md">
-                      {searchQuery ? `没有找到包含 "${searchQuery}" 的标签` : "暂无标签数据"}
+                      暂无标签数据，请稍后再试或联系管理员
                     </p>
-                    {searchQuery && (
-                      <Button color="primary" variant="light" onPress={() => setSearchQuery("")} className="mt-4">
-                        清除搜索
-                      </Button>
-                    )}
+                    <Button color="primary" variant="light" onPress={handleRefresh} className="mt-4">
+                      刷新页面
+                    </Button>
                   </div>
                 </CardBody>
               </Card>
             </div>
           )}
         </div>
+
+        {/* 分页信息 */}
+        {pagination && pagination.totalPages > 1 && (
+          <div className="mt-8 flex justify-center">
+            <Card className="border-0 backdrop-blur-xl bg-white/10 dark:bg-black/10">
+              <CardBody className="p-4">
+                <div className="flex items-center gap-4">
+                  <Button
+                    size="sm"
+                    variant="bordered"
+                    onPress={() => {
+                      setPage(pagination.page - 1);
+                      fetchTags({ page: pagination.page - 1 });
+                    }}
+                    isDisabled={!pagination.hasPrev}
+                    className="backdrop-blur-xl bg-white/10 dark:bg-black/10"
+                  >
+                    上一页
+                  </Button>
+                  <span className="text-sm text-default-600">
+                    第 {pagination.page} 页，共 {pagination.totalPages} 页
+                  </span>
+                  <Button
+                    size="sm"
+                    variant="bordered"
+                    onPress={() => {
+                      setPage(pagination.page + 1);
+                      fetchTags({ page: pagination.page + 1 });
+                    }}
+                    isDisabled={!pagination.hasNext}
+                    className="backdrop-blur-xl bg-white/10 dark:bg-black/10"
+                  >
+                    下一页
+                  </Button>
+                </div>
+              </CardBody>
+            </Card>
+          </div>
+        )}
       </div>
     </div>
   );
