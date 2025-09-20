@@ -51,7 +51,7 @@ function TagCard({ tag, index, onDelete }: { tag: Tag; index: number; onDelete?:
       {/* 主卡片 */}
       <Card
         className="relative w-full border-0 backdrop-blur-xl bg-white/10 dark:bg-black/10 hover:bg-white/20 dark:hover:bg-black/20 transition-all duration-500 hover:scale-105 hover:shadow-2xl hover:shadow-primary/20 cursor-pointer overflow-hidden"
-        isPressable
+        
         onMouseEnter={() => setIsHovered(true)}
         onMouseLeave={() => setIsHovered(false)}
       >
