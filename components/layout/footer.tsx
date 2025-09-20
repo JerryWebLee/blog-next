@@ -1,7 +1,7 @@
 export function Footer() {
   return (
     <footer className="blog-border-x-box-shadow bg-background">
-      <div className="container mx-auto">
+      <div className="container mx-auto px-4">
         <div className="py-8 grid grid-cols-1 md:grid-cols-4 gap-8">
           {/* 关于我们 */}
           <div className="space-y-3">

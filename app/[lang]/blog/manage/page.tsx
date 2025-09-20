@@ -145,308 +145,203 @@ export default function BlogManagePage() {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-background to-default-50">
-      {/* 主容器 - 增加最大宽度 */}
-      <div className="container mx-auto px-4 py-8 max-w-7xl">
-        {/* 导航 */}
-        <BlogNavigation />
+    <>
+      {/* 导航 */}
+      <BlogNavigation />
 
-        {/* 页面标题和操作区域 */}
-        <div className="flex flex-col lg:flex-row justify-between items-start lg:items-center gap-6 mb-8">
-          <div className="space-y-2">
-            <h1 className="text-4xl font-bold bg-gradient-to-r from-primary to-secondary bg-clip-text text-transparent">
-              博客管理
-            </h1>
-            <p className="text-default-500 text-lg">管理您的所有博客文章，创建精彩内容</p>
+      {/* 页面标题和操作区域 */}
+      <div className="flex flex-col lg:flex-row justify-between items-start lg:items-center gap-6 mb-8">
+        <div className="space-y-2">
+          <h1 className="text-4xl font-bold bg-gradient-to-r from-primary to-secondary bg-clip-text text-transparent">
+            博客管理
+          </h1>
+          <p className="text-default-500 text-lg">管理您的所有博客文章，创建精彩内容</p>
+        </div>
+
+        <div className="flex flex-col sm:flex-row gap-3">
+          <Button
+            as="a"
+            href="/blog/manage/create"
+            color="primary"
+            size="lg"
+            startContent={<Plus className="w-5 h-5" />}
+            className="font-semibold shadow-lg hover:shadow-xl transition-all duration-300"
+          >
+            创建博客
+          </Button>
+        </div>
+      </div>
+
+      {/* 搜索和过滤区域 */}
+      <Card className="mb-8 shadow-lg border-0 bg-gradient-to-r from-primary-50 to-secondary-50 dark:from-primary-900/20 dark:to-secondary-900/20">
+        <CardHeader className="pb-4">
+          <div className="flex items-center gap-3">
+            <div className="p-2 rounded-lg bg-primary/10">
+              <Filter className="w-6 h-6 text-primary" />
+            </div>
+            <div>
+              <h3 className="text-xl font-semibold">搜索和过滤</h3>
+              <p className="text-default-500">快速找到您需要的文章</p>
+            </div>
+          </div>
+        </CardHeader>
+        <CardBody className="pt-0">
+          <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-4 gap-4 mb-4">
+            <Input
+              placeholder="搜索博客标题..."
+              value={searchTerm}
+              onValueChange={setSearchTerm}
+              startContent={<Search className="w-4 h-4 text-default-400" />}
+              variant="bordered"
+              size="lg"
+              className="w-full"
+            />
+            <Select
+              placeholder="选择状态"
+              selectedKeys={[statusFilter]}
+              onSelectionChange={(keys) => {
+                const selectedKey = Array.from(keys)[0] as string;
+                setStatusFilter(selectedKey as PostStatus | "all");
+              }}
+              variant="bordered"
+              size="lg"
+            >
+              <SelectItem key="all">所有状态</SelectItem>
+              <SelectItem key="draft">草稿</SelectItem>
+              <SelectItem key="published">已发布</SelectItem>
+              <SelectItem key="archived">已归档</SelectItem>
+            </Select>
+            <Select
+              placeholder="选择可见性"
+              selectedKeys={[visibilityFilter]}
+              onSelectionChange={(keys) => {
+                const selectedKey = Array.from(keys)[0] as string;
+                setVisibilityFilter(selectedKey as PostVisibility | "all");
+              }}
+              variant="bordered"
+              size="lg"
+            >
+              <SelectItem key="all">所有可见性</SelectItem>
+              <SelectItem key="public">公开</SelectItem>
+              <SelectItem key="private">私有</SelectItem>
+              <SelectItem key="password">密码保护</SelectItem>
+            </Select>
+            <Select
+              placeholder="排序方式"
+              selectedKeys={[sortBy]}
+              onSelectionChange={(keys) => {
+                const selectedKey = Array.from(keys)[0] as string;
+                setSortBy(selectedKey as typeof sortBy);
+              }}
+              variant="bordered"
+              size="lg"
+              startContent={<SortAsc className="w-4 h-4" />}
+            >
+              <SelectItem key="createdAt">创建时间</SelectItem>
+              <SelectItem key="updatedAt">更新时间</SelectItem>
+              <SelectItem key="title">标题</SelectItem>
+              <SelectItem key="viewCount">浏览量</SelectItem>
+            </Select>
           </div>
 
-          <div className="flex flex-col sm:flex-row gap-3">
+          <div className="flex flex-wrap gap-3">
+            <Button color="primary" variant="flat" onPress={fetchPosts} size="lg">
+              应用过滤
+            </Button>
             <Button
-              as="a"
-              href="/blog/manage/create"
-              color="primary"
+              variant="bordered"
+              onPress={() => {
+                setSearchTerm("");
+                setStatusFilter("all");
+                setVisibilityFilter("all");
+                setSortBy("createdAt");
+              }}
               size="lg"
-              startContent={<Plus className="w-5 h-5" />}
-              className="font-semibold shadow-lg hover:shadow-xl transition-all duration-300"
             >
-              创建博客
+              重置
+            </Button>
+          </div>
+        </CardBody>
+      </Card>
+
+      {/* 视图控制区域 */}
+      <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 mb-6">
+        <div className="flex items-center gap-4">
+          <h3 className="text-xl font-semibold">博客列表</h3>
+          {!loading && posts.length > 0 && (
+            <Chip color="primary" variant="flat" size="lg">
+              共 {posts.length} 篇文章
+            </Chip>
+          )}
+        </div>
+
+        <div className="flex items-center gap-2">
+          <span className="text-sm text-default-500">视图模式:</span>
+          <div className="flex bg-default-100 rounded-lg p-1">
+            <Button
+              isIconOnly
+              size="sm"
+              variant={viewMode === "list" ? "solid" : "light"}
+              color={viewMode === "list" ? "primary" : "default"}
+              onPress={() => setViewMode("list")}
+            >
+              <List className="w-4 h-4" />
+            </Button>
+            <Button
+              isIconOnly
+              size="sm"
+              variant={viewMode === "grid" ? "solid" : "light"}
+              color={viewMode === "grid" ? "primary" : "default"}
+              onPress={() => setViewMode("grid")}
+            >
+              <Grid3X3 className="w-4 h-4" />
             </Button>
           </div>
         </div>
+      </div>
 
-        {/* 搜索和过滤区域 */}
-        <Card className="mb-8 shadow-lg border-0 bg-gradient-to-r from-primary-50 to-secondary-50 dark:from-primary-900/20 dark:to-secondary-900/20">
-          <CardHeader className="pb-4">
-            <div className="flex items-center gap-3">
-              <div className="p-2 rounded-lg bg-primary/10">
-                <Filter className="w-6 h-6 text-primary" />
+      {/* 博客列表 */}
+      <Card className="shadow-lg border-0">
+        <CardBody className="p-0">
+          {loading ? (
+            <div className="text-center py-16">
+              <Spinner size="lg" color="primary" />
+              <p className="mt-4 text-default-500 text-lg">加载中...</p>
+            </div>
+          ) : posts.length === 0 ? (
+            <div className="text-center py-16">
+              <div className="w-24 h-24 mx-auto mb-6 rounded-full bg-default-100 flex items-center justify-center">
+                <Bookmark className="w-12 h-12 text-default-400" />
               </div>
-              <div>
-                <h3 className="text-xl font-semibold">搜索和过滤</h3>
-                <p className="text-default-500">快速找到您需要的文章</p>
-              </div>
-            </div>
-          </CardHeader>
-          <CardBody className="pt-0">
-            <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-4 gap-4 mb-4">
-              <Input
-                placeholder="搜索博客标题..."
-                value={searchTerm}
-                onValueChange={setSearchTerm}
-                startContent={<Search className="w-4 h-4 text-default-400" />}
-                variant="bordered"
-                size="lg"
-                className="w-full"
-              />
-              <Select
-                placeholder="选择状态"
-                selectedKeys={[statusFilter]}
-                onSelectionChange={(keys) => {
-                  const selectedKey = Array.from(keys)[0] as string;
-                  setStatusFilter(selectedKey as PostStatus | "all");
-                }}
-                variant="bordered"
-                size="lg"
-              >
-                <SelectItem key="all">所有状态</SelectItem>
-                <SelectItem key="draft">草稿</SelectItem>
-                <SelectItem key="published">已发布</SelectItem>
-                <SelectItem key="archived">已归档</SelectItem>
-              </Select>
-              <Select
-                placeholder="选择可见性"
-                selectedKeys={[visibilityFilter]}
-                onSelectionChange={(keys) => {
-                  const selectedKey = Array.from(keys)[0] as string;
-                  setVisibilityFilter(selectedKey as PostVisibility | "all");
-                }}
-                variant="bordered"
-                size="lg"
-              >
-                <SelectItem key="all">所有可见性</SelectItem>
-                <SelectItem key="public">公开</SelectItem>
-                <SelectItem key="private">私有</SelectItem>
-                <SelectItem key="password">密码保护</SelectItem>
-              </Select>
-              <Select
-                placeholder="排序方式"
-                selectedKeys={[sortBy]}
-                onSelectionChange={(keys) => {
-                  const selectedKey = Array.from(keys)[0] as string;
-                  setSortBy(selectedKey as typeof sortBy);
-                }}
-                variant="bordered"
-                size="lg"
-                startContent={<SortAsc className="w-4 h-4" />}
-              >
-                <SelectItem key="createdAt">创建时间</SelectItem>
-                <SelectItem key="updatedAt">更新时间</SelectItem>
-                <SelectItem key="title">标题</SelectItem>
-                <SelectItem key="viewCount">浏览量</SelectItem>
-              </Select>
-            </div>
-
-            <div className="flex flex-wrap gap-3">
-              <Button color="primary" variant="flat" onPress={fetchPosts} size="lg">
-                应用过滤
-              </Button>
+              <h3 className="text-xl font-semibold mb-2">暂无博客文章</h3>
+              <p className="text-default-500 mb-6">开始创建您的第一篇博客文章吧！</p>
               <Button
-                variant="bordered"
-                onPress={() => {
-                  setSearchTerm("");
-                  setStatusFilter("all");
-                  setVisibilityFilter("all");
-                  setSortBy("createdAt");
-                }}
+                as="a"
+                href="/blog/manage/create"
+                color="primary"
                 size="lg"
+                startContent={<Plus className="w-5 h-5" />}
               >
-                重置
+                创建第一篇博客
               </Button>
             </div>
-          </CardBody>
-        </Card>
-
-        {/* 视图控制区域 */}
-        <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 mb-6">
-          <div className="flex items-center gap-4">
-            <h3 className="text-xl font-semibold">博客列表</h3>
-            {!loading && posts.length > 0 && (
-              <Chip color="primary" variant="flat" size="lg">
-                共 {posts.length} 篇文章
-              </Chip>
-            )}
-          </div>
-
-          <div className="flex items-center gap-2">
-            <span className="text-sm text-default-500">视图模式:</span>
-            <div className="flex bg-default-100 rounded-lg p-1">
-              <Button
-                isIconOnly
-                size="sm"
-                variant={viewMode === "list" ? "solid" : "light"}
-                color={viewMode === "list" ? "primary" : "default"}
-                onPress={() => setViewMode("list")}
-              >
-                <List className="w-4 h-4" />
-              </Button>
-              <Button
-                isIconOnly
-                size="sm"
-                variant={viewMode === "grid" ? "solid" : "light"}
-                color={viewMode === "grid" ? "primary" : "default"}
-                onPress={() => setViewMode("grid")}
-              >
-                <Grid3X3 className="w-4 h-4" />
-              </Button>
-            </div>
-          </div>
-        </div>
-
-        {/* 博客列表 */}
-        <Card className="shadow-lg border-0">
-          <CardBody className="p-0">
-            {loading ? (
-              <div className="text-center py-16">
-                <Spinner size="lg" color="primary" />
-                <p className="mt-4 text-default-500 text-lg">加载中...</p>
-              </div>
-            ) : posts.length === 0 ? (
-              <div className="text-center py-16">
-                <div className="w-24 h-24 mx-auto mb-6 rounded-full bg-default-100 flex items-center justify-center">
-                  <Bookmark className="w-12 h-12 text-default-400" />
-                </div>
-                <h3 className="text-xl font-semibold mb-2">暂无博客文章</h3>
-                <p className="text-default-500 mb-6">开始创建您的第一篇博客文章吧！</p>
-                <Button
-                  as="a"
-                  href="/blog/manage/create"
-                  color="primary"
-                  size="lg"
-                  startContent={<Plus className="w-5 h-5" />}
+          ) : (
+            <div className={viewMode === "grid" ? "grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6" : "space-y-4"}>
+              {posts.map((post) => (
+                <Card
+                  key={post.id}
+                  className={`border-1 hover:border-primary transition-all duration-300 hover:shadow-lg ${
+                    viewMode === "grid" ? "h-full" : ""
+                  }`}
                 >
-                  创建第一篇博客
-                </Button>
-              </div>
-            ) : (
-              <div
-                className={
-                  viewMode === "grid" ? "grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6 p-6" : "space-y-4 p-6"
-                }
-              >
-                {posts.map((post) => (
-                  <Card
-                    key={post.id}
-                    className={`border-1 hover:border-primary transition-all duration-300 hover:shadow-lg ${
-                      viewMode === "grid" ? "h-full" : ""
-                    }`}
-                  >
-                    <CardBody className={viewMode === "grid" ? "p-6 flex flex-col h-full" : "p-4"}>
-                      {viewMode === "grid" ? (
-                        // 网格视图
-                        <>
-                          <div className="flex items-start justify-between gap-3 mb-4">
-                            <div className="flex-1 min-w-0">
-                              <h3 className="font-semibold text-lg line-clamp-2 mb-2">{post.title}</h3>
-                              <div className="flex flex-wrap gap-2 mb-3">
-                                <Chip size="sm" color={getStatusColor(post.status)} variant="flat">
-                                  {getStatusText(post.status)}
-                                </Chip>
-                                <Chip size="sm" color={getVisibilityColor(post.visibility)} variant="flat">
-                                  {getVisibilityText(post.visibility)}
-                                </Chip>
-                              </div>
-                            </div>
-                            <Dropdown>
-                              <DropdownTrigger>
-                                <Button isIconOnly size="sm" variant="light" color="default">
-                                  <MoreHorizontal className="w-4 h-4" />
-                                </Button>
-                              </DropdownTrigger>
-                              <DropdownMenu>
-                                <DropdownItem
-                                  key="view"
-                                  startContent={<Eye className="w-4 h-4" />}
-                                  as="a"
-                                  href={`/blog/${post.slug}`}
-                                >
-                                  查看
-                                </DropdownItem>
-                                <DropdownItem
-                                  key="edit"
-                                  startContent={<Edit className="w-4 h-4" />}
-                                  as="a"
-                                  href={`/blog/manage/edit/${post.id}`}
-                                >
-                                  编辑
-                                </DropdownItem>
-                                <DropdownItem
-                                  key="delete"
-                                  color="danger"
-                                  startContent={<Trash2 className="w-4 h-4" />}
-                                  onPress={() => handleDelete(post.id)}
-                                >
-                                  删除
-                                </DropdownItem>
-                              </DropdownMenu>
-                            </Dropdown>
-                          </div>
-
-                          <p className="text-default-500 text-sm line-clamp-3 mb-4 flex-1">
-                            {post.excerpt || "暂无摘要"}
-                          </p>
-
-                          <div className="space-y-3">
-                            <div className="flex items-center gap-2 text-sm text-default-400">
-                              <Avatar size="sm" name={post.author?.displayName || "未知"} className="w-5 h-5" />
-                              <span>{post.author?.displayName || "未知"}</span>
-                            </div>
-
-                            <div className="grid grid-cols-2 gap-2 text-xs text-default-400">
-                              <div className="flex items-center gap-1">
-                                <Bookmark className="w-3 h-3" />
-                                <span className="truncate">{post.category?.name || "未分类"}</span>
-                              </div>
-                              <div className="flex items-center gap-1">
-                                <TrendingUp className="w-3 h-3" />
-                                <span>{post.viewCount} 浏览</span>
-                              </div>
-                            </div>
-
-                            <div className="flex items-center justify-between pt-2 border-t border-default-100">
-                              <span className="text-xs text-default-400">
-                                {new Date(post.createdAt).toLocaleDateString()}
-                              </span>
-                              <div className="flex gap-1">
-                                <Button
-                                  isIconOnly
-                                  size="sm"
-                                  variant="light"
-                                  color="default"
-                                  as="a"
-                                  href={`/blog/${post.slug}`}
-                                >
-                                  <Eye className="w-3 h-3" />
-                                </Button>
-                                <Button
-                                  isIconOnly
-                                  size="sm"
-                                  variant="light"
-                                  color="primary"
-                                  as="a"
-                                  href={`/blog/manage/edit/${post.id}`}
-                                >
-                                  <Edit className="w-3 h-3" />
-                                </Button>
-                              </div>
-                            </div>
-                          </div>
-                        </>
-                      ) : (
-                        // 列表视图
-                        <div className="flex items-start justify-between gap-4">
+                  <CardBody className={viewMode === "grid" ? "p-6 flex flex-col h-full" : "p-4"}>
+                    {viewMode === "grid" ? (
+                      // 网格视图
+                      <>
+                        <div className="flex items-start justify-between gap-3 mb-4">
                           <div className="flex-1 min-w-0">
-                            <div className="flex items-center gap-3 mb-3">
-                              <h3 className="font-semibold text-lg line-clamp-1">{post.title}</h3>
+                            <h3 className="font-semibold text-lg line-clamp-2 mb-2">{post.title}</h3>
+                            <div className="flex flex-wrap gap-2 mb-3">
                               <Chip size="sm" color={getStatusColor(post.status)} variant="flat">
                                 {getStatusText(post.status)}
                               </Chip>
@@ -454,107 +349,205 @@ export default function BlogManagePage() {
                                 {getVisibilityText(post.visibility)}
                               </Chip>
                             </div>
+                          </div>
+                          <Dropdown>
+                            <DropdownTrigger>
+                              <Button isIconOnly size="sm" variant="light" color="default">
+                                <MoreHorizontal className="w-4 h-4" />
+                              </Button>
+                            </DropdownTrigger>
+                            <DropdownMenu>
+                              <DropdownItem
+                                key="view"
+                                startContent={<Eye className="w-4 h-4" />}
+                                as="a"
+                                href={`/blog/${post.slug}`}
+                              >
+                                查看
+                              </DropdownItem>
+                              <DropdownItem
+                                key="edit"
+                                startContent={<Edit className="w-4 h-4" />}
+                                as="a"
+                                href={`/blog/manage/edit/${post.id}`}
+                              >
+                                编辑
+                              </DropdownItem>
+                              <DropdownItem
+                                key="delete"
+                                color="danger"
+                                startContent={<Trash2 className="w-4 h-4" />}
+                                onPress={() => handleDelete(post.id)}
+                              >
+                                删除
+                              </DropdownItem>
+                            </DropdownMenu>
+                          </Dropdown>
+                        </div>
 
-                            <p className="text-default-500 text-sm line-clamp-2 mb-4">{post.excerpt || "暂无摘要"}</p>
+                        <p className="text-default-500 text-sm line-clamp-3 mb-4 flex-1">
+                          {post.excerpt || "暂无摘要"}
+                        </p>
 
-                            <div className="flex flex-wrap items-center gap-4 text-sm text-default-400">
-                              <div className="flex items-center gap-2">
-                                <Avatar size="sm" name={post.author?.displayName || "未知"} className="w-4 h-4" />
-                                <span>{post.author?.displayName || "未知"}</span>
-                              </div>
-                              <div className="flex items-center gap-1">
-                                <Bookmark className="w-4 h-4" />
-                                <span>{post.category?.name || "未分类"}</span>
-                              </div>
-                              <div className="flex items-center gap-1">
-                                <TrendingUp className="w-4 h-4" />
-                                <span>{post.viewCount} 浏览</span>
-                              </div>
-                              <div className="flex items-center gap-1">
-                                <Calendar className="w-4 h-4" />
-                                <span>{new Date(post.createdAt).toLocaleDateString()}</span>
-                              </div>
+                        <div className="space-y-3">
+                          <div className="flex items-center gap-2 text-sm text-default-400">
+                            <Avatar size="sm" name={post.author?.displayName || "未知"} className="w-5 h-5" />
+                            <span>{post.author?.displayName || "未知"}</span>
+                          </div>
+
+                          <div className="grid grid-cols-2 gap-2 text-xs text-default-400">
+                            <div className="flex items-center gap-1">
+                              <Bookmark className="w-3 h-3" />
+                              <span className="truncate">{post.category?.name || "未分类"}</span>
+                            </div>
+                            <div className="flex items-center gap-1">
+                              <TrendingUp className="w-3 h-3" />
+                              <span>{post.viewCount} 浏览</span>
                             </div>
                           </div>
 
-                          <div className="flex items-center gap-2">
-                            <Button
-                              isIconOnly
-                              size="sm"
-                              variant="light"
-                              color="default"
-                              as="a"
-                              href={`/blog/${post.slug}`}
-                            >
-                              <Eye className="w-4 h-4" />
-                            </Button>
-                            <Button
-                              isIconOnly
-                              size="sm"
-                              variant="light"
-                              color="primary"
-                              as="a"
-                              href={`/blog/manage/edit/${post.id}`}
-                            >
-                              <Edit className="w-4 h-4" />
-                            </Button>
-                            <Dropdown>
-                              <DropdownTrigger>
-                                <Button isIconOnly size="sm" variant="light" color="default">
-                                  <MoreHorizontal className="w-4 h-4" />
-                                </Button>
-                              </DropdownTrigger>
-                              <DropdownMenu>
-                                <DropdownItem
-                                  key="delete"
-                                  color="danger"
-                                  startContent={<Trash2 className="w-4 h-4" />}
-                                  onPress={() => handleDelete(post.id)}
-                                >
-                                  删除
-                                </DropdownItem>
-                              </DropdownMenu>
-                            </Dropdown>
+                          <div className="flex items-center justify-between pt-2 border-t border-default-100">
+                            <span className="text-xs text-default-400">
+                              {new Date(post.createdAt).toLocaleDateString()}
+                            </span>
+                            <div className="flex gap-1">
+                              <Button
+                                isIconOnly
+                                size="sm"
+                                variant="light"
+                                color="default"
+                                as="a"
+                                href={`/blog/${post.slug}`}
+                              >
+                                <Eye className="w-3 h-3" />
+                              </Button>
+                              <Button
+                                isIconOnly
+                                size="sm"
+                                variant="light"
+                                color="primary"
+                                as="a"
+                                href={`/blog/manage/edit/${post.id}`}
+                              >
+                                <Edit className="w-3 h-3" />
+                              </Button>
+                            </div>
                           </div>
                         </div>
-                      )}
-                    </CardBody>
-                  </Card>
-                ))}
-              </div>
-            )}
-          </CardBody>
-        </Card>
+                      </>
+                    ) : (
+                      // 列表视图
+                      <div className="flex items-start justify-between gap-4">
+                        <div className="flex-1 min-w-0">
+                          <div className="flex items-center gap-3 mb-3">
+                            <h3 className="font-semibold text-lg line-clamp-1">{post.title}</h3>
+                            <Chip size="sm" color={getStatusColor(post.status)} variant="flat">
+                              {getStatusText(post.status)}
+                            </Chip>
+                            <Chip size="sm" color={getVisibilityColor(post.visibility)} variant="flat">
+                              {getVisibilityText(post.visibility)}
+                            </Chip>
+                          </div>
 
-        {/* 分页 */}
-        {totalPages > 1 && (
-          <div className="flex justify-center mt-8">
-            <Card className="p-4">
-              <div className="flex items-center gap-4">
-                <Button
-                  variant="bordered"
-                  onPress={() => setCurrentPage(Math.max(1, currentPage - 1))}
-                  isDisabled={currentPage === 1}
-                  size="lg"
-                >
-                  上一页
-                </Button>
-                <Chip color="primary" variant="flat" size="lg">
-                  第 {currentPage} 页 / 共 {totalPages} 页
-                </Chip>
-                <Button
-                  variant="bordered"
-                  onPress={() => setCurrentPage(Math.min(totalPages, currentPage + 1))}
-                  isDisabled={currentPage === totalPages}
-                  size="lg"
-                >
-                  下一页
-                </Button>
-              </div>
-            </Card>
-          </div>
-        )}
-      </div>
-    </div>
+                          <p className="text-default-500 text-sm line-clamp-2 mb-4">{post.excerpt || "暂无摘要"}</p>
+
+                          <div className="flex flex-wrap items-center gap-4 text-sm text-default-400">
+                            <div className="flex items-center gap-2">
+                              <Avatar size="sm" name={post.author?.displayName || "未知"} className="w-4 h-4" />
+                              <span>{post.author?.displayName || "未知"}</span>
+                            </div>
+                            <div className="flex items-center gap-1">
+                              <Bookmark className="w-4 h-4" />
+                              <span>{post.category?.name || "未分类"}</span>
+                            </div>
+                            <div className="flex items-center gap-1">
+                              <TrendingUp className="w-4 h-4" />
+                              <span>{post.viewCount} 浏览</span>
+                            </div>
+                            <div className="flex items-center gap-1">
+                              <Calendar className="w-4 h-4" />
+                              <span>{new Date(post.createdAt).toLocaleDateString()}</span>
+                            </div>
+                          </div>
+                        </div>
+
+                        <div className="flex items-center gap-2">
+                          <Button
+                            isIconOnly
+                            size="sm"
+                            variant="light"
+                            color="default"
+                            as="a"
+                            href={`/blog/${post.slug}`}
+                          >
+                            <Eye className="w-4 h-4" />
+                          </Button>
+                          <Button
+                            isIconOnly
+                            size="sm"
+                            variant="light"
+                            color="primary"
+                            as="a"
+                            href={`/blog/manage/edit/${post.id}`}
+                          >
+                            <Edit className="w-4 h-4" />
+                          </Button>
+                          <Dropdown>
+                            <DropdownTrigger>
+                              <Button isIconOnly size="sm" variant="light" color="default">
+                                <MoreHorizontal className="w-4 h-4" />
+                              </Button>
+                            </DropdownTrigger>
+                            <DropdownMenu>
+                              <DropdownItem
+                                key="delete"
+                                color="danger"
+                                startContent={<Trash2 className="w-4 h-4" />}
+                                onPress={() => handleDelete(post.id)}
+                              >
+                                删除
+                              </DropdownItem>
+                            </DropdownMenu>
+                          </Dropdown>
+                        </div>
+                      </div>
+                    )}
+                  </CardBody>
+                </Card>
+              ))}
+            </div>
+          )}
+        </CardBody>
+      </Card>
+
+      {/* 分页 */}
+      {totalPages > 1 && (
+        <div className="flex justify-center mt-8">
+          <Card className="p-4">
+            <div className="flex items-center gap-4">
+              <Button
+                variant="bordered"
+                onPress={() => setCurrentPage(Math.max(1, currentPage - 1))}
+                isDisabled={currentPage === 1}
+                size="lg"
+              >
+                上一页
+              </Button>
+              <Chip color="primary" variant="flat" size="lg">
+                第 {currentPage} 页 / 共 {totalPages} 页
+              </Chip>
+              <Button
+                variant="bordered"
+                onPress={() => setCurrentPage(Math.min(totalPages, currentPage + 1))}
+                isDisabled={currentPage === totalPages}
+                size="lg"
+              >
+                下一页
+              </Button>
+            </div>
+          </Card>
+        </div>
+      )}
+    </>
   );
 }

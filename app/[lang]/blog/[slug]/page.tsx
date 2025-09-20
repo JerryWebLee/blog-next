@@ -28,6 +28,7 @@ import {
 import { Post } from "@/types/blog";
 
 export default function BlogDetailPage({ params }: { params: Promise<{ lang: string; slug: string }> }) {
+  console.log("params", params);
   const [resolvedParams, setResolvedParams] = useState<{ lang: string; slug: string } | null>(null);
   const router = useRouter();
 
@@ -178,20 +179,17 @@ export default function BlogDetailPage({ params }: { params: Promise<{ lang: str
 
   if (loading) {
     return (
-      <div className="container mx-auto py-6">
         <Card>
           <CardBody className="text-center py-8">
             <Spinner size="lg" color="primary" />
             <p className="mt-4 text-default-500">加载中...</p>
           </CardBody>
         </Card>
-      </div>
     );
   }
 
   if (showPasswordForm) {
     return (
-      <div className="container mx-auto py-6">
         <Card className="max-w-md mx-auto">
           <CardHeader className="flex gap-3">
             <Lock className="w-5 h-5 text-warning" />
@@ -219,13 +217,11 @@ export default function BlogDetailPage({ params }: { params: Promise<{ lang: str
             </form>
           </CardBody>
         </Card>
-      </div>
     );
   }
 
   if (!post) {
     return (
-      <div className="container mx-auto py-6">
         <Card>
           <CardBody className="text-center py-8">
             <BookOpen className="w-16 h-16 mx-auto mb-4 text-default-300" />
@@ -235,12 +231,11 @@ export default function BlogDetailPage({ params }: { params: Promise<{ lang: str
             </Button>
           </CardBody>
         </Card>
-      </div>
     );
   }
 
   return (
-    <div className="container mx-auto py-6 space-y-6">
+    <div className="space-y-6">
       {/* 返回按钮 */}
       <Button
         variant="bordered"

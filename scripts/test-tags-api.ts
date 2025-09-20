@@ -3,7 +3,7 @@
  * 测试标签相关的所有API接口
  */
 
-import { ApiResponse, CreateTagRequest, UpdateTagRequest, PaginatedResponseData, Tag } from "../types/blog";
+import { ApiResponse, CreateTagRequest, PaginatedResponseData, Tag, UpdateTagRequest } from "../types/blog";
 
 const API_BASE = "http://localhost:3000/api";
 
@@ -12,17 +12,17 @@ const API_BASE = "http://localhost:3000/api";
  */
 async function testGetTags() {
   console.log("🧪 测试获取标签列表...");
-  
+
   try {
     const response = await fetch(`${API_BASE}/tags?page=1&limit=10`);
     const result: ApiResponse<PaginatedResponseData<Tag>> = await response.json();
-    
+
     if (result.success) {
       console.log("✅ 获取标签列表成功");
       console.log(`📊 总数: ${result.data?.pagination.total || 0}`);
       console.log(`📄 当前页: ${result.data?.pagination.page || 0}`);
       console.log(`📋 标签数量: ${result.data?.data.length || 0}`);
-      
+
       if (result.data?.data.length > 0) {
         console.log("🏷️ 标签示例:");
         result.data.data.slice(0, 3).forEach((tag, index) => {
@@ -42,7 +42,7 @@ async function testGetTags() {
  */
 async function testCreateTag() {
   console.log("\n🧪 测试创建标签...");
-  
+
   const newTag: CreateTagRequest = {
     name: `测试标签_${Date.now()}`,
     slug: `test-tag-${Date.now()}`,
@@ -50,7 +50,7 @@ async function testCreateTag() {
     color: "#ff6b6b",
     isActive: true,
   };
-  
+
   try {
     const response = await fetch(`${API_BASE}/tags`, {
       method: "POST",
@@ -59,9 +59,9 @@ async function testCreateTag() {
       },
       body: JSON.stringify(newTag),
     });
-    
+
     const result: ApiResponse<Tag> = await response.json();
-    
+
     if (result.success && result.data) {
       console.log("✅ 创建标签成功");
       console.log(`🏷️ 标签ID: ${result.data.id}`);
@@ -83,11 +83,11 @@ async function testCreateTag() {
  */
 async function testGetTag(id: number) {
   console.log(`\n🧪 测试获取标签 ${id}...`);
-  
+
   try {
     const response = await fetch(`${API_BASE}/tags/${id}`);
     const result: ApiResponse<Tag & { postCount: number }> = await response.json();
-    
+
     if (result.success && result.data) {
       console.log("✅ 获取标签成功");
       console.log(`🏷️ 标签名称: ${result.data.name}`);
@@ -108,14 +108,14 @@ async function testGetTag(id: number) {
  */
 async function testUpdateTag(id: number) {
   console.log(`\n🧪 测试更新标签 ${id}...`);
-  
+
   const updateData: UpdateTagRequest = {
     name: `更新的测试标签_${Date.now()}`,
     description: "这是一个更新后的测试标签",
     color: "#4ecdc4",
     isActive: false,
   };
-  
+
   try {
     const response = await fetch(`${API_BASE}/tags/${id}`, {
       method: "PUT",
@@ -124,9 +124,9 @@ async function testUpdateTag(id: number) {
       },
       body: JSON.stringify(updateData),
     });
-    
+
     const result: ApiResponse<Tag> = await response.json();
-    
+
     if (result.success && result.data) {
       console.log("✅ 更新标签成功");
       console.log(`🏷️ 新名称: ${result.data.name}`);
@@ -146,14 +146,14 @@ async function testUpdateTag(id: number) {
  */
 async function testDeleteTag(id: number) {
   console.log(`\n🧪 测试删除标签 ${id}...`);
-  
+
   try {
     const response = await fetch(`${API_BASE}/tags/${id}`, {
       method: "DELETE",
     });
-    
+
     const result: ApiResponse<null> = await response.json();
-    
+
     if (result.success) {
       console.log("✅ 删除标签成功");
     } else {
@@ -169,15 +169,15 @@ async function testDeleteTag(id: number) {
  */
 async function testSearchTags() {
   console.log("\n🧪 测试搜索标签...");
-  
+
   try {
     const response = await fetch(`${API_BASE}/tags?search=测试&page=1&limit=5`);
     const result: ApiResponse<PaginatedResponseData<Tag>> = await response.json();
-    
+
     if (result.success) {
       console.log("✅ 搜索标签成功");
       console.log(`🔍 搜索结果数量: ${result.data?.data.length || 0}`);
-      
+
       if (result.data?.data.length > 0) {
         console.log("🏷️ 搜索结果:");
         result.data.data.forEach((tag, index) => {
@@ -197,27 +197,27 @@ async function testSearchTags() {
  */
 async function runTests() {
   console.log("🚀 开始测试标签API接口...\n");
-  
+
   // 1. 测试获取标签列表
   await testGetTags();
-  
+
   // 2. 测试创建标签
   const tagId = await testCreateTag();
-  
+
   if (tagId) {
     // 3. 测试获取单个标签
     await testGetTag(tagId);
-    
+
     // 4. 测试更新标签
     await testUpdateTag(tagId);
-    
+
     // 5. 测试删除标签
     await testDeleteTag(tagId);
   }
-  
+
   // 6. 测试搜索标签
   await testSearchTags();
-  
+
   console.log("\n🎉 标签API测试完成！");
 }
 
