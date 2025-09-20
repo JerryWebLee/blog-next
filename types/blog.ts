@@ -204,6 +204,14 @@ export interface UpdateTagRequest {
   isActive?: boolean;
 }
 
+/**
+ * 标签查询参数接口
+ */
+export interface TagQueryParams extends PaginationParams {
+  search?: string; // 搜索关键词
+  isActive?: boolean; // 是否激活
+}
+
 // ==================== 文章相关类型 ====================
 
 /**
