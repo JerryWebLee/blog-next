@@ -151,16 +151,16 @@ const sampleTags = [
 
 async function seedTags() {
   console.log("🌱 开始填充标签数据...");
-  
+
   try {
     // 检查是否已有标签数据
     const existingTags = await db.select().from(tags).limit(1);
-    
+
     if (existingTags.length > 0) {
       console.log("⚠️ 标签数据已存在，跳过填充");
       return;
     }
-    
+
     // 插入标签数据
     for (const tag of sampleTags) {
       await db.insert(tags).values({
@@ -169,23 +169,24 @@ async function seedTags() {
         updatedAt: new Date(),
       });
     }
-    
+
     console.log(`✅ 成功创建 ${sampleTags.length} 个标签`);
-    
+
     // 验证数据
     const count = await db.select().from(tags);
     console.log(`📊 数据库中共有 ${count.length} 个标签`);
-    
   } catch (error) {
     console.error("❌ 填充标签数据失败:", error);
   }
 }
 
 // 运行填充
-seedTags().then(() => {
-  console.log("🎉 标签数据填充完成！");
-  process.exit(0);
-}).catch((error) => {
-  console.error("❌ 填充失败:", error);
-  process.exit(1);
-});
+seedTags()
+  .then(() => {
+    console.log("🎉 标签数据填充完成！");
+    process.exit(0);
+  })
+  .catch((error) => {
+    console.error("❌ 填充失败:", error);
+    process.exit(1);
+  });

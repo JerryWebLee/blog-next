@@ -4,27 +4,27 @@ import { useEffect, useState } from "react";
 import { useParams, useRouter } from "next/navigation";
 import { Button } from "@heroui/button";
 import { Card, CardBody, CardHeader } from "@heroui/card";
+import { Chip } from "@heroui/chip";
 import { Input } from "@heroui/input";
 import { Textarea } from "@heroui/react";
 import { Select, SelectItem } from "@heroui/select";
 import { Spinner } from "@heroui/spinner";
 import { Switch } from "@heroui/switch";
-import { Chip } from "@heroui/chip";
-import { 
-  ArrowLeft, 
-  Eye, 
-  EyeOff, 
-  FileText, 
-  Save, 
-  Image, 
-  Settings, 
-  Type,
+import {
+  ArrowLeft,
   Calendar,
+  Clock,
+  Edit3,
+  Eye,
+  EyeOff,
+  FileText,
+  Image,
   Lock,
   MessageSquare,
+  Save,
+  Settings,
   Sparkles,
-  Edit3,
-  Clock
+  Type,
 } from "lucide-react";
 
 import { Post, PostStatus, PostVisibility, UpdatePostRequest } from "@/types/blog";
@@ -183,9 +183,9 @@ export default function EditBlogPage() {
               </div>
               <h3 className="text-xl font-semibold mb-2">博客不存在</h3>
               <p className="text-default-500 mb-6">您要编辑的博客可能已被删除或不存在</p>
-              <Button 
-                onPress={() => router.push("/blog/manage")} 
-                color="primary" 
+              <Button
+                onPress={() => router.push("/blog/manage")}
+                color="primary"
                 size="lg"
                 startContent={<ArrowLeft className="w-4 h-4" />}
               >
@@ -221,7 +221,7 @@ export default function EditBlogPage() {
               <p className="text-default-500 text-lg mt-2">编辑: {post.title}</p>
             </div>
           </div>
-          
+
           <div className="flex items-center gap-3">
             <Chip color="secondary" variant="flat" size="lg" startContent={<Edit3 className="w-4 h-4" />}>
               编辑模式
@@ -262,7 +262,7 @@ export default function EditBlogPage() {
                   />
                   <p className="text-xs text-default-400">标题将自动生成URL别名</p>
                 </div>
-                
+
                 <div className="space-y-2">
                   <Input
                     label="URL别名"
@@ -421,12 +421,7 @@ export default function EditBlogPage() {
                     size="lg"
                     startContent={<Lock className="w-4 h-4 text-default-400" />}
                     endContent={
-                      <Button 
-                        isIconOnly 
-                        variant="light" 
-                        size="sm" 
-                        onPress={() => setShowPassword(!showPassword)}
-                      >
+                      <Button isIconOnly variant="light" size="sm" onPress={() => setShowPassword(!showPassword)}>
                         {showPassword ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
                       </Button>
                     }
@@ -461,14 +456,9 @@ export default function EditBlogPage() {
                   <Clock className="w-4 h-4" />
                   <span>最后保存: {new Date().toLocaleTimeString()}</span>
                 </div>
-                
+
                 <div className="flex gap-4">
-                  <Button 
-                    variant="bordered" 
-                    size="lg"
-                    onPress={() => router.back()}
-                    className="min-w-24"
-                  >
+                  <Button variant="bordered" size="lg" onPress={() => router.back()} className="min-w-24">
                     取消
                   </Button>
                   <Button

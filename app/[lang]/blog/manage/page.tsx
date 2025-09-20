@@ -15,15 +15,15 @@ import {
   Edit,
   Eye,
   Filter,
+  Grid3X3,
+  List,
   MoreHorizontal,
   Plus,
   Search,
+  SortAsc,
   Trash2,
   TrendingUp,
   User,
-  Grid3X3,
-  List,
-  SortAsc,
 } from "lucide-react";
 
 import { BlogNavigation } from "@/components/blog/blog-navigation";
@@ -159,7 +159,7 @@ export default function BlogManagePage() {
             </h1>
             <p className="text-default-500 text-lg">管理您的所有博客文章，创建精彩内容</p>
           </div>
-          
+
           <div className="flex flex-col sm:flex-row gap-3">
             <Button
               as="a"
@@ -245,7 +245,7 @@ export default function BlogManagePage() {
                 <SelectItem key="viewCount">浏览量</SelectItem>
               </Select>
             </div>
-            
+
             <div className="flex flex-wrap gap-3">
               <Button color="primary" variant="flat" onPress={fetchPosts} size="lg">
                 应用过滤
@@ -276,7 +276,7 @@ export default function BlogManagePage() {
               </Chip>
             )}
           </div>
-          
+
           <div className="flex items-center gap-2">
             <span className="text-sm text-default-500">视图模式:</span>
             <div className="flex bg-default-100 rounded-lg p-1">
@@ -328,7 +328,11 @@ export default function BlogManagePage() {
                 </Button>
               </div>
             ) : (
-              <div className={viewMode === "grid" ? "grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6 p-6" : "space-y-4 p-6"}>
+              <div
+                className={
+                  viewMode === "grid" ? "grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6 p-6" : "space-y-4 p-6"
+                }
+              >
                 {posts.map((post) => (
                   <Card
                     key={post.id}
@@ -396,7 +400,7 @@ export default function BlogManagePage() {
                               <Avatar size="sm" name={post.author?.displayName || "未知"} className="w-5 h-5" />
                               <span>{post.author?.displayName || "未知"}</span>
                             </div>
-                            
+
                             <div className="grid grid-cols-2 gap-2 text-xs text-default-400">
                               <div className="flex items-center gap-1">
                                 <Bookmark className="w-3 h-3" />
@@ -407,7 +411,7 @@ export default function BlogManagePage() {
                                 <span>{post.viewCount} 浏览</span>
                               </div>
                             </div>
-                            
+
                             <div className="flex items-center justify-between pt-2 border-t border-default-100">
                               <span className="text-xs text-default-400">
                                 {new Date(post.createdAt).toLocaleDateString()}
@@ -451,9 +455,7 @@ export default function BlogManagePage() {
                               </Chip>
                             </div>
 
-                            <p className="text-default-500 text-sm line-clamp-2 mb-4">
-                              {post.excerpt || "暂无摘要"}
-                            </p>
+                            <p className="text-default-500 text-sm line-clamp-2 mb-4">{post.excerpt || "暂无摘要"}</p>
 
                             <div className="flex flex-wrap items-center gap-4 text-sm text-default-400">
                               <div className="flex items-center gap-2">

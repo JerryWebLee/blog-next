@@ -166,11 +166,7 @@ export async function PUT(request: NextRequest, { params }: { params: Promise<{ 
       .where(eq(tags.id, tagId));
 
     // 重新查询更新后的标签
-    const [updatedTag] = await db
-      .select()
-      .from(tags)
-      .where(eq(tags.id, tagId))
-      .limit(1);
+    const [updatedTag] = await db.select().from(tags).where(eq(tags.id, tagId)).limit(1);
 
     return NextResponse.json({
       success: true,

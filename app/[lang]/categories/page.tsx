@@ -89,7 +89,9 @@ function CategoryCard({ category, level = 0 }: { category: Category; level?: num
         <div className="px-4 pb-4">
           <Divider className="mb-3" />
           <div className="space-y-2">
-            {category.children?.map((child) => <CategoryCard key={child.id} category={child} level={level + 1} />)}
+            {category.children?.map((child) => (
+              <CategoryCard key={child.id} category={child} level={level + 1} />
+            ))}
           </div>
         </div>
       )}

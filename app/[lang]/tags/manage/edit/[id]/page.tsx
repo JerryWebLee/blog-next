@@ -7,19 +7,19 @@
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import {
+  Badge,
   Button,
   Card,
   CardBody,
   CardHeader,
+  Chip,
+  Divider,
   Input,
   Spinner,
   Switch,
   Textarea,
-  Divider,
-  Chip,
-  Badge,
 } from "@heroui/react";
-import { ArrowLeft, Edit, Tag as TagIcon, Palette, Hash, FileText, Eye, Calendar, Save } from "lucide-react";
+import { ArrowLeft, Calendar, Edit, Eye, FileText, Hash, Palette, Save, Tag as TagIcon } from "lucide-react";
 
 import { ApiResponse, Tag, UpdateTagRequest } from "@/types/blog";
 
@@ -71,7 +71,7 @@ export default function EditTagPage({ params }: EditTagPageProps) {
   // 更新标签
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    
+
     if (!formData.name?.trim()) {
       alert("标签名称是必填项");
       return;
@@ -112,15 +112,24 @@ export default function EditTagPage({ params }: EditTagPageProps) {
       const resolvedParams = await params;
       fetchTag(resolvedParams.id);
     };
-    
+
     initPage();
   }, [params]);
 
   // 预设颜色
   const presetColors = [
-    "#667eea", "#764ba2", "#f093fb", "#f5576c", 
-    "#4facfe", "#00f2fe", "#43e97b", "#38f9d7",
-    "#ffecd2", "#fcb69f", "#a8edea", "#fed6e3"
+    "#667eea",
+    "#764ba2",
+    "#f093fb",
+    "#f5576c",
+    "#4facfe",
+    "#00f2fe",
+    "#43e97b",
+    "#38f9d7",
+    "#ffecd2",
+    "#fcb69f",
+    "#a8edea",
+    "#fed6e3",
   ];
 
   if (loading) {
@@ -137,10 +146,7 @@ export default function EditTagPage({ params }: EditTagPageProps) {
         <TagIcon className="w-16 h-16 text-default-300 mx-auto mb-4" />
         <h3 className="text-lg font-semibold text-default-600 mb-2">标签不存在</h3>
         <p className="text-default-500 mb-4">请检查标签ID是否正确</p>
-        <Button 
-          color="primary" 
-          onPress={() => router.back()}
-        >
+        <Button color="primary" onPress={() => router.back()}>
           返回
         </Button>
       </div>
@@ -151,12 +157,7 @@ export default function EditTagPage({ params }: EditTagPageProps) {
     <div className="space-y-6">
       {/* 页面标题 */}
       <div className="flex items-center gap-4">
-        <Button
-          variant="light"
-          isIconOnly
-          onPress={() => router.back()}
-          className="hover:bg-default-100"
-        >
+        <Button variant="light" isIconOnly onPress={() => router.back()} className="hover:bg-default-100">
           <ArrowLeft className="w-4 h-4" />
         </Button>
         <div className="flex-1">
@@ -262,9 +263,7 @@ export default function EditTagPage({ params }: EditTagPageProps) {
                         size="lg"
                       />
                       <div>
-                        <p className="font-medium text-foreground">
-                          {formData.isActive ? "激活" : "停用"}
-                        </p>
+                        <p className="font-medium text-foreground">{formData.isActive ? "激活" : "停用"}</p>
                         <p className="text-sm text-default-500">
                           {formData.isActive ? "标签将显示在网站上" : "标签将隐藏"}
                         </p>
@@ -276,11 +275,7 @@ export default function EditTagPage({ params }: EditTagPageProps) {
                 <Divider />
 
                 <div className="flex gap-4 pt-4">
-                  <Button
-                    variant="light"
-                    onPress={() => router.back()}
-                    className="flex-1"
-                  >
+                  <Button variant="light" onPress={() => router.back()} className="flex-1">
                     取消
                   </Button>
                   <Button
@@ -319,27 +314,15 @@ export default function EditTagPage({ params }: EditTagPageProps) {
                       <Hash className="w-4 h-4 text-white" />
                     </div>
                     <div className="text-left">
-                      <div className="font-semibold text-foreground">
-                        {formData.name || "标签名称"}
-                      </div>
-                      <div className="text-sm text-default-500">
-                        #{formData.slug || "标签标识"}
-                      </div>
+                      <div className="font-semibold text-foreground">{formData.name || "标签名称"}</div>
+                      <div className="text-sm text-default-500">#{formData.slug || "标签标识"}</div>
                     </div>
                   </div>
-                  
-                  {formData.description && (
-                    <p className="text-sm text-default-600 mb-3">
-                      {formData.description}
-                    </p>
-                  )}
-                  
+
+                  {formData.description && <p className="text-sm text-default-600 mb-3">{formData.description}</p>}
+
                   <div className="flex items-center justify-center gap-2">
-                    <Chip
-                      size="sm"
-                      color={formData.isActive ? "success" : "warning"}
-                      variant="flat"
-                    >
+                    <Chip size="sm" color={formData.isActive ? "success" : "warning"} variant="flat">
                       {formData.isActive ? "激活" : "停用"}
                     </Chip>
                   </div>
@@ -364,29 +347,19 @@ export default function EditTagPage({ params }: EditTagPageProps) {
                 </div>
                 <div className="flex justify-between">
                   <span className="text-default-500">创建时间</span>
-                  <span className="font-medium">
-                    {new Date(tag.createdAt).toLocaleDateString("zh-CN")}
-                  </span>
+                  <span className="font-medium">{new Date(tag.createdAt).toLocaleDateString("zh-CN")}</span>
                 </div>
                 <div className="flex justify-between">
                   <span className="text-default-500">更新时间</span>
-                  <span className="font-medium">
-                    {new Date(tag.updatedAt).toLocaleDateString("zh-CN")}
-                  </span>
+                  <span className="font-medium">{new Date(tag.updatedAt).toLocaleDateString("zh-CN")}</span>
                 </div>
                 <div className="flex justify-between">
                   <span className="text-default-500">文章数量</span>
-                  <span className="font-medium">
-                    {(tag as any).postCount || 0} 篇
-                  </span>
+                  <span className="font-medium">{(tag as any).postCount || 0} 篇</span>
                 </div>
                 <div className="flex justify-between">
                   <span className="text-default-500">当前状态</span>
-                  <Chip
-                    size="sm"
-                    color={tag.isActive ? "success" : "warning"}
-                    variant="flat"
-                  >
+                  <Chip size="sm" color={tag.isActive ? "success" : "warning"} variant="flat">
                     {tag.isActive ? "激活" : "停用"}
                   </Chip>
                 </div>

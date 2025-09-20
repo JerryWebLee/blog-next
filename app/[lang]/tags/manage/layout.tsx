@@ -9,18 +9,12 @@ export const metadata: Metadata = {
   description: "管理博客标签，包括创建、编辑、删除和状态控制",
 };
 
-export default function TagsManageLayout({ 
-  children 
-}: {
-  children: React.ReactNode;
-}) {
+export default function TagsManageLayout({ children }: { children: React.ReactNode }) {
   return (
     <div className="min-h-screen bg-gradient-to-br from-background to-background/50">
       <div className="container mx-auto px-4 py-8 max-w-7xl">
         {/* 页面内容 */}
-        <div className="space-y-6">
-          {children}
-        </div>
+        <div className="space-y-6">{children}</div>
       </div>
     </div>
   );

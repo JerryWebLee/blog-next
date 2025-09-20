@@ -9,6 +9,7 @@
 import { useEffect, useMemo, useState } from "react";
 import { Badge, Button, Card, CardBody, CardHeader, Chip, Input, Select, SelectItem, Spinner } from "@heroui/react";
 import {
+  AlertCircle,
   BarChart3,
   Calendar,
   Eye,
@@ -19,6 +20,7 @@ import {
   Layers,
   List,
   Palette,
+  RefreshCw,
   Search,
   SortAsc,
   SortDesc,
@@ -27,8 +29,6 @@ import {
   Tag as TagIcon,
   TrendingUp,
   Zap,
-  AlertCircle,
-  RefreshCw,
 } from "lucide-react";
 
 import { TagCloud } from "@/components/ui/tag-cloud";
@@ -51,7 +51,6 @@ function TagCard({ tag, index, onDelete }: { tag: Tag; index: number; onDelete?:
       {/* 主卡片 */}
       <Card
         className="relative w-full border-0 backdrop-blur-xl bg-white/10 dark:bg-black/10 hover:bg-white/20 dark:hover:bg-black/20 transition-all duration-500 hover:scale-105 hover:shadow-2xl hover:shadow-primary/20 cursor-pointer overflow-hidden"
-        
         onMouseEnter={() => setIsHovered(true)}
         onMouseLeave={() => setIsHovered(false)}
       >
@@ -423,12 +422,7 @@ function ErrorAlert({ error, onRetry }: { error: string; onRetry: () => void }) 
             <h3 className="text-lg font-semibold text-red-600 dark:text-red-400">加载失败</h3>
             <p className="text-red-500 dark:text-red-400 mt-1">{error}</p>
           </div>
-          <Button
-            color="danger"
-            variant="light"
-            onPress={onRetry}
-            startContent={<RefreshCw className="w-4 h-4" />}
-          >
+          <Button color="danger" variant="light" onPress={onRetry} startContent={<RefreshCw className="w-4 h-4" />}>
             重试
           </Button>
         </div>
@@ -640,9 +634,7 @@ export default function TagsPage() {
                       <TagIcon className="w-12 h-12 text-default-400" />
                     </div>
                     <h3 className="text-2xl font-bold text-foreground">未找到标签</h3>
-                    <p className="text-default-600 max-w-md">
-                      暂无标签数据，请稍后再试或联系管理员
-                    </p>
+                    <p className="text-default-600 max-w-md">暂无标签数据，请稍后再试或联系管理员</p>
                     <Button color="primary" variant="light" onPress={handleRefresh} className="mt-4">
                       刷新页面
                     </Button>

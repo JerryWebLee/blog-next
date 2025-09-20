@@ -4,25 +4,25 @@ import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { Button } from "@heroui/button";
 import { Card, CardBody, CardHeader } from "@heroui/card";
+import { Chip } from "@heroui/chip";
 import { Input } from "@heroui/input";
 import { Textarea } from "@heroui/react";
 import { Select, SelectItem } from "@heroui/select";
 import { Spinner } from "@heroui/spinner";
 import { Switch } from "@heroui/switch";
-import { Chip } from "@heroui/chip";
-import { 
-  ArrowLeft, 
-  Eye, 
-  EyeOff, 
-  FileText, 
-  Save, 
-  Image, 
-  Settings, 
-  Type,
+import {
+  ArrowLeft,
   Calendar,
+  Eye,
+  EyeOff,
+  FileText,
+  Image,
   Lock,
   MessageSquare,
-  Sparkles
+  Save,
+  Settings,
+  Sparkles,
+  Type,
 } from "lucide-react";
 
 import { CreatePostRequest, PostStatus, PostVisibility } from "@/types/blog";
@@ -131,7 +131,7 @@ export default function CreateBlogPage() {
               <p className="text-default-500 text-lg mt-2">创作您的精彩内容，与世界分享您的想法</p>
             </div>
           </div>
-          
+
           <div className="flex items-center gap-3">
             <Chip color="primary" variant="flat" size="lg" startContent={<Sparkles className="w-4 h-4" />}>
               创作模式
@@ -169,7 +169,7 @@ export default function CreateBlogPage() {
                   />
                   <p className="text-xs text-default-400">标题将自动生成URL别名</p>
                 </div>
-                
+
                 <div className="space-y-2">
                   <Input
                     label="URL别名"
@@ -328,12 +328,7 @@ export default function CreateBlogPage() {
                     size="lg"
                     startContent={<Lock className="w-4 h-4 text-default-400" />}
                     endContent={
-                      <Button 
-                        isIconOnly 
-                        variant="light" 
-                        size="sm" 
-                        onPress={() => setShowPassword(!showPassword)}
-                      >
+                      <Button isIconOnly variant="light" size="sm" onPress={() => setShowPassword(!showPassword)}>
                         {showPassword ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
                       </Button>
                     }
@@ -368,14 +363,9 @@ export default function CreateBlogPage() {
                   <FileText className="w-4 h-4" />
                   <span>创建后可以随时编辑和修改</span>
                 </div>
-                
+
                 <div className="flex gap-4">
-                  <Button 
-                    variant="bordered" 
-                    size="lg"
-                    onPress={() => router.back()}
-                    className="min-w-24"
-                  >
+                  <Button variant="bordered" size="lg" onPress={() => router.back()} className="min-w-24">
                     取消
                   </Button>
                   <Button

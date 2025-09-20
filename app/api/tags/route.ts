@@ -78,7 +78,7 @@ export async function GET(request: NextRequest) {
     const hasPrev = page > 1;
 
     const responseData: PaginatedResponseData<Tag> = {
-      data: tagsList.map(tag => ({
+      data: tagsList.map((tag) => ({
         ...tag,
         description: tag.description || undefined,
         color: tag.color || undefined,
@@ -163,22 +163,16 @@ export async function POST(request: NextRequest) {
     }
 
     // 创建新标签
-    await db
-      .insert(tags)
-      .values({
-        name: body.name,
-        slug: body.slug,
-        description: body.description || null,
-        color: body.color || null,
-        isActive: body.isActive !== undefined ? body.isActive : true,
-      });
+    await db.insert(tags).values({
+      name: body.name,
+      slug: body.slug,
+      description: body.description || null,
+      color: body.color || null,
+      isActive: body.isActive !== undefined ? body.isActive : true,
+    });
 
     // 重新查询创建的标签
-    const [newTag] = await db
-      .select()
-      .from(tags)
-      .where(eq(tags.name, body.name))
-      .limit(1);
+    const [newTag] = await db.select().from(tags).where(eq(tags.name, body.name)).limit(1);
 
     return NextResponse.json({
       success: true,

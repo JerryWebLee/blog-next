@@ -68,7 +68,6 @@ export default function BlogWithAPIPage() {
 
   // 处理文章交互
   const handleViewPost = async (post: Post) => {
-    console.log("post", post);
     try {
       await incrementViewCount(post.id);
       router.push(`/${params.lang}/blog/${post.id}`);

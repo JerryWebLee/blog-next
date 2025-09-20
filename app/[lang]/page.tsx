@@ -1,6 +1,6 @@
 import Image from "next/image";
 import Link from "next/link";
-import { ArrowRight, BookOpen, FileText, TrendingUp, Users, Sparkles, Zap, Shield } from "lucide-react";
+import { ArrowRight, BookOpen, FileText, Shield, Sparkles, TrendingUp, Users, Zap } from "lucide-react";
 
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
@@ -159,7 +159,7 @@ export default async function HomePage({ params }: { params: Promise<{ lang: Loc
           <div className="absolute top-40 right-10 w-72 h-72 bg-purple-200 dark:bg-purple-800 rounded-full mix-blend-multiply dark:mix-blend-screen filter blur-xl opacity-70 animate-pulse delay-1000"></div>
           <div className="absolute -bottom-8 left-20 w-72 h-72 bg-pink-200 dark:bg-pink-800 rounded-full mix-blend-multiply dark:mix-blend-screen filter blur-xl opacity-70 animate-pulse delay-2000"></div>
         </div>
-        
+
         <div className="container mx-auto px-4 text-center relative z-10">
           <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-white/80 dark:bg-gray-800/80 backdrop-blur-sm border border-gray-200 dark:border-gray-700 mb-8 animate-fade-in">
             <Sparkles className="h-4 w-4 text-yellow-500" />
@@ -169,27 +169,36 @@ export default async function HomePage({ params }: { params: Promise<{ lang: Loc
               {lang === "ja-JP" && "Next.js 15で構築"}
             </span>
           </div>
-          
+
           <h1 className="text-5xl md:text-7xl font-bold mb-6 bg-gradient-to-r from-gray-900 via-blue-900 to-purple-900 dark:from-white dark:via-blue-100 dark:to-purple-100 bg-clip-text text-transparent animate-fade-in-up">
             {lang === "zh-CN" && "欢迎来到 BlogNext"}
             {lang === "en-US" && "Welcome to BlogNext"}
             {lang === "ja-JP" && "BlogNextへようこそ"}
           </h1>
-          
+
           <p className="text-xl md:text-2xl mb-8 max-w-3xl mx-auto text-gray-600 dark:text-gray-300 animate-fade-in-up delay-200">
             {lang === "zh-CN" && "基于 Next.js 15 和 Drizzle ORM 构建的现代化博客系统"}
             {lang === "en-US" && "Modern blog system built with Next.js 15 and Drizzle ORM"}
             {lang === "ja-JP" && "Next.js 15とDrizzle ORMで構築されたモダンなブログシステム"}
           </p>
-          
+
           <div className="flex flex-col sm:flex-row gap-4 justify-center animate-fade-in-up delay-300">
-            <Button size="lg" asChild className="group hover:scale-105 transition-all duration-300 shadow-lg hover:shadow-xl">
+            <Button
+              size="lg"
+              asChild
+              className="group hover:scale-105 transition-all duration-300 shadow-lg hover:shadow-xl"
+            >
               <Link href={`/${lang}/blog`}>
                 {dict.navigation.blog}
                 <ArrowRight className="ml-2 h-5 w-5 group-hover:translate-x-1 transition-transform" />
               </Link>
             </Button>
-            <Button variant="outline" size="lg" asChild className="group hover:scale-105 transition-all duration-300 backdrop-blur-sm">
+            <Button
+              variant="outline"
+              size="lg"
+              asChild
+              className="group hover:scale-105 transition-all duration-300 backdrop-blur-sm"
+            >
               <Link href={`/${lang}/about`}>{dict.navigation.about}</Link>
             </Button>
           </div>
@@ -201,19 +210,21 @@ export default async function HomePage({ params }: { params: Promise<{ lang: Loc
         <div className="container mx-auto px-4">
           <div className="grid grid-cols-2 md:grid-cols-4 gap-6">
             {stats.map((stat, index) => (
-              <div 
-                key={index} 
+              <div
+                key={index}
                 className={`group relative p-6 rounded-2xl ${stat.bgColor} border border-gray-200 dark:border-gray-700 hover:scale-105 transition-all duration-300 hover:shadow-lg animate-fade-in-up`}
                 style={{ animationDelay: `${index * 100}ms` }}
               >
                 <div className="flex justify-center mb-4">
-                  <div className={`p-3 rounded-full ${stat.bgColor} group-hover:scale-110 transition-transform duration-300`}>
+                  <div
+                    className={`p-3 rounded-full ${stat.bgColor} group-hover:scale-110 transition-transform duration-300`}
+                  >
                     <stat.icon className={`h-8 w-8 ${stat.color}`} />
                   </div>
                 </div>
                 <div className="text-3xl font-bold mb-2 text-gray-900 dark:text-white">{stat.value}</div>
                 <div className="text-sm text-gray-600 dark:text-gray-400">{stat.label[lang]}</div>
-                
+
                 {/* 悬停时的装饰效果 */}
                 <div className="absolute inset-0 rounded-2xl bg-gradient-to-r from-transparent via-white/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
               </div>
@@ -241,17 +252,17 @@ export default async function HomePage({ params }: { params: Promise<{ lang: Loc
 
           <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
             {featuredPosts.map((post, index) => (
-              <Card 
-                key={post.id} 
+              <Card
+                key={post.id}
                 className="group overflow-hidden hover:shadow-2xl transition-all duration-500 hover:-translate-y-2 bg-white dark:bg-gray-800 border-0 shadow-lg animate-fade-in-up"
                 style={{ animationDelay: `${index * 200}ms` }}
               >
                 <div className="relative h-48 overflow-hidden">
-                  <Image 
-                    src={post.featuredImage} 
-                    alt={post.title[lang]} 
-                    fill 
-                    className="object-cover group-hover:scale-110 transition-transform duration-700" 
+                  <Image
+                    src={post.featuredImage}
+                    alt={post.title[lang]}
+                    fill
+                    className="object-cover group-hover:scale-110 transition-transform duration-700"
                   />
                   <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent"></div>
                   <Badge className="absolute top-4 left-4 bg-white/90 dark:bg-gray-800/90 text-gray-900 dark:text-white border-0 shadow-lg">
@@ -282,7 +293,12 @@ export default async function HomePage({ params }: { params: Promise<{ lang: Loc
           </div>
 
           <div className="text-center mt-12 animate-fade-in-up delay-500">
-            <Button size="lg" variant="outline" asChild className="group hover:scale-105 transition-all duration-300 shadow-lg hover:shadow-xl">
+            <Button
+              size="lg"
+              variant="outline"
+              asChild
+              className="group hover:scale-105 transition-all duration-300 shadow-lg hover:shadow-xl"
+            >
               <Link href={`/${lang}/blog`}>
                 {lang === "zh-CN" && "查看所有文章"}
                 {lang === "en-US" && "View All Posts"}
@@ -313,30 +329,30 @@ export default async function HomePage({ params }: { params: Promise<{ lang: Loc
 
           <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
             {techStack.map((tech, index) => (
-              <Card 
+              <Card
                 key={tech.name}
                 className="group relative p-8 text-center hover:shadow-2xl transition-all duration-500 hover:-translate-y-2 bg-white dark:bg-gray-800 border-0 shadow-lg animate-fade-in-up"
                 style={{ animationDelay: `${index * 200}ms` }}
               >
-                <div className={`w-20 h-20 rounded-2xl bg-gradient-to-br ${tech.color} flex items-center justify-center mx-auto mb-6 group-hover:scale-110 transition-transform duration-300 shadow-lg`}>
+                <div
+                  className={`w-20 h-20 rounded-2xl bg-gradient-to-br ${tech.color} flex items-center justify-center mx-auto mb-6 group-hover:scale-110 transition-transform duration-300 shadow-lg`}
+                >
                   <span className="text-3xl font-bold text-white">{tech.icon}</span>
                 </div>
                 <h3 className="text-2xl font-semibold mb-4 text-gray-900 dark:text-white">{tech.name}</h3>
-                <p className="text-gray-600 dark:text-gray-300 mb-6 leading-relaxed">
-                  {tech.description[lang]}
-                </p>
+                <p className="text-gray-600 dark:text-gray-300 mb-6 leading-relaxed">{tech.description[lang]}</p>
                 <div className="flex flex-wrap gap-2 justify-center">
                   {tech.features.map((feature, featureIndex) => (
-                    <Badge 
+                    <Badge
                       key={featureIndex}
-                      variant="secondary" 
+                      variant="secondary"
                       className="text-xs px-3 py-1 bg-gray-100 dark:bg-gray-700 text-gray-700 dark:text-gray-300"
                     >
                       {feature}
                     </Badge>
                   ))}
                 </div>
-                
+
                 {/* 悬停时的装饰效果 */}
                 <div className="absolute inset-0 rounded-lg bg-gradient-to-r from-transparent via-white/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
               </Card>

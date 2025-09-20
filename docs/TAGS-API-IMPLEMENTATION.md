@@ -36,54 +36,67 @@
 ## API 接口测试结果
 
 ### ✅ 获取标签列表
+
 ```bash
 GET /api/tags?page=1&limit=5
 ```
+
 - 成功返回分页数据
 - 支持搜索、筛选、排序参数
 
 ### ✅ 创建标签
+
 ```bash
 POST /api/tags
 ```
+
 - 成功创建新标签
 - 验证必填字段
 - 检查重复名称和 slug
 
 ### ✅ 获取单个标签
+
 ```bash
 GET /api/tags/{id}
 ```
+
 - 成功获取标签详情
 - 包含文章数量统计
 
 ### ✅ 更新标签
+
 ```bash
 PUT /api/tags/{id}
 ```
+
 - 成功更新标签信息
 - 支持部分更新
 
 ### ✅ 删除标签
+
 ```bash
 DELETE /api/tags/{id}
 ```
+
 - 成功删除标签
 - 检查关联文章
 
 ## 页面功能验证
 
 ### ✅ 多语言支持
+
 - 中文页面: `/zh-CN/tags`
 - 英文页面: `/en-US/tags`
 - 日文页面: `/ja-JP/tags`
 
 ### ✅ 数据展示
+
 - 标签列表正确显示
 - 统计信息准确
 - 分页功能正常
 
 ### ✅ 交互功能
+
 - 搜索功能
 - 筛选功能
 - 排序功能
@@ -93,21 +106,23 @@ DELETE /api/tags/{id}
 ## 技术实现细节
 
 ### 1. 数据流管理
+
 ```typescript
 const {
-  tags,           // 标签数据
-  loading,        // 加载状态
-  error,          // 错误信息
-  pagination,     // 分页信息
-  fetchTags,      // 获取数据
-  createTag,      // 创建标签
-  updateTag,      // 更新标签
-  deleteTag,      // 删除标签
-  refreshTags,    // 刷新数据
+  tags, // 标签数据
+  loading, // 加载状态
+  error, // 错误信息
+  pagination, // 分页信息
+  fetchTags, // 获取数据
+  createTag, // 创建标签
+  updateTag, // 更新标签
+  deleteTag, // 删除标签
+  refreshTags, // 刷新数据
 } = useTags();
 ```
 
 ### 2. 查询参数处理
+
 ```typescript
 const queryParams = new URLSearchParams();
 queryParams.set("page", currentPage.toString());
@@ -124,6 +139,7 @@ if (currentIsActive !== undefined) {
 ```
 
 ### 3. 错误处理
+
 ```typescript
 if (!response.ok || !result.success) {
   throw new Error(result.message || "操作失败");

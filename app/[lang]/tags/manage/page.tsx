@@ -8,11 +8,13 @@
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import {
+  Badge,
   Button,
   Card,
   CardBody,
   CardHeader,
   Chip,
+  Divider,
   Dropdown,
   DropdownItem,
   DropdownMenu,
@@ -32,23 +34,21 @@ import {
   TableColumn,
   TableHeader,
   TableRow,
-  Badge,
-  Divider,
 } from "@heroui/react";
-import { 
-  Edit, 
-  MoreVertical, 
-  Plus, 
-  Search, 
-  Tag as TagIcon, 
-  Trash2, 
-  Filter,
+import {
   BarChart3,
+  Calendar,
+  Edit,
   Eye,
   EyeOff,
-  Palette,
-  Calendar,
+  Filter,
   Hash,
+  MoreVertical,
+  Palette,
+  Plus,
+  Search,
+  Tag as TagIcon,
+  Trash2,
 } from "lucide-react";
 
 import { ApiResponse, PaginatedResponseData, Tag, TagQueryParams } from "@/types/blog";
@@ -188,8 +188,8 @@ export default function TagsManagePage() {
   }, []);
 
   // 统计信息
-  const activeTags = tags.filter(tag => tag.isActive).length;
-  const inactiveTags = tags.filter(tag => !tag.isActive).length;
+  const activeTags = tags.filter((tag) => tag.isActive).length;
+  const inactiveTags = tags.filter((tag) => !tag.isActive).length;
 
   return (
     <div className="space-y-6">
@@ -199,11 +199,9 @@ export default function TagsManagePage() {
           <h1 className="text-4xl font-bold bg-gradient-to-r from-primary to-secondary bg-clip-text text-transparent">
             标签管理
           </h1>
-          <p className="text-default-600 mt-2 text-lg">
-            管理博客标签，包括创建、编辑、删除和状态控制
-          </p>
+          <p className="text-default-600 mt-2 text-lg">管理博客标签，包括创建、编辑、删除和状态控制</p>
         </div>
-        
+
         {/* 统计卡片 */}
         <div className="flex gap-4">
           <Card className="p-4 min-w-[120px]">
@@ -248,7 +246,7 @@ export default function TagsManagePage() {
               startContent={<Search className="w-4 h-4 text-default-400" />}
               className="flex-1 max-w-md"
             />
-            
+
             {/* 状态筛选 */}
             <div className="flex gap-2">
               <Button
@@ -278,9 +276,9 @@ export default function TagsManagePage() {
             </div>
 
             {/* 创建按钮 */}
-            <Button 
-              color="primary" 
-              startContent={<Plus className="w-4 h-4" />} 
+            <Button
+              color="primary"
+              startContent={<Plus className="w-4 h-4" />}
               onPress={() => router.push("/tags/manage/create")}
               className="lg:ml-auto"
             >
@@ -313,8 +311,8 @@ export default function TagsManagePage() {
               <TagIcon className="w-16 h-16 text-default-300 mx-auto mb-4" />
               <h3 className="text-lg font-semibold text-default-600 mb-2">暂无标签</h3>
               <p className="text-default-500 mb-4">开始创建你的第一个标签吧</p>
-              <Button 
-                color="primary" 
+              <Button
+                color="primary"
                 startContent={<Plus className="w-4 h-4" />}
                 onPress={() => router.push("/tags/manage/create")}
               >
@@ -361,9 +359,9 @@ export default function TagsManagePage() {
                         </div>
                       </TableCell>
                       <TableCell>
-                        <Chip 
-                          size="sm" 
-                          variant="flat" 
+                        <Chip
+                          size="sm"
+                          variant="flat"
                           color={tag.postCount && tag.postCount > 0 ? "primary" : "default"}
                         >
                           {tag.postCount || 0} 篇
@@ -377,9 +375,7 @@ export default function TagsManagePage() {
                             color="success"
                             size="sm"
                           />
-                          <span className="text-sm text-default-600">
-                            {tag.isActive ? "激活" : "停用"}
-                          </span>
+                          <span className="text-sm text-default-600">{tag.isActive ? "激活" : "停用"}</span>
                         </div>
                       </TableCell>
                       <TableCell>
@@ -423,11 +419,11 @@ export default function TagsManagePage() {
               {/* 分页 */}
               {totalPages > 1 && (
                 <div className="flex justify-center mt-6">
-                  <Pagination 
-                    total={totalPages} 
-                    page={currentPage} 
-                    onChange={handlePageChange} 
-                    showControls 
+                  <Pagination
+                    total={totalPages}
+                    page={currentPage}
+                    onChange={handlePageChange}
+                    showControls
                     showShadow
                     color="primary"
                   />
@@ -464,9 +460,9 @@ export default function TagsManagePage() {
             <Button variant="light" onPress={() => setIsDeleteModalOpen(false)}>
               取消
             </Button>
-            <Button 
-              color="danger" 
-              onPress={handleDeleteTag} 
+            <Button
+              color="danger"
+              onPress={handleDeleteTag}
               isLoading={deleteLoading}
               startContent={!deleteLoading && <Trash2 className="w-4 h-4" />}
             >
