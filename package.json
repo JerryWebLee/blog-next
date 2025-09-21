@@ -13,15 +13,17 @@
     "db:push": "drizzle-kit push --config=drizzle.config.ts",
     "db:studio": "drizzle-kit studio --config=drizzle.config.ts --port=4984",
     "db:seed": "npx tsx scripts/seed.ts",
-    "db:seed:tags": "npx tsx scripts/seed-tags.ts",
-    "test:api": "npx tsx scripts/test-api-simple.ts",
-    "test:api:tags": "npx tsx scripts/test-tags-simple.ts",
+    "db:reset:dev": "npx tsx scripts/reset-database-dev.ts",
+    "db:reset:prod": "npx tsx scripts/reset-database-prod.ts",
+    "db:backup": "npx tsx scripts/backup-database.ts",
+    "db:verify": "npx tsx scripts/verify-system.ts",
+    "db:clear": "npx tsx scripts/clear-data.ts",
+    "test:api": "npx tsx scripts/test-api.ts",
     "test:db:env": "npx tsx scripts/setup-env.ts",
-    "test:db:connect": "npx tsx scripts/simple-db-test.ts",
+    "test:db:connect": "npx tsx scripts/test-db-connect.ts",
     "format": "prettier . --write",
     "lint:fix": "eslint \"./**/*.+(ts|tsx)\" --fix",
-    "format:check": "prettier . --check",
-    "test:db:connection": "node scripts/test-db-connection.js"
+    "format:check": "prettier . --check"
   },
   "dependencies": {
     "@formatjs/intl-localematcher": "^0.6.1",

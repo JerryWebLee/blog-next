@@ -37,3 +37,5 @@ bun.lockb
 # Drizzle ORM
 /drizzle
 *.sql
+
+.backups
