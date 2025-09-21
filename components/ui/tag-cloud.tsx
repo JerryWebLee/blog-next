@@ -50,7 +50,7 @@ export function TagCloud({
 
   // 处理标签数据
   const processedTags = useMemo(() => {
-    let processed = [...tags];
+    const processed = [...tags];
 
     // 按指定方式排序
     switch (sortBy) {

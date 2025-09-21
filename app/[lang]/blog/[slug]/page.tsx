@@ -179,58 +179,58 @@ export default function BlogDetailPage({ params }: { params: Promise<{ lang: str
 
   if (loading) {
     return (
-        <Card>
-          <CardBody className="text-center py-8">
-            <Spinner size="lg" color="primary" />
-            <p className="mt-4 text-default-500">加载中...</p>
-          </CardBody>
-        </Card>
+      <Card>
+        <CardBody className="text-center py-8">
+          <Spinner size="lg" color="primary" />
+          <p className="mt-4 text-default-500">加载中...</p>
+        </CardBody>
+      </Card>
     );
   }
 
   if (showPasswordForm) {
     return (
-        <Card className="max-w-md mx-auto">
-          <CardHeader className="flex gap-3">
-            <Lock className="w-5 h-5 text-warning" />
-            <div className="flex flex-col">
-              <p className="text-lg font-semibold">需要密码访问</p>
-              <p className="text-small text-default-500">请输入访问密码</p>
-            </div>
-          </CardHeader>
-          <CardBody>
-            <form onSubmit={handlePasswordSubmit} className="space-y-4">
-              <Input
-                label="访问密码"
-                type="password"
-                value={password}
-                onValueChange={setPassword}
-                placeholder="输入密码"
-                variant="bordered"
-                isRequired
-                errorMessage={passwordError}
-                isInvalid={!!passwordError}
-              />
-              <Button type="submit" color="primary" className="w-full">
-                验证密码
-              </Button>
-            </form>
-          </CardBody>
-        </Card>
+      <Card className="max-w-md mx-auto">
+        <CardHeader className="flex gap-3">
+          <Lock className="w-5 h-5 text-warning" />
+          <div className="flex flex-col">
+            <p className="text-lg font-semibold">需要密码访问</p>
+            <p className="text-small text-default-500">请输入访问密码</p>
+          </div>
+        </CardHeader>
+        <CardBody>
+          <form onSubmit={handlePasswordSubmit} className="space-y-4">
+            <Input
+              label="访问密码"
+              type="password"
+              value={password}
+              onValueChange={setPassword}
+              placeholder="输入密码"
+              variant="bordered"
+              isRequired
+              errorMessage={passwordError}
+              isInvalid={!!passwordError}
+            />
+            <Button type="submit" color="primary" className="w-full">
+              验证密码
+            </Button>
+          </form>
+        </CardBody>
+      </Card>
     );
   }
 
   if (!post) {
     return (
-        <Card>
-          <CardBody className="text-center py-8">
-            <BookOpen className="w-16 h-16 mx-auto mb-4 text-default-300" />
-            <p className="text-default-500">博客不存在</p>
-            <Button onPress={() => router.push("/blog")} className="mt-4" color="primary">
-              返回博客列表
-            </Button>
-          </CardBody>
-        </Card>
+      <Card>
+        <CardBody className="text-center py-8">
+          <BookOpen className="w-16 h-16 mx-auto mb-4 text-default-300" />
+          <p className="text-default-500">博客不存在</p>
+          <Button onPress={() => router.push("/blog")} className="mt-4" color="primary">
+            返回博客列表
+          </Button>
+        </CardBody>
+      </Card>
     );
   }
 

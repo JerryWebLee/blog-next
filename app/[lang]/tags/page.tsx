@@ -467,7 +467,7 @@ export default function TagsPage() {
 
   // 搜索、筛选和排序逻辑
   const filteredAndSortedTags = useMemo(() => {
-    let filtered = tags;
+    const filtered = tags;
 
     // 排序已经在 API 层面处理，这里只需要返回数据
     return filtered;
