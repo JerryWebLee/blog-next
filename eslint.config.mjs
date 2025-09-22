@@ -5,7 +5,6 @@ import { FlatCompat } from "@eslint/eslintrc";
 import js from "@eslint/js";
 import typescriptEslintEslintPlugin from "@typescript-eslint/eslint-plugin";
 import tsParser from "@typescript-eslint/parser";
-import prettier from "eslint-plugin-prettier";
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -28,15 +27,11 @@ export default [
       "**/node_modules/**/*",
     ],
   },
+  // Next.js 和 Prettier 基础配置
   ...compat.extends("next", "next/core-web-vitals", "prettier"),
   {
-    plugins: {
-      prettier,
-    },
     rules: {
-      "prettier/prettier": "error",
       camelcase: "off",
-      // "import/prefer-default-export": "off",
       "react/jsx-filename-extension": "off",
       "react/jsx-props-no-spreading": "off",
       "react/no-unused-prop-types": "off",
@@ -54,7 +49,8 @@ export default [
       ],
     },
   },
-  ...compat.extends("plugin:@typescript-eslint/recommended", "prettier").map((config) => ({
+  // TypeScript 配置
+  ...compat.extends("plugin:@typescript-eslint/recommended").map((config) => ({
     ...config,
     files: ["**/*.+(ts|tsx)"],
   })),
@@ -73,7 +69,7 @@ export default [
       "@typescript-eslint/no-use-before-define": [1],
       "@typescript-eslint/no-explicit-any": "off",
       "@typescript-eslint/no-var-requires": "off",
-      "linebreak-style": ["error", "unix"],
+      "linebreak-style": "off",
     },
   },
 ];

@@ -1,7 +1,7 @@
 {
   "cssDeclarationSorterKeepOverrides": true,
   "cssDeclarationSorterOrder": "alphabetical",
-  "endOfLine": "lf",
+  "endOfLine": "auto",
   "importOrder": [
     "^(react/(.*)$)|^(react$)",
     "^(next/(.*)$)|^(next$)",

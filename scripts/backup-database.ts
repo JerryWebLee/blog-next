@@ -7,8 +7,9 @@
 import * as fs from "fs";
 import * as path from "path";
 import { sql } from "drizzle-orm";
+
 import { db } from "../lib/db/config";
-import { categories, posts, tags, users, comments, media, settings } from "../lib/db/schema";
+import { categories, comments, media, posts, settings, tags, users } from "../lib/db/schema";
 
 /**
  * 读取环境变量文件
@@ -68,11 +69,11 @@ function createBackupDir() {
  */
 async function backupDatabase() {
   console.log("💾 开始备份数据库...");
-  
+
   const backupDir = createBackupDir();
   const timestamp = new Date().toISOString().replace(/[:.]/g, "-");
   const backupFile = path.join(backupDir, `blog_system_backup_${timestamp}.json`);
-  
+
   try {
     // 备份所有表的数据
     const backupData = {
@@ -86,12 +87,12 @@ async function backupDatabase() {
         comments: await db.select().from(comments),
         media: await db.select().from(media),
         settings: await db.select().from(settings),
-      }
+      },
     };
-    
+
     // 写入备份文件
     fs.writeFileSync(backupFile, JSON.stringify(backupData, null, 2), "utf-8");
-    
+
     console.log(`✅ 数据库备份完成: ${backupFile}`);
     console.log(`📊 备份统计:`);
     console.log(`   用户: ${backupData.tables.users.length} 条记录`);
@@ -101,7 +102,7 @@ async function backupDatabase() {
     console.log(`   评论: ${backupData.tables.comments.length} 条记录`);
     console.log(`   媒体: ${backupData.tables.media.length} 条记录`);
     console.log(`   设置: ${backupData.tables.settings.length} 条记录`);
-    
+
     return backupFile;
   } catch (error) {
     console.error("❌ 数据库备份失败:", error);
@@ -115,13 +116,12 @@ async function backupDatabase() {
 async function main() {
   console.log("🔄 开始数据库备份流程...");
   console.log("=".repeat(50));
-  
+
   try {
     await backupDatabase();
-    
+
     console.log("\n🎉 数据库备份完成！");
     console.log("📁 备份文件已保存在 ./.backups/ 目录中");
-    
   } catch (error) {
     console.error("\n💥 数据库备份失败:", error);
     process.exit(1);

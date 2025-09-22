@@ -5,6 +5,7 @@
 ## 准备工作
 
 ### 1. 环境检查
+
 确保您的环境变量配置正确：
 
 ```bash
@@ -13,6 +14,7 @@ cat .env.local
 ```
 
 确保以下变量已正确设置：
+
 - `DB_HOST` - 数据库主机
 - `DB_PORT` - 数据库端口
 - `DB_USER` - 数据库用户名
@@ -20,6 +22,7 @@ cat .env.local
 - `DB_NAME` - 数据库名称
 
 ### 2. 数据库连接测试
+
 ```bash
 # 测试数据库连接
 pnpm test:db:connect
@@ -65,6 +68,7 @@ pnpm test:db:connect
 ## 验证流程
 
 ### 1. 启动应用程序
+
 ```bash
 # 启动开发服务器
 pnpm dev
@@ -73,26 +77,31 @@ pnpm dev
 ### 2. 测试核心功能
 
 #### 用户认证
+
 - 访问 `/zh-CN/auth/register` 注册新用户
 - 访问 `/zh-CN/auth/login` 登录用户
 - 测试不同角色的权限
 
 #### 文章管理
+
 - 访问 `/zh-CN/blog` 查看文章列表
 - 访问 `/zh-CN/blog/manage` 管理文章
 - 创建、编辑、删除文章
 
 #### 分类和标签
+
 - 访问 `/zh-CN/categories` 查看分类
 - 访问 `/zh-CN/tags` 查看标签
 - 测试分类和标签的创建
 
 #### 多语言支持
+
 - 测试中文 (`/zh-CN/`)
 - 测试英文 (`/en-US/`)
 - 测试日文 (`/ja-JP/`)
 
 ### 3. API 测试
+
 ```bash
 # 测试文章 API
 pnpm test:api
@@ -106,6 +115,7 @@ pnpm test:api:tags
 ### 常见问题
 
 #### 1. 数据库连接失败
+
 ```bash
 # 检查 MySQL 服务是否运行
 brew services list | grep mysql
@@ -115,6 +125,7 @@ brew services start mysql
 ```
 
 #### 2. 迁移失败
+
 ```bash
 # 清理迁移文件并重新生成
 rm -rf drizzle/
@@ -123,6 +134,7 @@ pnpm db:migrate
 ```
 
 #### 3. 种子数据失败
+
 ```bash
 # 检查数据库表是否存在
 pnpm test:db:connect
@@ -132,6 +144,7 @@ pnpm db:seed
 ```
 
 ### 日志查看
+
 ```bash
 # 查看详细日志
 pnpm db:reset 2>&1 | tee reset.log
@@ -140,12 +153,15 @@ pnpm db:reset 2>&1 | tee reset.log
 ## 备份和恢复
 
 ### 备份文件位置
+
 备份文件保存在 `./.backups/` 目录中，文件名格式：
+
 ```
 blog_system_backup_2024-01-01T12-00-00-000Z.json
 ```
 
 ### 恢复数据（如果需要）
+
 ```bash
 # 查看备份文件
 ls -la .backups/
