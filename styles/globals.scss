@@ -329,3 +329,231 @@
     animation: none;
   }
 }
+
+/* 博客页面专用动画效果 */
+@keyframes blog-fade-in-up {
+  from {
+    opacity: 0;
+    transform: translateY(30px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes blog-scale-in {
+  from {
+    opacity: 0;
+    transform: scale(0.95);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+@keyframes blog-slide-in-right {
+  from {
+    opacity: 0;
+    transform: translateX(30px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+@keyframes blog-float {
+  0%, 100% {
+    transform: translateY(0px);
+  }
+  50% {
+    transform: translateY(-8px);
+  }
+}
+
+@keyframes blog-glow {
+  0%, 100% {
+    box-shadow: 0 0 20px rgba(59, 130, 246, 0.3);
+  }
+  50% {
+    box-shadow: 0 0 30px rgba(59, 130, 246, 0.6);
+  }
+}
+
+@keyframes blog-shimmer {
+  0% {
+    background-position: -200px 0;
+  }
+  100% {
+    background-position: calc(200px + 100%) 0;
+  }
+}
+
+/* 博客动画类 */
+.animate-blog-fade-in-up {
+  animation: blog-fade-in-up 0.8s ease-out;
+}
+
+.animate-blog-scale-in {
+  animation: blog-scale-in 0.6s ease-out;
+}
+
+.animate-blog-slide-in-right {
+  animation: blog-slide-in-right 0.6s ease-out;
+}
+
+.animate-blog-float {
+  animation: blog-float 3s ease-in-out infinite;
+}
+
+.animate-blog-glow {
+  animation: blog-glow 2s ease-in-out infinite;
+}
+
+.animate-blog-shimmer {
+  animation: blog-shimmer 1.5s infinite;
+  background: linear-gradient(90deg, rgba(255, 255, 255, 0.1) 25%, rgba(255, 255, 255, 0.2) 50%, rgba(255, 255, 255, 0.1) 75%);
+  background-size: 200px 100%;
+}
+
+/* 暗色模式下的shimmer效果 */
+.dark .animate-blog-shimmer {
+  background: linear-gradient(90deg, rgba(0, 0, 0, 0.1) 25%, rgba(0, 0, 0, 0.2) 50%, rgba(0, 0, 0, 0.1) 75%);
+  background-size: 200px 100%;
+}
+
+/* 玻璃态效果增强 */
+.glass-enhanced {
+  backdrop-filter: blur(20px);
+  background: rgba(255, 255, 255, 0.1);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+}
+
+.dark .glass-enhanced {
+  background: rgba(0, 0, 0, 0.1);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+}
+
+/* 悬停效果增强 */
+.hover-lift-enhanced {
+  transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.hover-lift-enhanced:hover {
+  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.15);
+  transform: translateY(-8px) scale(1.02);
+}
+
+/* 渐变文字效果增强 */
+.gradient-text-enhanced {
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 50%, #f093fb 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  background-size: 200% 200%;
+  animation: gradient-shift 3s ease infinite;
+}
+
+/* 卡片悬停效果 */
+.card-hover-effect {
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.card-hover-effect:hover {
+  transform: translateY(-4px) scale(1.02);
+  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
+}
+
+/* 按钮悬停效果 */
+.button-hover-effect {
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.button-hover-effect:hover {
+  transform: translateY(-2px) scale(1.05);
+  box-shadow: 0 10px 20px rgba(0, 0, 0, 0.15);
+}
+
+/* 响应式动画控制 */
+@media (prefers-reduced-motion: reduce) {
+  .animate-blog-fade-in-up,
+  .animate-blog-scale-in,
+  .animate-blog-slide-in-right,
+  .animate-blog-float,
+  .animate-blog-glow,
+  .animate-blog-shimmer,
+  .hover-lift-enhanced,
+  .card-hover-effect,
+  .button-hover-effect {
+    animation: none;
+    transition: none;
+  }
+}
+
+/* 博客卡片高度一致性优化 */
+.blog-card-container {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+}
+
+.blog-card {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  min-height: 500px; /* 设置最小高度 */
+}
+
+.blog-card-header {
+  flex-shrink: 0;
+}
+
+.blog-card-body {
+  flex-grow: 1;
+  display: flex;
+  flex-direction: column;
+}
+
+.blog-card-footer {
+  flex-shrink: 0;
+  margin-top: auto;
+}
+
+/* 确保网格中的卡片高度一致 */
+.blog-grid {
+  display: grid;
+  grid-template-rows: 1fr; /* 所有行高度相等 */
+  align-items: stretch;
+}
+
+.blog-grid > * {
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+}
+
+/* 响应式调整 */
+@media (max-width: 768px) {
+  .blog-card {
+    min-height: 400px;
+  }
+}
+
+/* 标签区域高度限制 */
+.tag-container {
+  min-height: 2rem;
+  max-height: 4rem;
+  overflow: hidden;
+}
+
+/* 元信息区域固定高度 */
+.meta-info {
+  min-height: 3rem;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+}

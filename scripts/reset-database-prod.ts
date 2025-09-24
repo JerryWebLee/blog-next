@@ -197,7 +197,7 @@ async function verifyDatabase() {
     `);
 
     console.log("📊 数据库表列表:");
-    (tables as any[]).forEach((table: any) => {
+    (tables as unknown as any[]).forEach((table: any) => {
       console.log(`   - ${table.TABLE_NAME}`);
     });
 

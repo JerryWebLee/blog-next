@@ -42,7 +42,7 @@ async function verifyDataIntegrity() {
     console.log(`   标签: ${tagCount.count} 条记录`);
     console.log(`   文章: ${postCount.count} 条记录`);
 
-    if (userCount.count > 0 && categoryCount.count > 0 && tagCount.count > 0 && postCount.count > 0) {
+    if (Number(userCount.count) > 0 && Number(categoryCount.count) > 0 && Number(tagCount.count) > 0 && Number(postCount.count) > 0) {
       console.log("✅ 数据完整性验证通过");
       return true;
     } else {

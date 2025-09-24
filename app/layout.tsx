@@ -10,7 +10,7 @@ export async function generateStaticParams() {
 export default async function RootLayout({ children }: { children: React.ReactNode }) {
   return (
     <html suppressHydrationWarning>
-      <body className={clsx("font-sans")}>
+      <body className={clsx("font-sans")} suppressHydrationWarning>
         <Providers
           themeProps={{
             enableSystem: true,
