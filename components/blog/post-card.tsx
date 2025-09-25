@@ -1,10 +1,10 @@
+import { useState } from "react";
 import Image from "next/image";
 import { Avatar } from "@heroui/avatar";
 import { Button } from "@heroui/button";
 import { Card, CardBody, CardFooter, CardHeader } from "@heroui/card";
 import { Chip } from "@heroui/chip";
 import { ArrowRight, Calendar, Clock, Eye, Heart, MessageCircle, Tag, User } from "lucide-react";
-import { useState } from "react";
 
 interface PostCardProps {
   post: {
@@ -53,9 +53,9 @@ export function PostCard({ post, onView, onLike }: PostCardProps) {
     <div className="group relative animate-fade-in-up blog-card-container">
       {/* 背景光效 */}
       <div className="absolute inset-0 rounded-2xl bg-gradient-to-br from-primary/20 via-secondary/10 to-accent/20 opacity-0 group-hover:opacity-100 transition-opacity duration-500 blur-xl" />
-      
+
       {/* 主卡片 - 使用flex布局确保高度一致 */}
-      <Card 
+      <Card
         className="blog-card relative w-full border-0 backdrop-blur-xl bg-white/10 dark:bg-black/10 hover:bg-white/20 dark:hover:bg-black/20 transition-all duration-500 hover:scale-105 hover:shadow-2xl hover:shadow-primary/20 cursor-pointer overflow-hidden"
         onMouseEnter={() => setIsHovered(true)}
         onMouseLeave={() => setIsHovered(false)}
@@ -68,10 +68,10 @@ export function PostCard({ post, onView, onLike }: PostCardProps) {
           <div className="flex flex-col gap-2 w-full">
             {/* 分类标签 */}
             {post.category && (
-              <Chip 
-                size="sm" 
-                variant="flat" 
-                color="primary" 
+              <Chip
+                size="sm"
+                variant="flat"
+                color="primary"
                 className="self-start backdrop-blur-xl bg-white/10 dark:bg-black/10 hover:bg-white/20 dark:hover:bg-black/20 transition-all duration-300"
               >
                 <Tag className="w-3 h-3 mr-1" />
@@ -109,11 +109,11 @@ export function PostCard({ post, onView, onLike }: PostCardProps) {
           {post.tags && post.tags.length > 0 && (
             <div className="tag-container flex flex-wrap gap-1 mb-4">
               {post.tags.slice(0, 4).map((tag) => (
-                <Chip 
-                  key={tag.slug} 
-                  size="sm" 
-                  variant="flat" 
-                  color="secondary" 
+                <Chip
+                  key={tag.slug}
+                  size="sm"
+                  variant="flat"
+                  color="secondary"
                   className="text-xs backdrop-blur-xl bg-white/10 dark:bg-black/10 hover:bg-white/20 dark:hover:bg-black/20 transition-all duration-300 hover:scale-105"
                   style={{
                     backgroundColor: tag.color ? `${tag.color}20` : undefined,
@@ -125,9 +125,9 @@ export function PostCard({ post, onView, onLike }: PostCardProps) {
                 </Chip>
               ))}
               {post.tags.length > 4 && (
-                <Chip 
-                  size="sm" 
-                  variant="flat" 
+                <Chip
+                  size="sm"
+                  variant="flat"
                   color="default"
                   className="text-xs backdrop-blur-xl bg-white/10 dark:bg-black/10"
                 >
@@ -143,10 +143,10 @@ export function PostCard({ post, onView, onLike }: PostCardProps) {
               {/* 作者和发布时间 */}
               <div className="flex items-center justify-between">
                 <div className="flex items-center gap-2">
-                  <Avatar 
-                    size="sm" 
-                    icon={<User className="w-3 h-3" />} 
-                    className="w-6 h-6 backdrop-blur-xl bg-white/10 dark:bg-black/10" 
+                  <Avatar
+                    size="sm"
+                    icon={<User className="w-3 h-3" />}
+                    className="w-6 h-6 backdrop-blur-xl bg-white/10 dark:bg-black/10"
                   />
                   <span className="truncate">{post.author.displayName}</span>
                 </div>

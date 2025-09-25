@@ -28,7 +28,6 @@ import {
 import { Post } from "@/types/blog";
 
 export default function BlogDetailPage({ params }: { params: Promise<{ lang: string; slug: string }> }) {
-  console.log("params", params);
   const [resolvedParams, setResolvedParams] = useState<{ lang: string; slug: string } | null>(null);
   const router = useRouter();
 
@@ -47,6 +46,7 @@ export default function BlogDetailPage({ params }: { params: Promise<{ lang: str
 
   // 获取博客详情
   useEffect(() => {
+    console.log("resolvedParams", resolvedParams);
     if (!resolvedParams?.slug) return;
 
     const fetchPost = async () => {
@@ -55,6 +55,7 @@ export default function BlogDetailPage({ params }: { params: Promise<{ lang: str
         const response = await fetch(`/api/posts/${resolvedParams.slug}?includeRelations=true`);
         const result = await response.json();
 
+        console.log("result", result);
         if (result.success) {
           const postData = result.data;
 

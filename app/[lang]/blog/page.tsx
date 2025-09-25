@@ -9,7 +9,16 @@ import { Input } from "@heroui/input";
 import { Pagination } from "@heroui/pagination";
 import { Select, SelectItem } from "@heroui/select";
 import { Spinner } from "@heroui/spinner";
-import { BookOpenIcon, CalendarIcon, FilterIcon, RefreshCwIcon, SearchIcon, TrendingUpIcon, Sparkles, Layers } from "lucide-react";
+import {
+  BookOpenIcon,
+  CalendarIcon,
+  FilterIcon,
+  Layers,
+  RefreshCwIcon,
+  SearchIcon,
+  Sparkles,
+  TrendingUpIcon,
+} from "lucide-react";
 
 import { BlogSidebar } from "@/components/blog/blog-sidebar";
 import { PostCard } from "@/components/blog/post-card";
@@ -230,17 +239,17 @@ export default function BlogWithAPIPage() {
               <>
                 {/* 文章统计 */}
                 <div className="flex items-center gap-4 mb-6 animate-fade-in-up">
-                  <Chip 
-                    startContent={<TrendingUpIcon className="w-4 h-4" />} 
-                    variant="flat" 
+                  <Chip
+                    startContent={<TrendingUpIcon className="w-4 h-4" />}
+                    variant="flat"
                     color="primary"
                     className="backdrop-blur-xl bg-white/10 dark:bg-black/10"
                   >
                     共找到 {pagination.total} 篇文章
                   </Chip>
-                  <Chip 
-                    startContent={<CalendarIcon className="w-4 h-4" />} 
-                    variant="flat" 
+                  <Chip
+                    startContent={<CalendarIcon className="w-4 h-4" />}
+                    variant="flat"
                     color="secondary"
                     className="backdrop-blur-xl bg-white/10 dark:bg-black/10"
                   >
@@ -251,11 +260,7 @@ export default function BlogWithAPIPage() {
                 {/* 文章网格 */}
                 <div className="blog-grid grid grid-cols-1 md:grid-cols-2 gap-6 mb-8">
                   {(posts || []).map((post, index) => (
-                    <div
-                      key={post.id}
-                      className="animate-fade-in-up"
-                      style={{ animationDelay: `${index * 100}ms` }}
-                    >
+                    <div key={post.id} className="animate-fade-in-up" style={{ animationDelay: `${index * 100}ms` }}>
                       <PostCard
                         post={{
                           ...post,
@@ -304,7 +309,8 @@ export default function BlogWithAPIPage() {
                           classNames={{
                             wrapper: "gap-0 overflow-visible h-8 rounded border border-divider",
                             item: "w-8 h-8 text-small rounded-none bg-transparent",
-                            cursor: "bg-gradient-to-b shadow-lg from-default-50 to-default-100 dark:from-default-50 dark:to-default-100",
+                            cursor:
+                              "bg-gradient-to-b shadow-lg from-default-50 to-default-100 dark:from-default-50 dark:to-default-100",
                           }}
                         />
                       </CardBody>

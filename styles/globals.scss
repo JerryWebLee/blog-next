@@ -365,7 +365,8 @@
 }
 
 @keyframes blog-float {
-  0%, 100% {
+  0%,
+  100% {
     transform: translateY(0px);
   }
   50% {
@@ -374,7 +375,8 @@
 }
 
 @keyframes blog-glow {
-  0%, 100% {
+  0%,
+  100% {
     box-shadow: 0 0 20px rgba(59, 130, 246, 0.3);
   }
   50% {
@@ -414,7 +416,12 @@
 
 .animate-blog-shimmer {
   animation: blog-shimmer 1.5s infinite;
-  background: linear-gradient(90deg, rgba(255, 255, 255, 0.1) 25%, rgba(255, 255, 255, 0.2) 50%, rgba(255, 255, 255, 0.1) 75%);
+  background: linear-gradient(
+    90deg,
+    rgba(255, 255, 255, 0.1) 25%,
+    rgba(255, 255, 255, 0.2) 50%,
+    rgba(255, 255, 255, 0.1) 75%
+  );
   background-size: 200px 100%;
 }
 
@@ -453,9 +460,9 @@
   background: linear-gradient(135deg, #667eea 0%, #764ba2 50%, #f093fb 100%);
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
+  animation: gradient-shift 3s ease infinite;
   background-clip: text;
   background-size: 200% 200%;
-  animation: gradient-shift 3s ease infinite;
 }
 
 /* 卡片悬停效果 */
@@ -464,8 +471,8 @@
 }
 
 .card-hover-effect:hover {
-  transform: translateY(-4px) scale(1.02);
   box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
+  transform: translateY(-4px) scale(1.02);
 }
 
 /* 按钮悬停效果 */
@@ -474,8 +481,8 @@
 }
 
 .button-hover-effect:hover {
-  transform: translateY(-2px) scale(1.05);
   box-shadow: 0 10px 20px rgba(0, 0, 0, 0.15);
+  transform: translateY(-2px) scale(1.05);
 }
 
 /* 响应式动画控制 */
@@ -513,9 +520,9 @@
 }
 
 .blog-card-body {
-  flex-grow: 1;
   display: flex;
   flex-direction: column;
+  flex-grow: 1;
 }
 
 .blog-card-footer {
@@ -525,15 +532,15 @@
 
 /* 确保网格中的卡片高度一致 */
 .blog-grid {
+  align-items: stretch;
   display: grid;
   grid-template-rows: 1fr; /* 所有行高度相等 */
-  align-items: stretch;
 }
 
 .blog-grid > * {
-  height: 100%;
   display: flex;
   flex-direction: column;
+  height: 100%;
 }
 
 /* 响应式调整 */
@@ -545,15 +552,15 @@
 
 /* 标签区域高度限制 */
 .tag-container {
-  min-height: 2rem;
   max-height: 4rem;
+  min-height: 2rem;
   overflow: hidden;
 }
 
 /* 元信息区域固定高度 */
 .meta-info {
-  min-height: 3rem;
   display: flex;
   flex-direction: column;
   justify-content: space-between;
+  min-height: 3rem;
 }

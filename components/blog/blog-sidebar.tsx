@@ -76,9 +76,9 @@ export function BlogSidebar() {
                     {category.name}
                   </span>
                 </div>
-                <Chip 
-                  size="sm" 
-                  variant="flat" 
+                <Chip
+                  size="sm"
+                  variant="flat"
                   color="default"
                   className="backdrop-blur-xl bg-white/10 dark:bg-black/10"
                 >
@@ -104,8 +104,8 @@ export function BlogSidebar() {
         <CardBody className="pt-0">
           <div className="flex flex-wrap gap-2">
             {mockTags.map((tag, index) => (
-              <Link 
-                key={tag.slug} 
+              <Link
+                key={tag.slug}
                 href={`/tags/${tag.slug}`}
                 className="animate-fade-in-up"
                 style={{ animationDelay: `${index * 100}ms` }}
@@ -185,10 +185,10 @@ export function BlogSidebar() {
           </div>
         </CardHeader>
         <CardBody className="pt-0 space-y-3">
-          <Input 
-            type="email" 
-            placeholder="输入邮箱地址" 
-            variant="bordered" 
+          <Input
+            type="email"
+            placeholder="输入邮箱地址"
+            variant="bordered"
             size="sm"
             classNames={{
               input: "bg-white/10 dark:bg-black/10 backdrop-blur-xl",
