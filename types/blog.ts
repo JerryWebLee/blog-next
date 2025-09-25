@@ -300,6 +300,9 @@ export interface PostData extends BaseEntity {
   title: string;
   viewCount: number;
   visibility: PostVisibility;
+  comments: Comment[];
+  readTime: number;
+  tags: Tag[];
 }
 
 /**

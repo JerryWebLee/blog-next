@@ -7,31 +7,10 @@ import { Chip } from "@heroui/chip";
 import dayjs from "dayjs";
 import { ArrowRight, Calendar, Clock, Eye, Heart, MessageCircle, Tag, User } from "lucide-react";
 
+import { PostData } from "@/types/blog";
+
 interface PostCardProps {
-  post: {
-    id: number;
-    title: string;
-    slug: string;
-    excerpt?: string;
-    featuredImage?: string;
-    author: {
-      displayName: string;
-      username: string;
-    };
-    category?: {
-      name: string;
-      slug: string;
-    };
-    tags?: Array<{
-      name: string;
-      slug: string;
-      color?: string;
-    }>;
-    publishedAt?: Date;
-    viewCount: number;
-    commentCount?: number;
-    readTime?: number;
-  };
+  post: PostData;
   onView?: () => void;
   onLike?: () => void;
 }
@@ -143,7 +122,9 @@ export function PostCard({ post, onView, onLike }: PostCardProps) {
                 </div>
                 <div className="flex items-center gap-1">
                   <Calendar className="w-3 h-3" />
-                  <span className="text-xs">{dayjs(post.publishedAt).format("YYYY-MM-DD HH:mm:ss")}</span>
+                  <span className="text-xs">
+                    {dayjs(post.publishedAt || post.createdAt || post.updatedAt).format("YYYY-MM-DD HH:mm:ss")}
+                  </span>
                 </div>
               </div>
 
@@ -156,7 +137,7 @@ export function PostCard({ post, onView, onLike }: PostCardProps) {
                   </div>
                   <div className="flex items-center gap-1">
                     <MessageCircle className="w-3 h-3" />
-                    <span className="text-xs">{post.commentCount || 0}</span>
+                    <span className="text-xs">{post.comments?.length || 0}</span>
                   </div>
                 </div>
                 <div className="flex items-center gap-1">

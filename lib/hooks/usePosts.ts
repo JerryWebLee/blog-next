@@ -6,7 +6,7 @@
 import { useCallback, useEffect, useState } from "react";
 
 import PostsAPI from "@/lib/api/posts";
-import { CreatePostRequest, PaginatedResponse, Post, PostQueryParams, UpdatePostRequest } from "@/types/blog";
+import { CreatePostRequest, PostData, PostQueryParams, UpdatePostRequest } from "@/types/blog";
 
 export interface UsePostsOptions {
   initialParams?: PostQueryParams;
@@ -17,7 +17,7 @@ export function usePosts(options: UsePostsOptions = {}) {
   const { initialParams = {}, autoFetch = true } = options;
 
   // 状态管理
-  const [posts, setPosts] = useState<Post[]>([]);
+  const [posts, setPosts] = useState<PostData[]>([]);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [pagination, setPagination] = useState({
@@ -37,6 +37,7 @@ export function usePosts(options: UsePostsOptions = {}) {
 
         const newParams = { ...params, ...queryParams };
         const response = await PostsAPI.getPosts(newParams);
+        console.log("response", response);
         setPosts(response.data?.data ?? []);
         setPagination(response.data?.pagination ?? {});
       } catch (err) {
@@ -50,7 +51,7 @@ export function usePosts(options: UsePostsOptions = {}) {
   );
 
   // 获取文章详情
-  const getPost = useCallback(async (id: number): Promise<Post | null> => {
+  const getPost = useCallback(async (id: number): Promise<PostData | null> => {
     try {
       setLoading(true);
       setError(null);
@@ -67,7 +68,7 @@ export function usePosts(options: UsePostsOptions = {}) {
   }, []);
 
   // 根据slug获取文章
-  const getPostBySlug = useCallback(async (slug: string): Promise<Post | null> => {
+  const getPostBySlug = useCallback(async (slug: string): Promise<PostData | null> => {
     try {
       setLoading(true);
       setError(null);
@@ -85,7 +86,7 @@ export function usePosts(options: UsePostsOptions = {}) {
 
   // 创建文章
   const createPost = useCallback(
-    async (data: CreatePostRequest): Promise<Post | null> => {
+    async (data: CreatePostRequest): Promise<PostData | null> => {
       try {
         setLoading(true);
         setError(null);
@@ -108,7 +109,7 @@ export function usePosts(options: UsePostsOptions = {}) {
   );
 
   // 更新文章
-  const updatePost = useCallback(async (id: number, data: UpdatePostRequest): Promise<Post | null> => {
+  const updatePost = useCallback(async (id: number, data: UpdatePostRequest): Promise<PostData | null> => {
     try {
       setLoading(true);
       setError(null);
@@ -152,7 +153,7 @@ export function usePosts(options: UsePostsOptions = {}) {
   }, []);
 
   // 更新文章状态
-  const updatePostStatus = useCallback(async (id: number, status: Post["status"]): Promise<Post | null> => {
+  const updatePostStatus = useCallback(async (id: number, status: PostData["status"]): Promise<PostData | null> => {
     try {
       setLoading(true);
       setError(null);
@@ -226,7 +227,7 @@ export function usePosts(options: UsePostsOptions = {}) {
   );
 
   const filterByStatus = useCallback(
-    (status: Post["status"] | null) => {
+    (status: PostData["status"] | null) => {
       fetchPosts({ ...params, status: status || undefined, page: 1 });
     },
     [fetchPosts, params]

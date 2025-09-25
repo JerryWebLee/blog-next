@@ -3,7 +3,7 @@
  * 封装所有与文章相关的API调用
  */
 
-import { CreatePostRequest, PaginatedResponse, Post, PostQueryParams, UpdatePostRequest } from "@/types/blog";
+import { CreatePostRequest, PaginatedResponse, PostData, PostQueryParams, UpdatePostRequest } from "@/types/blog";
 
 const API_BASE = "/api/posts";
 
@@ -14,7 +14,7 @@ export class PostsAPI {
   /**
    * 获取文章列表
    */
-  static async getPosts(params: PostQueryParams = {}): Promise<PaginatedResponse<Post>> {
+  static async getPosts(params: PostQueryParams = {}): Promise<PaginatedResponse<PostData>> {
     const searchParams = new URLSearchParams();
 
     if (params.page) searchParams.append("page", params.page.toString());
@@ -39,7 +39,7 @@ export class PostsAPI {
   /**
    * 根据ID获取文章详情
    */
-  static async getPostById(id: number): Promise<Post> {
+  static async getPostById(id: number): Promise<PostData> {
     const response = await fetch(`${API_BASE}/${id}`);
 
     if (!response.ok) {
@@ -52,7 +52,7 @@ export class PostsAPI {
   /**
    * 根据slug获取文章详情
    */
-  static async getPostBySlug(slug: string): Promise<Post> {
+  static async getPostBySlug(slug: string): Promise<PostData> {
     const response = await fetch(`${API_BASE}/slug/${slug}`);
 
     if (!response.ok) {
@@ -65,7 +65,7 @@ export class PostsAPI {
   /**
    * 创建新文章
    */
-  static async createPost(data: CreatePostRequest): Promise<Post> {
+  static async createPost(data: CreatePostRequest): Promise<PostData> {
     const response = await fetch(API_BASE, {
       method: "POST",
       headers: {
@@ -84,7 +84,7 @@ export class PostsAPI {
   /**
    * 更新文章
    */
-  static async updatePost(id: number, data: UpdatePostRequest): Promise<Post> {
+  static async updatePost(id: number, data: UpdatePostRequest): Promise<PostData> {
     const response = await fetch(`${API_BASE}/${id}`, {
       method: "PUT",
       headers: {
@@ -118,7 +118,7 @@ export class PostsAPI {
   /**
    * 更新文章状态
    */
-  static async updatePostStatus(id: number, status: Post["status"]): Promise<Post> {
+  static async updatePostStatus(id: number, status: PostData["status"]): Promise<PostData> {
     const response = await fetch(`${API_BASE}/${id}/status`, {
       method: "PATCH",
       headers: {

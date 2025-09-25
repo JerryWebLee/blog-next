@@ -23,7 +23,7 @@ import {
 import { BlogSidebar } from "@/components/blog/blog-sidebar";
 import { PostCard } from "@/components/blog/post-card";
 import { usePosts } from "@/lib/hooks/usePosts";
-import { Post } from "@/types/blog";
+import { PostData } from "@/types/blog";
 
 export default function BlogWithAPIPage() {
   const router = useRouter();
@@ -51,6 +51,8 @@ export default function BlogWithAPIPage() {
     },
   });
 
+  console.log("posts", posts);
+
   // 处理搜索
   const handleSearch = (value: string) => {
     setSearchValue(value);
@@ -76,7 +78,7 @@ export default function BlogWithAPIPage() {
   };
 
   // 处理文章交互
-  const handleViewPost = async (post: Post) => {
+  const handleViewPost = async (post: PostData) => {
     try {
       await incrementViewCount(post.id);
       router.push(`/${params.lang}/blog/${post.id}`);
@@ -85,7 +87,7 @@ export default function BlogWithAPIPage() {
     }
   };
 
-  const handleLikePost = async (post: Post) => {
+  const handleLikePost = async (post: PostData) => {
     await incrementLikeCount(post.id);
   };
 
@@ -258,35 +260,7 @@ export default function BlogWithAPIPage() {
               <div className="blog-grid grid grid-cols-1 md:grid-cols-2 gap-6 mb-8">
                 {(posts || []).map((post, index) => (
                   <div key={post.id} className="animate-fade-in-up" style={{ animationDelay: `${index * 100}ms` }}>
-                    <PostCard
-                      post={{
-                        ...post,
-                        author: post.author
-                          ? {
-                              displayName: post.author.displayName || post.author.username,
-                              username: post.author.username,
-                            }
-                          : {
-                              displayName: "未知作者",
-                              username: "unknown",
-                            },
-                        category: post.category
-                          ? {
-                              name: post.category.name,
-                              slug: post.category.slug,
-                            }
-                          : undefined,
-                        tags: post.tags?.map((tag) => ({
-                          name: tag.name,
-                          slug: tag.slug,
-                          color: tag.color,
-                        })),
-                        commentCount: (post as any).commentCount || 0,
-                        readTime: (post as any).readTime || 5,
-                      }}
-                      onView={() => handleViewPost(post)}
-                      onLike={() => handleLikePost(post)}
-                    />
+                    <PostCard post={post} onView={() => handleViewPost(post)} onLike={() => handleLikePost(post)} />
                   </div>
                 ))}
               </div>
