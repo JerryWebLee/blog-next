@@ -5,97 +5,162 @@
 
 "use client";
 
-import { useMemo, useState } from "react";
-import { Button, Card, CardBody, CardHeader, Chip, Divider, Input, Spinner } from "@heroui/react";
-import { Calendar, ChevronRight, FileText, Filter, Folder, FolderOpen, Hash, Search } from "lucide-react";
+import { useMemo, useState, useRef, useEffect } from "react";
+import { Button, Card, CardBody, Chip, Divider, Input, Spinner } from "@heroui/react";
+import { Calendar, ChevronRight, FileText, Filter, Folder, FolderOpen, Hash, Search, Users, BookOpen, TrendingUp } from "lucide-react";
 
-import { CategoryTree } from "@/components/ui/category-tree";
 import { mockCategories } from "@/lib/data/mock-data";
 import { Category } from "@/types/blog";
+import { shadowManager } from "./shadow-effects";
+// 导入样式
+import "./categories.scss";
 
 /**
- * 分类卡片组件
+ * 分类卡片组件 - 全新设计 + 动态阴影
  * 展示单个分类的信息和统计
  */
 function CategoryCard({ category, level = 0 }: { category: Category; level?: number }) {
   const [isExpanded, setIsExpanded] = useState(false);
+  const [isHovered, setIsHovered] = useState(false);
+  const [isSelected, setIsSelected] = useState(false);
+  const cardRef = useRef<HTMLDivElement>(null);
   const hasChildren = category.children && category.children.length > 0;
 
+  // 应用动态阴影效果
+  useEffect(() => {
+    if (cardRef.current) {
+      // 根据层级应用不同的阴影效果
+      shadowManager.applyLevelShadow(cardRef.current, level);
+      
+      // 应用悬停和点击效果
+      shadowManager.applyHoverShadow(cardRef.current, {
+        intensity: 0.15,
+        color: level === 0 ? 'rgba(59, 130, 246, 0.3)' : 
+               level === 1 ? 'rgba(16, 185, 129, 0.3)' : 
+               'rgba(139, 92, 246, 0.3)',
+        blur: 25
+      });
+
+      shadowManager.applyClickShadow(cardRef.current, {
+        intensity: 0.1,
+        color: level === 0 ? 'rgba(59, 130, 246, 0.2)' : 
+               level === 1 ? 'rgba(16, 185, 129, 0.2)' : 
+               'rgba(139, 92, 246, 0.2)',
+        blur: 15
+      });
+    }
+  }, [level]);
+
+  // 处理卡片点击
+  const handleCardClick = () => {
+    setIsSelected(!isSelected);
+    if (hasChildren) {
+      setIsExpanded(!isExpanded);
+    }
+  };
+
+  // 处理悬停状态
+  const handleMouseEnter = () => {
+    setIsHovered(true);
+  };
+
+  const handleMouseLeave = () => {
+    setIsHovered(false);
+  };
+
   return (
-    <Card
-      className={`w-full transition-all duration-200 hover:shadow-lg ${
-        level > 0 ? "ml-4 border-l-2 border-primary/20" : ""
-      }`}
-      isPressable
-      onPress={() => setIsExpanded(!isExpanded)}
+    <div 
+      ref={cardRef}
+      className={`category-card-modern ${level > 0 ? `level-${level}` : ""} ${isSelected ? 'selected' : ''} ${isExpanded ? 'expanded' : ''}`}
+      onClick={handleCardClick}
+      onMouseEnter={handleMouseEnter}
+      onMouseLeave={handleMouseLeave}
     >
-      <CardBody className="p-4">
-        <div className="flex items-center justify-between">
-          <div className="flex items-center gap-3">
-            {/* 分类图标 */}
-            <div className="flex items-center gap-2">
+      <div className="category-card-content">
+        {/* 卡片头部 */}
+        <div className="category-card-header">
+          <div className="category-icon-section">
+            <div className="category-icon-wrapper">
               {hasChildren ? (
                 isExpanded ? (
-                  <FolderOpen className="w-5 h-5 text-primary" />
+                  <FolderOpen className="w-6 h-6" />
                 ) : (
-                  <Folder className="w-5 h-5 text-primary" />
+                  <Folder className="w-6 h-6" />
                 )
               ) : (
-                <FileText className="w-5 h-5 text-secondary" />
+                <FileText className="w-6 h-6" />
               )}
-
-              {/* 层级缩进指示器 */}
-              {level > 0 && <ChevronRight className="w-4 h-4 text-default-400" />}
             </div>
-
-            {/* 分类信息 */}
-            <div className="flex-1">
-              <h3 className="text-lg font-semibold text-foreground">{category.name}</h3>
-              {category.description && <p className="text-sm text-default-600 mt-1">{category.description}</p>}
+            <div className="category-badge">
+              <span className="category-level">L{level + 1}</span>
             </div>
           </div>
 
-          {/* 统计信息和操作按钮 */}
-          <div className="flex items-center gap-3">
-            {/* 文章数量 */}
-            <Chip size="sm" variant="flat" color="primary" startContent={<Hash className="w-3 h-3" />}>
-              {category.postCount || 0}
-            </Chip>
+          <div className="category-info-section">
+            <h3 className="category-title">{category.name}</h3>
+            {category.description && (
+              <p className="category-desc">{category.description}</p>
+            )}
+            <div className="category-meta-info">
+              <div className="meta-item">
+                <Calendar className="w-4 h-4" />
+                <span>{category.createdAt.toLocaleDateString("zh-CN")}</span>
+              </div>
+              <div className="meta-item">
+                <TrendingUp className="w-4 h-4" />
+                <span>{category.isActive ? "活跃" : "非活跃"}</span>
+              </div>
+            </div>
+          </div>
 
-            {/* 展开/收起按钮 */}
+          <div className="category-actions">
+            <div className="post-count-badge">
+              <Hash className="w-4 h-4" />
+              <span>{category.postCount || 0}</span>
+            </div>
             {hasChildren && (
-              <div
-                className="w-6 h-6 flex items-center justify-center cursor-pointer hover:bg-default-100 rounded-sm transition-colors"
+              <button
+                className={`expand-btn ${isExpanded ? "expanded" : ""}`}
                 onClick={(e) => {
                   e.stopPropagation();
                   setIsExpanded(!isExpanded);
                 }}
               >
-                <ChevronRight className={`w-4 h-4 transition-transform ${isExpanded ? "rotate-90" : ""}`} />
-              </div>
+                <ChevronRight className="w-5 h-5" />
+              </button>
             )}
           </div>
         </div>
 
-        {/* 创建时间 */}
-        <div className="flex items-center gap-1 mt-2 text-xs text-default-500">
-          <Calendar className="w-3 h-3" />
-          <span>创建于 {category.createdAt.toLocaleDateString("zh-CN")}</span>
+        {/* 卡片内容区域 */}
+        <div className="category-card-body">
+          <div className="category-stats-grid">
+            <div className="stat-item">
+              <BookOpen className="w-4 h-4" />
+              <span>文章</span>
+              <strong>{category.postCount || 0}</strong>
+            </div>
+            <div className="stat-item">
+              <Users className="w-4 h-4" />
+              <span>子分类</span>
+              <strong>{category.children?.length || 0}</strong>
+            </div>
+          </div>
         </div>
-      </CardBody>
+      </div>
 
-      {/* 子分类列表 */}
+      {/* 子分类展示 */}
       {hasChildren && isExpanded && (
-        <div className="px-4 pb-4">
-          <Divider className="mb-3" />
-          <div className="space-y-2">
+        <div className="children-section">
+          <div className="children-divider"></div>
+          <div className="children-grid">
             {category.children?.map((child) => (
               <CategoryCard key={child.id} category={child} level={level + 1} />
             ))}
           </div>
         </div>
       )}
-    </Card>
+    </div>
   );
 }
 
@@ -109,39 +174,48 @@ function CategoryStats({ categories }: { categories: Category[] }) {
   const activeCategories = categories.filter((cat) => cat.isActive).length;
 
   return (
-    <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6">
-      <Card className="bg-gradient-to-r from-blue-500 to-blue-600 text-white">
-        <CardBody className="p-4">
-          <div className="flex items-center justify-between">
-            <div>
-              <p className="text-blue-100 text-sm">总分类数</p>
-              <p className="text-2xl font-bold">{totalCategories}</p>
+    <div className="stats-grid-modern">
+      <Card className="stat-card-modern blue-theme">
+        <CardBody className="stat-content-modern">
+          <div className="stat-header">
+            <div className="stat-icon-wrapper blue">
+              <Folder className="w-8 h-8" />
             </div>
-            <Folder className="w-8 h-8 text-blue-200" />
+            <div className="stat-info">
+              <h3 className="stat-title">总分类数</h3>
+              <p className="stat-value">{totalCategories}</p>
+              <p className="stat-desc">包含所有层级</p>
+            </div>
           </div>
         </CardBody>
       </Card>
 
-      <Card className="bg-gradient-to-r from-green-500 to-green-600 text-white">
-        <CardBody className="p-4">
-          <div className="flex items-center justify-between">
-            <div>
-              <p className="text-green-100 text-sm">总文章数</p>
-              <p className="text-2xl font-bold">{totalPosts}</p>
+      <Card className="stat-card-modern green-theme">
+        <CardBody className="stat-content-modern">
+          <div className="stat-header">
+            <div className="stat-icon-wrapper green">
+              <FileText className="w-8 h-8" />
             </div>
-            <FileText className="w-8 h-8 text-green-200" />
+            <div className="stat-info">
+              <h3 className="stat-title">总文章数</h3>
+              <p className="stat-value">{totalPosts}</p>
+              <p className="stat-desc">所有分类文章</p>
+            </div>
           </div>
         </CardBody>
       </Card>
 
-      <Card className="bg-gradient-to-r from-purple-500 to-purple-600 text-white">
-        <CardBody className="p-4">
-          <div className="flex items-center justify-between">
-            <div>
-              <p className="text-purple-100 text-sm">活跃分类</p>
-              <p className="text-2xl font-bold">{activeCategories}</p>
+      <Card className="stat-card-modern purple-theme">
+        <CardBody className="stat-content-modern">
+          <div className="stat-header">
+            <div className="stat-icon-wrapper purple">
+              <Filter className="w-8 h-8" />
             </div>
-            <Filter className="w-8 h-8 text-purple-200" />
+            <div className="stat-info">
+              <h3 className="stat-title">活跃分类</h3>
+              <p className="stat-value">{activeCategories}</p>
+              <p className="stat-desc">正在使用中</p>
+            </div>
           </div>
         </CardBody>
       </Card>
@@ -164,27 +238,27 @@ function SearchAndFilter({
   onToggleActive: (show: boolean) => void;
 }) {
   return (
-    <Card className="mb-6">
-      <CardBody className="p-4">
-        <div className="flex flex-col md:flex-row gap-4">
-          {/* 搜索输入框 */}
-          <Input
-            placeholder="搜索分类..."
-            value={searchQuery}
-            onValueChange={onSearchChange}
-            startContent={<Search className="w-4 h-4 text-default-400" />}
-            className="flex-1"
-            variant="bordered"
-          />
-
-          {/* 筛选选项 */}
-          <div className="flex items-center gap-2">
+    <Card className="search-filter-modern">
+      <CardBody className="search-content">
+        <div className="search-section">
+          <div className="search-input-wrapper">
+            <Search className="search-icon" />
+            <Input
+              placeholder="搜索分类名称、描述..."
+              value={searchQuery}
+              onValueChange={onSearchChange}
+              className="search-input-field"
+              variant="bordered"
+            />
+          </div>
+          <div className="filter-section">
             <Button
               size="sm"
               variant={showOnlyActive ? "solid" : "bordered"}
               color={showOnlyActive ? "primary" : "default"}
               onPress={() => onToggleActive(!showOnlyActive)}
               startContent={<Filter className="w-4 h-4" />}
+              className="filter-btn"
             >
               仅显示活跃
             </Button>
@@ -241,11 +315,15 @@ export default function CategoriesPage() {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-background via-background to-primary/5">
+    <div className="categories-page">
       {/* 页面标题 */}
-      <div className="mb-8">
-        <h1 className="text-3xl font-bold text-foreground mb-2">博客分类</h1>
-        <p className="text-default-600">探索我们的技术分类，找到您感兴趣的内容</p>
+      <div className="page-header">
+        <div className="header-content">
+          <div className="title-section">
+            <h1 className="page-title">博客分类</h1>
+            <p className="page-subtitle">探索我们的技术分类，找到您感兴趣的内容</p>
+          </div>
+        </div>
       </div>
 
       {/* 统计信息 */}
@@ -259,32 +337,29 @@ export default function CategoriesPage() {
         onToggleActive={handleToggleActive}
       />
 
-      {/* 分类列表 */}
-      <div className="space-y-4">
+      {/* 分类列表 - 全新设计 + 动态阴影 */}
+      <div className="categories-section">
         {isLoading ? (
-          <div className="flex justify-center py-8">
+          <div className="loading-state">
             <Spinner size="lg" color="primary" />
+            <p>加载分类中...</p>
           </div>
         ) : filteredCategories.length > 0 ? (
-          <CategoryTree
-            categories={filteredCategories}
-            onCategorySelect={(category) => {
-              // 可以在这里处理分类选择逻辑
-              console.log("Selected category:", category);
-            }}
-            showPostCount={true}
-            showDescription={true}
-          />
+          <div className="categories-grid">
+            {filteredCategories.map((category) => (
+              <CategoryCard key={category.id} category={category} />
+            ))}
+          </div>
         ) : (
-          <Card>
-            <CardBody className="p-8 text-center">
-              <Folder className="w-12 h-12 text-default-400 mx-auto mb-4" />
-              <h3 className="text-lg font-semibold text-foreground mb-2">未找到分类</h3>
-              <p className="text-default-600">
-                {searchQuery ? `没有找到包含 "${searchQuery}" 的分类` : "暂无分类数据"}
-              </p>
-            </CardBody>
-          </Card>
+          <div className="empty-state">
+            <div className="empty-icon">
+              <Folder className="w-16 h-16" />
+            </div>
+            <h3 className="empty-title">未找到分类</h3>
+            <p className="empty-description">
+              {searchQuery ? `没有找到包含 "${searchQuery}" 的分类` : "暂无分类数据"}
+            </p>
+          </div>
         )}
       </div>
     </div>

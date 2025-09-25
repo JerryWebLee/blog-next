@@ -13,7 +13,6 @@
 │   └── categories-test/
 │       └── page.tsx              # 测试页面
 ├── components/ui/
-│   ├── category-tree.tsx         # 分类树组件
 │   ├── tag-cloud.tsx            # 标签云组件
 │   └── tag-color-picker.tsx     # 标签颜色选择器
 ├── lib/data/
@@ -173,7 +172,6 @@
 ### 2. 集成组件
 
 ```tsx
-import { CategoryTree } from "@/components/ui/category-tree";
 import { TagCloud, TagStats } from "@/components/ui/tag-cloud";
 import { TagColorPicker } from "@/components/ui/tag-color-picker";
 ```
