@@ -241,7 +241,7 @@ export default function CategoriesPage() {
   };
 
   return (
-    <div className="container mx-auto px-4 py-8 max-w-6xl">
+    <div className="min-h-screen bg-gradient-to-br from-background via-background to-primary/5">
       {/* 页面标题 */}
       <div className="mb-8">
         <h1 className="text-3xl font-bold text-foreground mb-2">博客分类</h1>

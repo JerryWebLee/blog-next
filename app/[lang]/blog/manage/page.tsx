@@ -27,10 +27,10 @@ import {
 } from "lucide-react";
 
 import { BlogNavigation } from "@/components/blog/blog-navigation";
-import { Post, PostStatus, PostVisibility } from "@/types/blog";
+import { PostData, PostStatus, PostVisibility } from "@/types/blog";
 
 export default function BlogManagePage() {
-  const [posts, setPosts] = useState<Post[]>([]);
+  const [posts, setPosts] = useState<PostData[]>([]);
   const [loading, setLoading] = useState(true);
   const [searchTerm, setSearchTerm] = useState("");
   const [statusFilter, setStatusFilter] = useState<PostStatus | "all">("all");
@@ -57,6 +57,7 @@ export default function BlogManagePage() {
       const result = await response.json();
 
       if (result.success) {
+        console.log("result", result.data.data);
         setPosts(result.data.data);
         setTotalPages(result.data.pagination.totalPages);
       }
@@ -361,7 +362,7 @@ export default function BlogManagePage() {
                                 key="view"
                                 startContent={<Eye className="w-4 h-4" />}
                                 as="a"
-                                href={`/blog/${post.slug}`}
+                                href={`/blog/${post.id}`}
                               >
                                 查看
                               </DropdownItem>
@@ -417,7 +418,7 @@ export default function BlogManagePage() {
                                 variant="light"
                                 color="default"
                                 as="a"
-                                href={`/blog/${post.slug}`}
+                                href={`/blog/${post.id}`}
                               >
                                 <Eye className="w-3 h-3" />
                               </Button>
@@ -472,14 +473,7 @@ export default function BlogManagePage() {
                         </div>
 
                         <div className="flex items-center gap-2">
-                          <Button
-                            isIconOnly
-                            size="sm"
-                            variant="light"
-                            color="default"
-                            as="a"
-                            href={`/blog/${post.slug}`}
-                          >
+                          <Button isIconOnly size="sm" variant="light" color="default" as="a" href={`/blog/${post.id}`}>
                             <Eye className="w-4 h-4" />
                           </Button>
                           <Button

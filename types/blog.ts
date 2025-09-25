@@ -228,7 +228,7 @@ export type PostVisibility = "public" | "private" | "password";
  * 文章实体接口
  */
 
-export interface Post extends BaseEntity {
+export interface Post {
   posts: {
     id: number;
     title: string;
@@ -282,6 +282,24 @@ export interface Post extends BaseEntity {
     createdAt: string;
     updatedAt: string;
   };
+}
+
+export interface PostData extends BaseEntity {
+  allowComments: boolean;
+  author: User;
+  authorId: number;
+  category: { id: number; name: string };
+  categoryId: number;
+  content: string;
+  excerpt: string;
+  featuredImage: string;
+  likeCount: number;
+  publishedAt: string | null;
+  slug: string;
+  status: PostStatus;
+  title: string;
+  viewCount: number;
+  visibility: PostVisibility;
 }
 
 /**

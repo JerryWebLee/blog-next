@@ -541,142 +541,101 @@ export default function TagsPage() {
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-background via-background to-primary/5">
-      <div className="container mx-auto px-4 py-8 max-w-7xl">
-        {/* 页面标题 */}
-        <div className="mb-12 text-center animate-fade-in-up">
-          <div className="inline-flex items-center gap-3 mb-4">
-            <div className="p-3 rounded-full bg-gradient-to-br from-primary/20 to-secondary/20">
-              <Layers className="w-8 h-8 text-primary" />
-            </div>
-            <h1 className="text-4xl md:text-5xl font-bold bg-gradient-to-r from-primary via-secondary to-accent bg-clip-text text-transparent">
-              博客标签
-            </h1>
+      {/* 页面标题 */}
+      <div className="mb-12 text-center animate-fade-in-up">
+        <div className="inline-flex items-center gap-3 mb-4">
+          <div className="p-3 rounded-full bg-gradient-to-br from-primary/20 to-secondary/20">
+            <Layers className="w-8 h-8 text-primary" />
           </div>
-          <p className="text-lg text-default-600 max-w-2xl mx-auto">探索技术世界的标签海洋，发现您感兴趣的话题和内容</p>
+          <h1 className="text-4xl md:text-5xl font-bold bg-gradient-to-r from-primary via-secondary to-accent bg-clip-text text-transparent">
+            博客标签
+          </h1>
         </div>
+        <p className="text-lg text-default-600 max-w-2xl mx-auto">探索技术世界的标签海洋，发现您感兴趣的话题和内容</p>
+      </div>
 
-        {/* 错误提示 */}
-        {error && <ErrorAlert error={error} onRetry={handleRefresh} />}
+      {/* 错误提示 */}
+      {error && <ErrorAlert error={error} onRetry={handleRefresh} />}
 
-        {/* 统计信息 */}
-        <TagStats tags={tags} pagination={pagination} />
+      {/* 统计信息 */}
+      <TagStats tags={tags} pagination={pagination} />
 
-        {/* 标签云 */}
-        {tags.length > 0 && (
-          <Card className="mb-8 border-0 backdrop-blur-xl bg-white/10 dark:bg-black/10 animate-fade-in-up">
-            <CardHeader className="pb-4">
-              <h2 className="text-2xl font-bold flex items-center gap-3">
-                <div className="p-2 rounded-full bg-gradient-to-br from-primary/20 to-secondary/20">
-                  <Palette className="w-6 h-6 text-primary" />
-                </div>
-                <span className="bg-gradient-to-r from-primary to-secondary bg-clip-text text-transparent">标签云</span>
-              </h2>
-            </CardHeader>
-            <CardBody>
-              <TagCloud
-                tags={tags.filter((tag) => tag.isActive)}
-                maxTags={30}
-                minSize={12}
-                maxSize={20}
-                showPostCount={true}
-                onTagClick={(tag) => {
-                  console.log("Clicked tag:", tag);
-                }}
-                layout="cloud"
-                sortBy="postCount"
-              />
-            </CardBody>
-          </Card>
-        )}
-
-        {/* 热门标签 */}
-        {tags.length > 0 && <PopularTags tags={tags} />}
-
-        {/* 搜索和筛选 */}
-        <SearchAndFilter
-          searchQuery=""
-          onSearchChange={handleSearch}
-          showOnlyActive={false}
-          onToggleActive={handleToggleActive}
-          sortBy="createdAt"
-          onSortChange={handleSortChange}
-          sortOrder="desc"
-          onSortOrderChange={handleSortOrderChange}
-          viewMode={viewMode}
-          onViewModeChange={handleViewModeChange}
-          loading={loading}
-          onRefresh={handleRefresh}
-        />
-
-        {/* 标签列表 */}
-        <div
-          className={`grid gap-6 ${
-            viewMode === "grid" ? "grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4" : "grid-cols-1"
-          }`}
-        >
-          {loading ? (
-            <div className="col-span-full flex justify-center py-12">
-              <div className="flex flex-col items-center gap-4">
-                <Spinner size="lg" color="primary" />
-                <p className="text-default-600">加载标签中...</p>
+      {/* 标签云 */}
+      {tags.length > 0 && (
+        <Card className="mb-8 border-0 backdrop-blur-xl bg-white/10 dark:bg-black/10 animate-fade-in-up">
+          <CardHeader className="pb-4">
+            <h2 className="text-2xl font-bold flex items-center gap-3">
+              <div className="p-2 rounded-full bg-gradient-to-br from-primary/20 to-secondary/20">
+                <Palette className="w-6 h-6 text-primary" />
               </div>
-            </div>
-          ) : filteredAndSortedTags.length > 0 ? (
-            filteredAndSortedTags.map((tag, index) => (
-              <TagCard key={tag.id} tag={tag} index={index} onDelete={handleDeleteTag} />
-            ))
-          ) : (
-            <div className="col-span-full">
-              <Card className="border-0 backdrop-blur-xl bg-white/10 dark:bg-black/10">
-                <CardBody className="p-12 text-center">
-                  <div className="flex flex-col items-center gap-4">
-                    <div className="p-4 rounded-full bg-gradient-to-br from-default-200 to-default-300 dark:from-default-700 dark:to-default-800">
-                      <TagIcon className="w-12 h-12 text-default-400" />
-                    </div>
-                    <h3 className="text-2xl font-bold text-foreground">未找到标签</h3>
-                    <p className="text-default-600 max-w-md">暂无标签数据，请稍后再试或联系管理员</p>
-                    <Button color="primary" variant="light" onPress={handleRefresh} className="mt-4">
-                      刷新页面
-                    </Button>
-                  </div>
-                </CardBody>
-              </Card>
-            </div>
-          )}
-        </div>
+              <span className="bg-gradient-to-r from-primary to-secondary bg-clip-text text-transparent">标签云</span>
+            </h2>
+          </CardHeader>
+          <CardBody>
+            <TagCloud
+              tags={tags.filter((tag) => tag.isActive)}
+              maxTags={30}
+              minSize={12}
+              maxSize={20}
+              showPostCount={true}
+              onTagClick={(tag) => {
+                console.log("Clicked tag:", tag);
+              }}
+              layout="cloud"
+              sortBy="postCount"
+            />
+          </CardBody>
+        </Card>
+      )}
 
-        {/* 分页信息 */}
-        {pagination && pagination.totalPages > 1 && (
-          <div className="mt-8 flex justify-center">
+      {/* 热门标签 */}
+      {tags.length > 0 && <PopularTags tags={tags} />}
+
+      {/* 搜索和筛选 */}
+      <SearchAndFilter
+        searchQuery=""
+        onSearchChange={handleSearch}
+        showOnlyActive={false}
+        onToggleActive={handleToggleActive}
+        sortBy="createdAt"
+        onSortChange={handleSortChange}
+        sortOrder="desc"
+        onSortOrderChange={handleSortOrderChange}
+        viewMode={viewMode}
+        onViewModeChange={handleViewModeChange}
+        loading={loading}
+        onRefresh={handleRefresh}
+      />
+
+      {/* 标签列表 */}
+      <div
+        className={`grid gap-6 ${
+          viewMode === "grid" ? "grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4" : "grid-cols-1"
+        }`}
+      >
+        {loading ? (
+          <div className="col-span-full flex justify-center py-12">
+            <div className="flex flex-col items-center gap-4">
+              <Spinner size="lg" color="primary" />
+              <p className="text-default-600">加载标签中...</p>
+            </div>
+          </div>
+        ) : filteredAndSortedTags.length > 0 ? (
+          filteredAndSortedTags.map((tag, index) => (
+            <TagCard key={tag.id} tag={tag} index={index} onDelete={handleDeleteTag} />
+          ))
+        ) : (
+          <div className="col-span-full">
             <Card className="border-0 backdrop-blur-xl bg-white/10 dark:bg-black/10">
-              <CardBody className="p-4">
-                <div className="flex items-center gap-4">
-                  <Button
-                    size="sm"
-                    variant="bordered"
-                    onPress={() => {
-                      setPage(pagination.page - 1);
-                      fetchTags({ page: pagination.page - 1 });
-                    }}
-                    isDisabled={!pagination.hasPrev}
-                    className="backdrop-blur-xl bg-white/10 dark:bg-black/10"
-                  >
-                    上一页
-                  </Button>
-                  <span className="text-sm text-default-600">
-                    第 {pagination.page} 页，共 {pagination.totalPages} 页
-                  </span>
-                  <Button
-                    size="sm"
-                    variant="bordered"
-                    onPress={() => {
-                      setPage(pagination.page + 1);
-                      fetchTags({ page: pagination.page + 1 });
-                    }}
-                    isDisabled={!pagination.hasNext}
-                    className="backdrop-blur-xl bg-white/10 dark:bg-black/10"
-                  >
-                    下一页
+              <CardBody className="p-12 text-center">
+                <div className="flex flex-col items-center gap-4">
+                  <div className="p-4 rounded-full bg-gradient-to-br from-default-200 to-default-300 dark:from-default-700 dark:to-default-800">
+                    <TagIcon className="w-12 h-12 text-default-400" />
+                  </div>
+                  <h3 className="text-2xl font-bold text-foreground">未找到标签</h3>
+                  <p className="text-default-600 max-w-md">暂无标签数据，请稍后再试或联系管理员</p>
+                  <Button color="primary" variant="light" onPress={handleRefresh} className="mt-4">
+                    刷新页面
                   </Button>
                 </div>
               </CardBody>
@@ -684,6 +643,45 @@ export default function TagsPage() {
           </div>
         )}
       </div>
+
+      {/* 分页信息 */}
+      {pagination && pagination.totalPages > 1 && (
+        <div className="mt-8 flex justify-center">
+          <Card className="border-0 backdrop-blur-xl bg-white/10 dark:bg-black/10">
+            <CardBody className="p-4">
+              <div className="flex items-center gap-4">
+                <Button
+                  size="sm"
+                  variant="bordered"
+                  onPress={() => {
+                    setPage(pagination.page - 1);
+                    fetchTags({ page: pagination.page - 1 });
+                  }}
+                  isDisabled={!pagination.hasPrev}
+                  className="backdrop-blur-xl bg-white/10 dark:bg-black/10"
+                >
+                  上一页
+                </Button>
+                <span className="text-sm text-default-600">
+                  第 {pagination.page} 页，共 {pagination.totalPages} 页
+                </span>
+                <Button
+                  size="sm"
+                  variant="bordered"
+                  onPress={() => {
+                    setPage(pagination.page + 1);
+                    fetchTags({ page: pagination.page + 1 });
+                  }}
+                  isDisabled={!pagination.hasNext}
+                  className="backdrop-blur-xl bg-white/10 dark:bg-black/10"
+                >
+                  下一页
+                </Button>
+              </div>
+            </CardBody>
+          </Card>
+        </div>
+      )}
     </div>
   );
 }

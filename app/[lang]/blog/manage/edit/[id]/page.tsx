@@ -66,16 +66,16 @@ export default function EditBlogPage() {
           const postData = result.data;
           setPost(postData);
           setFormData({
-            title: postData.title || "",
-            slug: postData.slug || "",
-            excerpt: postData.excerpt || "",
-            content: postData.content || "",
-            featuredImage: postData.featuredImage || "",
-            categoryId: postData.categoryId,
-            status: postData.status || "draft",
-            visibility: postData.visibility || "public",
-            password: postData.password || "",
-            allowComments: postData.allowComments ?? true,
+            title: postData.posts.title || "",
+            slug: postData.posts.slug || "",
+            excerpt: postData.posts.excerpt || "",
+            content: postData.posts.content || "",
+            featuredImage: postData.posts.featuredImage || "",
+            categoryId: postData.posts.categoryId,
+            status: postData.posts.status || "draft",
+            visibility: postData.posts.visibility || "public",
+            password: postData.posts.password || "",
+            allowComments: postData.posts.allowComments ?? true,
             tagIds: postData.tags?.map((tag: any) => tag.id) || [],
           });
         } else {
@@ -209,7 +209,7 @@ export default function EditBlogPage() {
             <h1 className="text-4xl font-bold bg-gradient-to-r from-primary to-secondary bg-clip-text text-transparent">
               编辑博客
             </h1>
-            <p className="text-default-500 text-lg mt-2">编辑: {post.title}</p>
+            <p className="text-default-500 text-lg mt-2">编辑: {post.posts.title}</p>
           </div>
         </div>
 
@@ -218,7 +218,7 @@ export default function EditBlogPage() {
             编辑模式
           </Chip>
           <Chip color="default" variant="flat" size="lg" startContent={<Clock className="w-4 h-4" />}>
-            最后更新: {new Date(post.updatedAt).toLocaleDateString()}
+            最后更新: {new Date(post.posts.updatedAt).toLocaleDateString()}
           </Chip>
         </div>
       </div>
