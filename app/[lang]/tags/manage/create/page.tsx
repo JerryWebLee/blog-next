@@ -9,6 +9,7 @@ import { useRouter } from "next/navigation";
 import { Button, Card, CardBody, CardHeader, Chip, Divider, Input, Switch, Textarea } from "@heroui/react";
 import { ArrowLeft, Eye, FileText, Hash, Palette, Plus, Tag as TagIcon } from "lucide-react";
 
+import { message } from "@/lib/utils";
 import { ApiResponse, CreateTagRequest } from "@/types/blog";
 
 export default function CreateTagPage() {
@@ -45,7 +46,7 @@ export default function CreateTagPage() {
     e.preventDefault();
 
     if (!formData.name.trim()) {
-      alert("标签名称是必填项");
+      message.warning("标签名称是必填项");
       return;
     }
 
@@ -69,11 +70,11 @@ export default function CreateTagPage() {
         router.push("/tags/manage");
         router.refresh();
       } else {
-        alert(result.message || "创建标签失败");
+        message.error(result.message || "创建标签失败");
       }
     } catch (error) {
       console.error("创建标签失败:", error);
-      alert("创建标签失败");
+      message.error("创建标签失败");
     } finally {
       setLoading(false);
     }

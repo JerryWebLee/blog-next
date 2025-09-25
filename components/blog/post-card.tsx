@@ -4,6 +4,7 @@ import { Avatar } from "@heroui/avatar";
 import { Button } from "@heroui/button";
 import { Card, CardBody, CardFooter, CardHeader } from "@heroui/card";
 import { Chip } from "@heroui/chip";
+import dayjs from "dayjs";
 import { ArrowRight, Calendar, Clock, Eye, Heart, MessageCircle, Tag, User } from "lucide-react";
 
 interface PostCardProps {
@@ -38,16 +39,6 @@ interface PostCardProps {
 export function PostCard({ post, onView, onLike }: PostCardProps) {
   const [isHovered, setIsHovered] = useState(false);
   const [isLiked, setIsLiked] = useState(false);
-
-  const formatDate = (date?: Date) => {
-    return date
-      ? new Intl.DateTimeFormat("zh-CN", {
-          year: "numeric",
-          month: "long",
-          day: "numeric",
-        }).format(date)
-      : "未知日期";
-  };
 
   return (
     <div className="group relative animate-fade-in-up blog-card-container">
@@ -152,7 +143,7 @@ export function PostCard({ post, onView, onLike }: PostCardProps) {
                 </div>
                 <div className="flex items-center gap-1">
                   <Calendar className="w-3 h-3" />
-                  <span className="text-xs">{formatDate(post.publishedAt)}</span>
+                  <span className="text-xs">{dayjs(post.publishedAt).format("YYYY-MM-DD HH:mm:ss")}</span>
                 </div>
               </div>
 

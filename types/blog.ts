@@ -227,28 +227,61 @@ export type PostVisibility = "public" | "private" | "password";
 /**
  * 文章实体接口
  */
-export interface Post extends BaseEntity {
-  title: string;
-  slug: string;
-  excerpt?: string;
-  content: string;
-  contentHtml?: string;
-  featuredImage?: string;
-  authorId: number;
-  categoryId?: number;
-  status: PostStatus;
-  visibility: PostVisibility;
-  password?: string;
-  allowComments: boolean;
-  viewCount: number;
-  likeCount: number;
-  publishedAt?: Date;
 
-  // 关联数据
-  author?: User;
-  category?: Category;
-  tags?: Tag[];
-  comments?: Comment[];
+export interface Post extends BaseEntity {
+  posts: {
+    id: number;
+    title: string;
+    slug: string;
+    excerpt: string;
+    content: string;
+    contentHtml: string | null;
+    featuredImage: string;
+    authorId: number;
+    categoryId: number | null;
+    status: PostStatus;
+    visibility: PostVisibility;
+    password: string;
+    allowComments: boolean;
+    viewCount: number;
+    likeCount: number;
+    publishedAt: string;
+    createdAt: string;
+    updatedAt: string;
+  };
+
+  users: {
+    id: number;
+    username: string;
+    email: string;
+    password: string;
+    displayName: string | null;
+    avatar: string | null;
+    bio: string | null;
+    role: UserRole;
+    status: UserStatus;
+    emailVerified: boolean;
+    lastLoginAt: string | null;
+    createdAt: string;
+    updatedAt: string;
+  };
+  categories: Category[];
+  tags: Tag[];
+  comments: Comment[];
+  author: {
+    id: number;
+    username: string;
+    displayName: string;
+    email: string;
+    avatar: string | null;
+    bio: string | null;
+    role: UserRole;
+    status: UserStatus;
+    emailVerified: boolean;
+    lastLoginAt: string | null;
+    createdAt: string;
+    updatedAt: string;
+  };
 }
 
 /**

@@ -3,7 +3,6 @@ import { eq } from "drizzle-orm";
 
 import { db } from "@/lib/db/config";
 import { users } from "@/lib/db/schema";
-import { generatePasswordResetToken, isValidEmail } from "@/lib/utils/auth";
 import { ApiResponse } from "@/types/blog";
 
 // 模拟发送邮件功能（实际项目中应该集成真实的邮件服务）

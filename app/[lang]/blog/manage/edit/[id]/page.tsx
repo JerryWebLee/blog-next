@@ -27,6 +27,7 @@ import {
   Type,
 } from "lucide-react";
 
+import { message } from "@/lib/utils";
 import { Post, PostStatus, PostVisibility, UpdatePostRequest } from "@/types/blog";
 
 export default function EditBlogPage() {
@@ -78,12 +79,12 @@ export default function EditBlogPage() {
             tagIds: postData.tags?.map((tag: any) => tag.id) || [],
           });
         } else {
-          alert("获取博客数据失败");
+          message.error("获取博客数据失败");
           router.push("/blog/manage");
         }
       } catch (error) {
         console.error("获取博客数据失败:", error);
-        alert("获取博客数据失败");
+        message.error("获取博客数据失败");
         router.push("/blog/manage");
       } finally {
         setLoading(false);
@@ -126,7 +127,7 @@ export default function EditBlogPage() {
     e.preventDefault();
 
     if (!formData.title?.trim() || !formData.content?.trim()) {
-      alert("请填写标题和内容");
+      message.warning("请填写标题和内容");
       return;
     }
 
@@ -144,14 +145,14 @@ export default function EditBlogPage() {
       const result = await response.json();
 
       if (result.success) {
-        alert("博客更新成功！");
+        message.success("博客更新成功！");
         router.push("/blog/manage");
       } else {
-        alert(`更新失败: ${result.message}`);
+        message.error(`更新失败: ${result.message}`);
       }
     } catch (error) {
       console.error("更新博客失败:", error);
-      alert("更新博客失败，请重试");
+      message.error("更新博客失败，请重试");
     } finally {
       setSaving(false);
     }

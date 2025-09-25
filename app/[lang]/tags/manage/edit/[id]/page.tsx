@@ -21,6 +21,7 @@ import {
 } from "@heroui/react";
 import { ArrowLeft, Calendar, Edit, Eye, FileText, Hash, Palette, Save, Tag as TagIcon } from "lucide-react";
 
+import { message } from "@/lib/utils";
 import { ApiResponse, Tag, UpdateTagRequest } from "@/types/blog";
 
 interface EditTagPageProps {
@@ -56,12 +57,12 @@ export default function EditTagPage({ params }: EditTagPageProps) {
           isActive: result.data.isActive,
         });
       } else {
-        alert(result.message || "获取标签信息失败");
+        message.error(result.message || "获取标签信息失败");
         router.back();
       }
     } catch (error) {
       console.error("获取标签信息失败:", error);
-      alert("获取标签信息失败");
+      message.error("获取标签信息失败");
       router.back();
     } finally {
       setLoading(false);
@@ -73,7 +74,7 @@ export default function EditTagPage({ params }: EditTagPageProps) {
     e.preventDefault();
 
     if (!formData.name?.trim()) {
-      alert("标签名称是必填项");
+      message.warning("标签名称是必填项");
       return;
     }
 
@@ -96,11 +97,11 @@ export default function EditTagPage({ params }: EditTagPageProps) {
         router.push("/tags/manage");
         router.refresh();
       } else {
-        alert(result.message || "更新标签失败");
+        message.error(result.message || "更新标签失败");
       }
     } catch (error) {
       console.error("更新标签失败:", error);
-      alert("更新标签失败");
+      message.error("更新标签失败");
     } finally {
       setSaving(false);
     }

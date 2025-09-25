@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 
-import { hashPassword, validatePasswordStrength } from "@/lib/utils/auth";
+import { hashPassword, validatePasswordStrength } from "@/lib/utils";
 import { ApiResponse } from "@/types/blog";
 
 // 模拟令牌验证（实际项目中应该从数据库验证）

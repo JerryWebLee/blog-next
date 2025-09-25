@@ -3,7 +3,7 @@ import { and, eq } from "drizzle-orm";
 
 import { db } from "@/lib/db/config";
 import { users } from "@/lib/db/schema";
-import { generateAccessToken, generateRefreshToken, hashPassword, verifyPassword } from "@/lib/utils/auth";
+import { generateAccessToken, generateRefreshToken, hashPassword, verifyPassword } from "@/lib/utils";
 import { ApiResponse, LoginRequest, LoginResponse } from "@/types/blog";
 
 export async function POST(request: NextRequest) {

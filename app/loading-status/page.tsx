@@ -4,6 +4,7 @@ import { useState } from "react";
 
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
+import { message } from "@/lib/utils";
 
 export default function LoadingStatusPage() {
   const [status, setStatus] = useState("检查中...");
@@ -42,7 +43,7 @@ export default function LoadingStatusPage() {
 
     // 显示结果
     const resultText = results.map((r) => `${r.name}: ${r.status}`).join("\n");
-    alert(resultText);
+    message.error(resultText);
   };
 
   return (

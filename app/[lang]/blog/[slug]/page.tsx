@@ -25,6 +25,7 @@ import {
   User,
 } from "lucide-react";
 
+import { message } from "@/lib/utils";
 import { Post } from "@/types/blog";
 
 export default function BlogDetailPage({ params }: { params: Promise<{ lang: string; slug: string }> }) {
@@ -69,13 +70,13 @@ export default function BlogDetailPage({ params }: { params: Promise<{ lang: str
           if (result.message.includes("密码")) {
             setShowPasswordForm(true);
           } else {
-            alert("获取博客失败");
+            message.error("获取博客失败");
             router.push("/blog");
           }
         }
       } catch (error) {
         console.error("获取博客失败:", error);
-        alert("获取博客失败");
+        message.error("获取博客失败");
         router.push("/blog");
       } finally {
         setLoading(false);
@@ -123,7 +124,7 @@ export default function BlogDetailPage({ params }: { params: Promise<{ lang: str
     e.preventDefault();
 
     if (!comment.trim()) {
-      alert("请输入评论内容");
+      message.warning("请输入评论内容");
       return;
     }
 
@@ -146,7 +147,7 @@ export default function BlogDetailPage({ params }: { params: Promise<{ lang: str
 
       if (result.success) {
         setComment("");
-        alert("评论提交成功！");
+        message.success("评论提交成功！");
         // 重新获取博客数据以显示新评论
         const postResponse = await fetch(`/api/posts/${resolvedParams?.slug}?includeRelations=true`);
         const postResult = await postResponse.json();
@@ -154,11 +155,11 @@ export default function BlogDetailPage({ params }: { params: Promise<{ lang: str
           setPost(postResult.data);
         }
       } else {
-        alert(`评论提交失败: ${result.message}`);
+        message.error(`评论提交失败: ${result.message}`);
       }
     } catch (error) {
       console.error("提交评论失败:", error);
-      alert("评论提交失败，请重试");
+      message.error("评论提交失败，请重试");
     } finally {
       setSubmittingComment(false);
     }
@@ -252,19 +253,19 @@ export default function BlogDetailPage({ params }: { params: Promise<{ lang: str
         <CardBody className="space-y-4">
           <div className="flex items-center justify-between">
             <div className="space-y-2">
-              <h1 className="text-4xl font-bold">{post.title}</h1>
-              {post.excerpt && <p className="text-xl text-default-500">{post.excerpt}</p>}
+              <h1 className="text-4xl font-bold">{post.posts.title}</h1>
+              {post.posts.excerpt && <p className="text-xl text-default-500">{post.posts.excerpt}</p>}
             </div>
             <div className="flex items-center gap-2">
-              <Chip color={getStatusColor(post.status)} variant="flat">
-                {post.status === "published" ? "已发布" : post.status === "draft" ? "草稿" : "已归档"}
+              <Chip color={getStatusColor(post.posts.status)} variant="flat">
+                {post.posts.status === "published" ? "已发布" : post.posts.status === "draft" ? "草稿" : "已归档"}
               </Chip>
-              {post.visibility === "private" && (
+              {post.posts.visibility === "private" && (
                 <Chip color="secondary" variant="flat">
                   私有
                 </Chip>
               )}
-              {post.visibility === "password" && (
+              {post.posts.visibility === "password" && (
                 <Chip color="warning" variant="flat">
                   密码保护
                 </Chip>
@@ -273,11 +274,11 @@ export default function BlogDetailPage({ params }: { params: Promise<{ lang: str
           </div>
 
           {/* 特色图片 */}
-          {post.featuredImage && (
+          {post.posts.featuredImage && (
             <div className="w-full h-64 rounded-lg overflow-hidden">
               <Image
-                src={post.featuredImage}
-                alt={post.title}
+                src={post.posts.featuredImage}
+                alt={post.posts.title}
                 width={800}
                 height={400}
                 className="w-full h-full object-cover"
@@ -294,11 +295,11 @@ export default function BlogDetailPage({ params }: { params: Promise<{ lang: str
             </div>
             <div className="flex items-center gap-2">
               <Calendar className="w-4 h-4" />
-              <span>{new Date(post.createdAt).toLocaleDateString()}</span>
+              <span>{new Date(post.posts.createdAt).toLocaleDateString()}</span>
             </div>
             <div className="flex items-center gap-2">
               <Eye className="w-4 h-4" />
-              <span>{post.viewCount} 次浏览</span>
+              <span>{post.posts.viewCount} 次浏览</span>
             </div>
             <div className="flex items-center gap-2">
               <MessageCircle className="w-4 h-4" />
@@ -306,18 +307,22 @@ export default function BlogDetailPage({ params }: { params: Promise<{ lang: str
             </div>
             <div className="flex items-center gap-2">
               <Heart className="w-4 h-4" />
-              <span>{post.likeCount} 个赞</span>
+              <span>{post.posts.likeCount} 个赞</span>
             </div>
           </div>
 
           {/* 分类和标签 */}
           <div className="flex items-center gap-4">
-            {post.category && (
+            {post.categories && post.categories.length > 0 && (
               <div className="flex items-center gap-2">
                 <span className="text-sm text-default-500">分类:</span>
-                <Chip variant="flat" color="primary">
-                  {post.category.name}
-                </Chip>
+                <div className="flex gap-2">
+                  {post.categories.map((category) => (
+                    <Chip key={category.slug} variant="flat" color="secondary">
+                      {category.name}
+                    </Chip>
+                  ))}
+                </div>
               </div>
             )}
             {post.tags && post.tags.length > 0 && (
@@ -340,10 +345,10 @@ export default function BlogDetailPage({ params }: { params: Promise<{ lang: str
       <Card>
         <CardBody className="py-6">
           <div className="prose prose-lg max-w-none">
-            {post.contentHtml ? (
-              <div dangerouslySetInnerHTML={{ __html: post.contentHtml }} />
+            {post.posts.contentHtml ? (
+              <div dangerouslySetInnerHTML={{ __html: post.posts.contentHtml }} />
             ) : (
-              <div className="whitespace-pre-wrap">{post.content}</div>
+              <div className="whitespace-pre-wrap">{post.posts.content}</div>
             )}
           </div>
         </CardBody>
@@ -373,7 +378,7 @@ export default function BlogDetailPage({ params }: { params: Promise<{ lang: str
       </div>
 
       {/* 评论区域 */}
-      {post.allowComments && (
+      {post.posts.allowComments && (
         <Card>
           <CardHeader>
             <p className="text-lg font-semibold">评论</p>

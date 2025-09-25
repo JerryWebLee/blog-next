@@ -25,6 +25,7 @@ import {
   Type,
 } from "lucide-react";
 
+import { message } from "@/lib/utils";
 import { CreatePostRequest, PostStatus, PostVisibility } from "@/types/blog";
 
 export default function CreateBlogPage() {
@@ -77,7 +78,7 @@ export default function CreateBlogPage() {
     e.preventDefault();
 
     if (!formData.title.trim() || !formData.content.trim()) {
-      alert("请填写标题和内容");
+      message.warning("请填写标题和内容");
       return;
     }
 
@@ -95,14 +96,14 @@ export default function CreateBlogPage() {
       const result = await response.json();
 
       if (result.success) {
-        alert("博客创建成功！");
+        message.success("博客创建成功！");
         router.push("/blog/manage");
       } else {
-        alert(`创建失败: ${result.message}`);
+        message.error(`创建失败: ${result.message}`);
       }
     } catch (error) {
       console.error("创建博客失败:", error);
-      alert("创建博客失败，请重试");
+      message.error("创建博客失败，请重试");
     } finally {
       setLoading(false);
     }

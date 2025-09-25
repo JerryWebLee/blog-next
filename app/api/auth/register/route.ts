@@ -3,7 +3,7 @@ import { eq } from "drizzle-orm";
 
 import { db } from "@/lib/db/config";
 import { users } from "@/lib/db/schema";
-import { hashPassword, isValidEmail, validatePasswordStrength } from "@/lib/utils/auth";
+import { hashPassword, isValidEmail, validatePasswordStrength } from "@/lib/utils";
 import { ApiResponse } from "@/types/blog";
 
 export async function POST(request: NextRequest) {

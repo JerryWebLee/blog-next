@@ -51,6 +51,7 @@ import {
   Trash2,
 } from "lucide-react";
 
+import { message } from "@/lib/utils";
 import { ApiResponse, PaginatedResponseData, Tag, TagQueryParams } from "@/types/blog";
 
 /**
@@ -142,11 +143,11 @@ export default function TagsManagePage() {
         setSelectedTag(null);
         fetchTags();
       } else {
-        alert(result.message || "删除标签失败");
+        message.error(result.message || "删除标签失败");
       }
     } catch (error) {
       console.error("删除标签失败:", error);
-      alert("删除标签失败");
+      message.error("删除标签失败");
     } finally {
       setDeleteLoading(false);
     }
@@ -174,11 +175,11 @@ export default function TagsManagePage() {
       if (result.success) {
         fetchTags();
       } else {
-        alert(result.message || "更新标签状态失败");
+        message.error(result.message || "更新标签状态失败");
       }
     } catch (error) {
       console.error("更新标签状态失败:", error);
-      alert("更新标签状态失败");
+      message.error("更新标签状态失败");
     }
   };
 
