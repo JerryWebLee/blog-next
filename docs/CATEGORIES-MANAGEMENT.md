@@ -15,26 +15,31 @@
 ## 文件结构
 
 ### API 接口
+
 - `app/api/categories/route.ts` - 分类列表和创建接口
 - `app/api/categories/[id]/route.ts` - 单个分类的增删改查接口
 
 ### 管理页面
+
 - `app/[lang]/categories/manage/page.tsx` - 分类管理主页面
 - `app/[lang]/categories/manage/layout.tsx` - 管理页面布局
 - `app/[lang]/categories/manage/create/page.tsx` - 创建分类页面
 - `app/[lang]/categories/manage/edit/[id]/page.tsx` - 编辑分类页面
 
 ### 类型定义
+
 - `types/blog.ts` - 包含分类相关的类型定义
 
 ## API 接口说明
 
 ### 获取分类列表
+
 ```
 GET /api/categories
 ```
 
 **查询参数：**
+
 - `page` - 页码（默认：1）
 - `limit` - 每页数量（默认：10）
 - `search` - 搜索关键词
@@ -44,9 +49,9 @@ GET /api/categories
 - `sortOrder` - 排序方向（asc/desc）
 
 **响应示例：**
+
 ```json
 {
-  "success": true,
   "data": {
     "data": [
       {
@@ -71,38 +76,44 @@ GET /api/categories
     }
   },
   "message": "分类列表获取成功",
+  "success": true,
   "timestamp": "2025-09-26T12:31:11.417Z"
 }
 ```
 
 ### 创建分类
+
 ```
 POST /api/categories
 ```
 
 **请求体：**
+
 ```json
 {
-  "name": "分类名称",
-  "slug": "category-slug",
   "description": "分类描述",
+  "isActive": true,
+  "name": "分类名称",
   "parentId": 1,
-  "sortOrder": 0,
-  "isActive": true
+  "slug": "category-slug",
+  "sortOrder": 0
 }
 ```
 
 ### 获取单个分类
+
 ```
 GET /api/categories/[id]
 ```
 
 ### 更新分类
+
 ```
 PUT /api/categories/[id]
 ```
 
 ### 删除分类
+
 ```
 DELETE /api/categories/[id]
 ```
@@ -147,21 +158,25 @@ DELETE /api/categories/[id]
 ## 特性
 
 ### 层级结构支持
+
 - 支持创建多级分类结构
 - 父分类和子分类的层级关系
 - 避免循环引用的安全检查
 
 ### 搜索和筛选
+
 - 按分类名称、描述、slug搜索
 - 按激活状态筛选
 - 支持分页显示
 
 ### 数据验证
+
 - 分类名称和slug的唯一性检查
 - 必填字段验证
 - 删除前的安全检查
 
 ### 用户体验
+
 - 响应式设计，支持移动端
 - 实时预览功能
 - 友好的错误提示
@@ -178,6 +193,7 @@ DELETE /api/categories/[id]
 ## 数据库结构
 
 分类表（categories）包含以下字段：
+
 - `id` - 主键
 - `name` - 分类名称
 - `slug` - URL标识符
@@ -191,6 +207,7 @@ DELETE /api/categories/[id]
 ## 扩展功能
 
 未来可以考虑添加的功能：
+
 - 分类图标上传
 - 分类颜色主题
 - 批量操作

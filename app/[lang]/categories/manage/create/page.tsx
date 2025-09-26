@@ -6,11 +6,23 @@
 
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
-import { Button, Card, CardBody, CardHeader, Chip, Divider, Input, Select, SelectItem, Switch, Textarea } from "@heroui/react";
+import {
+  Button,
+  Card,
+  CardBody,
+  CardHeader,
+  Chip,
+  Divider,
+  Input,
+  Select,
+  SelectItem,
+  Switch,
+  Textarea,
+} from "@heroui/react";
 import { ArrowLeft, Eye, FileText, Folder, Plus } from "lucide-react";
 
 import { message } from "@/lib/utils";
-import { ApiResponse, CreateCategoryRequest, Category } from "@/types/blog";
+import { ApiResponse, Category, CreateCategoryRequest } from "@/types/blog";
 
 export default function CreateCategoryPage() {
   const router = useRouter();
@@ -176,9 +188,7 @@ export default function CreateCategoryPage() {
                       }}
                     >
                       {categories.map((category) => (
-                        <SelectItem key={category.id.toString()}>
-                          {category.name}
-                        </SelectItem>
+                        <SelectItem key={category.id.toString()}>{category.name}</SelectItem>
                       ))}
                     </Select>
                     <p className="text-xs text-default-500">选择父分类以创建层级结构</p>
@@ -274,7 +284,10 @@ export default function CreateCategoryPage() {
                 <div className="space-y-2 text-sm text-default-500">
                   <p>• 分类名称: {formData.name || "未设置"}</p>
                   <p>• 分类标识: {formData.slug || "将自动生成"}</p>
-                  <p>• 父分类: {formData.parentId ? categories.find(c => c.id === formData.parentId)?.name || "未知" : "无"}</p>
+                  <p>
+                    • 父分类:{" "}
+                    {formData.parentId ? categories.find((c) => c.id === formData.parentId)?.name || "未知" : "无"}
+                  </p>
                   <p>• 排序顺序: {formData.sortOrder}</p>
                   <p>• 状态: {formData.isActive ? "激活" : "停用"}</p>
                 </div>

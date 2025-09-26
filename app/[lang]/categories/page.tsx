@@ -22,8 +22,8 @@ import {
   Users,
 } from "lucide-react";
 
-import { Category } from "@/types/blog";
 import { useCategories } from "@/lib/hooks/useCategories";
+import { Category } from "@/types/blog";
 import { shadowManager } from "./shadow-effects";
 // 导入样式
 import "./categories.scss";
@@ -349,11 +349,7 @@ export default function CategoriesPage() {
             </div>
             <h3 className="empty-title">加载失败</h3>
             <p className="empty-description">{error}</p>
-            <Button
-              color="primary"
-              onPress={refetch}
-              className="mt-4"
-            >
+            <Button color="primary" onPress={refetch} className="mt-4">
               重试
             </Button>
           </div>

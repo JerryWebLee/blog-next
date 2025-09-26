@@ -3,8 +3,9 @@
  * 提供分类数据的获取、搜索、筛选等功能
  */
 
-import { useState, useEffect, useCallback, useMemo } from "react";
-import { Category, ApiResponse, PaginatedResponseData, CategoryQueryParams } from "@/types/blog";
+import { useCallback, useEffect, useMemo, useState } from "react";
+
+import { ApiResponse, Category, CategoryQueryParams, PaginatedResponseData } from "@/types/blog";
 
 interface UseCategoriesOptions {
   autoFetch?: boolean;
@@ -25,7 +26,7 @@ interface UseCategoriesReturn {
 
 export function useCategories(options: UseCategoriesOptions = {}): UseCategoriesReturn {
   const { autoFetch = true, limit = 100 } = options;
-  
+
   const [categories, setCategories] = useState<Category[]>([]);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
@@ -68,14 +69,14 @@ export function useCategories(options: UseCategoriesOptions = {}): UseCategories
     const rootCategories: Category[] = [];
 
     // 创建分类映射
-    categories.forEach(category => {
+    categories.forEach((category) => {
       categoryMap.set(category.id, { ...category, children: [] });
     });
 
     // 构建层级关系
-    categories.forEach(category => {
+    categories.forEach((category) => {
       const categoryWithChildren = categoryMap.get(category.id)!;
-      
+
       if (category.parentId && categoryMap.has(category.parentId)) {
         const parent = categoryMap.get(category.parentId)!;
         if (!parent.children) {

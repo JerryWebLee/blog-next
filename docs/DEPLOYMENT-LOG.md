@@ -1,6 +1,7 @@
 # 荒野博客系统部署日志
 
 ## 📅 部署信息
+
 - **部署时间**: 2025-09-26 21:00-21:15
 - **部署环境**: macOS (darwin 24.6.0)
 - **部署方式**: 从零开始Docker容器部署
@@ -11,6 +12,7 @@
 ### 1. 环境准备阶段
 
 #### 1.1 检查当前环境
+
 ```bash
 # 检查Docker状态
 docker --version
@@ -26,6 +28,7 @@ docker ps -a | grep mysql
 ```
 
 #### 1.2 停止现有服务
+
 ```bash
 # 停止可能存在的MySQL容器
 docker stop blog-mysql 2>/dev/null || true
@@ -36,6 +39,7 @@ docker rm blog-mysql 2>/dev/null || true
 ### 2. MySQL容器创建阶段
 
 #### 2.1 创建MySQL容器
+
 ```bash
 docker run --name blog-mysql \
   -e MYSQL_ROOT_PASSWORD=blog123456 \
@@ -51,11 +55,13 @@ docker run --name blog-mysql \
 **容器ID**: `aabf5f7a0616`
 
 #### 2.2 验证容器状态
+
 ```bash
 docker ps -a | grep blog-mysql
 ```
 
 **输出结果**:
+
 ```
 aabf5f7a0616   mysql:8.0   "docker-entrypoint.s…"   About a minute ago   Up About a minute   0.0.0.0:3306->3306/tcp   blog-mysql
 ```
@@ -63,11 +69,13 @@ aabf5f7a0616   mysql:8.0   "docker-entrypoint.s…"   About a minute ago   Up Ab
 **状态**: ✅ 容器运行正常
 
 #### 2.3 检查MySQL启动日志
+
 ```bash
 docker logs blog-mysql | tail -10
 ```
 
 **关键日志**:
+
 ```
 2025-09-26T13:04:00.682661Z 0 [System] [MY-010931] [Server] /usr/sbin/mysqld: ready for connections. Version: '8.0.43'  socket: '/var/run/mysqld/mysqld.sock'  port: 3306  MySQL Community Server - GPL.
 2025-09-26 13:04:00.483352Z 0 [Note] [Entrypoint]: MySQL init process done. Ready for start up.
@@ -78,6 +86,7 @@ docker logs blog-mysql | tail -10
 ### 3. 环境配置阶段
 
 #### 3.1 创建环境变量文件
+
 ```bash
 # 复制环境变量模板
 cp env.example .env.local
@@ -93,11 +102,13 @@ sed -i '' 's/your_jwt_secret_key_here/blog_jwt_secret_key_2024/g' .env.local
 ```
 
 #### 3.2 验证环境变量配置
+
 ```bash
 cat .env.local
 ```
 
 **关键配置**:
+
 ```env
 DB_HOST=localhost
 DB_PORT=3306
@@ -112,11 +123,13 @@ JWT_SECRET=blog_jwt_secret_key_2024
 ### 4. 数据库连接测试阶段
 
 #### 4.1 首次连接测试
+
 ```bash
 pnpm test:db:connect
 ```
 
 **执行结果**:
+
 ```
 🚀 数据库连接测试工具
 ==================================================
@@ -149,11 +162,13 @@ pnpm test:db:connect
 ### 5. 数据库迁移阶段
 
 #### 5.1 生成迁移文件
+
 ```bash
 pnpm db:generate
 ```
 
 **执行结果**:
+
 ```
 Reading config file '/Users/harveylee/Documents/CODE/nextjs-pro/blog-next/drizzle.config.ts'
 Reading schema files:
@@ -175,11 +190,13 @@ No schema changes, nothing to migrate 😴
 **状态**: ✅ 迁移文件已存在，无需生成
 
 #### 5.2 执行数据库迁移
+
 ```bash
 pnpm db:migrate
 ```
 
 **执行结果**:
+
 ```
 Reading config file '/Users/harveylee/Documents/CODE/nextjs-pro/blog-next/drizzle.config.ts'
 [✓] migrations applied successfully!
@@ -188,11 +205,13 @@ Reading config file '/Users/harveylee/Documents/CODE/nextjs-pro/blog-next/drizzl
 **状态**: ✅ 迁移成功
 
 #### 5.3 验证数据库表结构
+
 ```bash
 pnpm test:db:connect
 ```
 
 **执行结果**:
+
 ```
 ✅ 数据库表检查成功！
    表数量: 9
@@ -213,11 +232,13 @@ pnpm test:db:connect
 ### 6. 测试数据填充阶段
 
 #### 6.1 运行数据填充脚本
+
 ```bash
 pnpm db:seed
 ```
 
 **执行结果**:
+
 ```
 🌱 开始数据库种子数据初始化...
 ==================================================
@@ -248,11 +269,13 @@ pnpm db:seed
 ### 7. API功能测试阶段
 
 #### 7.1 运行API测试套件
+
 ```bash
 pnpm test:api
 ```
 
 **执行结果**:
+
 ```
 🚀 开始运行博客API测试...
 
@@ -345,11 +368,13 @@ pnpm test:api
 ### 8. 开发服务器启动阶段
 
 #### 8.1 启动Next.js开发服务器
+
 ```bash
 pnpm dev
 ```
 
 **执行结果**:
+
 ```
 > next-app-template@0.0.1 dev /Users/harveylee/Documents/CODE/nextjs-pro/blog-next
 > next dev --turbopack
@@ -365,14 +390,35 @@ pnpm dev
 **状态**: ✅ 服务器启动成功
 
 #### 8.2 测试API端点
+
 ```bash
 # 测试数据库连接API
 curl -s http://localhost:3000/api/test-db | head -20
 ```
 
 **执行结果**:
+
 ```json
-{"success":true,"message":"数据库连接测试成功","details":{"version":"8.0.43","tableCount":9,"tableNames":["categories","comments","drizzle_migrations","media","post_tags","posts","settings","tags","users"],"config":{"host":"localhost","port":3306,"user":"root","database":"blog_system","passwordSet":true}}}
+{
+  "details": {
+    "version": "8.0.43",
+    "tableCount": 9,
+    "tableNames": [
+      "categories",
+      "comments",
+      "drizzle_migrations",
+      "media",
+      "post_tags",
+      "posts",
+      "settings",
+      "tags",
+      "users"
+    ],
+    "config": { "host": "localhost", "port": 3306, "user": "root", "database": "blog_system", "passwordSet": true }
+  },
+  "message": "数据库连接测试成功",
+  "success": true
+}
 ```
 
 **状态**: ✅ API响应正常
@@ -383,20 +429,23 @@ curl -s http://localhost:3000/api/posts | head -20
 ```
 
 **执行结果**:
-```json
+
+````json
 {"success":true,"data":{"data":[{"id":2,"title":"TypeScript 最佳实践指南","slug":"typescript-best-practices-guide","excerpt":"分享一些在大型项目中使用的 TypeScript 最佳实践...","content":"# TypeScript 最佳实践指南\n\n## 类型定义\n\n### 接口 vs 类型别名\n```typescript\n// 推荐：使用接口定义对象结构\ninterface User {\n  id: number;\n  name: string;\n  email: string;\n}\n\n// 推荐：使用类型别名定义联合类型\ntype Status = 'pending' | 'approved' | 'rejected';\n```\n\n## 泛型使用\n\n```typescript\n// 泛型约束\ninterface Repository<T extends { id: number }> {\n  findById(id: number): Promise<T | null>;\n  save(entity: T): Promise<T>;\n}\n```\n\n## 总结\n\nTypeScript 的正确使用可以大大提高代码质量和开发效率。","featuredImage":null,"authorId":1,"categoryId":3,"status":"published","visibility":"public","allowComments":true,"viewCount":0,"likeCount":0,"publishedAt":null,"createdAt":"2025-09-26T13:07:48.000Z","updatedAt":"2025-09-26T13:07:48.000Z","author":{"id":1,"username":"admin","displayName":""},"category":{"id":3,"name":"前端开发"}}],"pagination":{"page":1,"limit":10,"total":1,"totalPages":1,"hasNext":false,"hasPrev":false}},"message":"获取文章列表成功"}}
-```
+````
 
 **状态**: ✅ 文章API正常
 
 ### 9. 前端页面验证阶段
 
 #### 9.1 测试首页访问
+
 ```bash
 curl -s http://localhost:3000/zh-CN | grep -o '<title>.*</title>'
 ```
 
 **执行结果**:
+
 ```html
 <title>荒野博客 | 在数字荒野中探索技术 - 在思考森林中寻找真理</title>
 ```
@@ -404,11 +453,13 @@ curl -s http://localhost:3000/zh-CN | grep -o '<title>.*</title>'
 **状态**: ✅ 中文首页正常
 
 #### 9.2 测试博客页面
+
 ```bash
 curl -s http://localhost:3000/zh-CN/blog | grep -o '<title>.*</title>'
 ```
 
 **执行结果**:
+
 ```html
 <title>荒野博客 | 在数字荒野中探索技术 - 在思考森林中寻找真理</title>
 ```
@@ -418,6 +469,7 @@ curl -s http://localhost:3000/zh-CN/blog | grep -o '<title>.*</title>'
 ## 📊 最终验证结果
 
 ### 数据库状态
+
 - **容器名称**: `blog-mysql`
 - **容器ID**: `aabf5f7a0616`
 - **数据库版本**: MySQL 8.0.43
@@ -427,6 +479,7 @@ curl -s http://localhost:3000/zh-CN/blog | grep -o '<title>.*</title>'
 - **端口映射**: `3306:3306`
 
 ### 系统功能验证
+
 - ✅ 数据库连接池正常工作
 - ✅ Drizzle ORM操作正常
 - ✅ API路由响应正常
@@ -435,6 +488,7 @@ curl -s http://localhost:3000/zh-CN/blog | grep -o '<title>.*</title>'
 - ✅ 文章CRUD操作正常
 
 ### 可访问的URL
+
 - **中文首页**: http://localhost:3000/zh-CN
 - **英文首页**: http://localhost:3000/en-US
 - **日文首页**: http://localhost:3000/ja-JP
@@ -446,6 +500,7 @@ curl -s http://localhost:3000/zh-CN/blog | grep -o '<title>.*</title>'
 ## 🎯 部署总结
 
 ### 成功指标
+
 - ✅ **零错误**: 整个部署过程无任何错误
 - ✅ **完整功能**: 所有功能模块正常工作
 - ✅ **数据完整**: 数据库结构和数据完整
@@ -453,6 +508,7 @@ curl -s http://localhost:3000/zh-CN/blog | grep -o '<title>.*</title>'
 - ✅ **稳定运行**: 系统运行稳定
 
 ### 部署时间线
+
 - **开始时间**: 21:00
 - **MySQL容器创建**: 21:01
 - **环境配置**: 21:02
@@ -466,6 +522,7 @@ curl -s http://localhost:3000/zh-CN/blog | grep -o '<title>.*</title>'
 **总耗时**: 约15分钟
 
 ### 关键成功因素
+
 1. **Docker环境准备充分**: 容器创建一次成功
 2. **环境变量配置正确**: 数据库连接无问题
 3. **迁移文件完整**: 数据库结构创建成功
@@ -475,6 +532,7 @@ curl -s http://localhost:3000/zh-CN/blog | grep -o '<title>.*</title>'
 ## 📝 后续建议
 
 ### 生产环境部署
+
 1. 使用更安全的密码策略
 2. 配置SSL证书
 3. 设置数据库备份策略
@@ -482,6 +540,7 @@ curl -s http://localhost:3000/zh-CN/blog | grep -o '<title>.*</title>'
 5. 使用环境变量管理敏感信息
 
 ### 开发环境优化
+
 1. 配置热重载
 2. 设置代码格式化
 3. 配置ESLint规则

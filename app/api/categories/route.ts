@@ -11,7 +11,7 @@ import { and, asc, count, desc, eq, like } from "drizzle-orm";
 
 import { db } from "@/lib/db/config";
 import { categories } from "@/lib/db/schema";
-import { ApiResponse, CreateCategoryRequest, PaginatedResponseData, Category, CategoryQueryParams } from "@/types/blog";
+import { ApiResponse, Category, CategoryQueryParams, CreateCategoryRequest, PaginatedResponseData } from "@/types/blog";
 
 /**
  * GET /api/categories

@@ -82,7 +82,7 @@ export default function EditCategoryPage({ params }: EditCategoryPageProps) {
 
       if (result.success && result.data) {
         // 过滤掉当前分类和其子分类，避免循环引用
-        const filteredCategories = result.data.data.filter(c => c.id !== category?.id);
+        const filteredCategories = result.data.data.filter((c) => c.id !== category?.id);
         setCategories(filteredCategories);
       }
     } catch (error) {
@@ -246,9 +246,7 @@ export default function EditCategoryPage({ params }: EditCategoryPageProps) {
                       }}
                     >
                       {categories.map((cat) => (
-                        <SelectItem key={cat.id.toString()}>
-                          {cat.name}
-                        </SelectItem>
+                        <SelectItem key={cat.id.toString()}>{cat.name}</SelectItem>
                       ))}
                     </Select>
                     <p className="text-xs text-default-500">选择父分类以创建层级结构</p>

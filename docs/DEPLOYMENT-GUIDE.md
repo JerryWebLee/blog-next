@@ -21,6 +21,7 @@
 ### 步骤1：创建MySQL Docker容器
 
 #### 1.1 停止现有容器（如果存在）
+
 ```bash
 # 停止并删除现有容器
 docker stop blog-mysql 2>/dev/null || true
@@ -28,6 +29,7 @@ docker rm blog-mysql 2>/dev/null || true
 ```
 
 #### 1.2 创建新的MySQL容器
+
 ```bash
 docker run --name blog-mysql \
   -e MYSQL_ROOT_PASSWORD=blog123456 \
@@ -40,27 +42,32 @@ docker run --name blog-mysql \
 ```
 
 #### 1.3 验证容器状态
+
 ```bash
 docker ps -a | grep blog-mysql
 ```
 
 **预期输出**：
+
 ```
 aabf5f7a0616   mysql:8.0   "docker-entrypoint.s…"   About a minute ago   Up About a minute   0.0.0.0:3306->3306/tcp   blog-mysql
 ```
 
 #### 1.4 检查MySQL启动日志
+
 ```bash
 docker logs blog-mysql | tail -10
 ```
 
 **关键日志信息**：
+
 - `ready for connections` - MySQL服务已准备就绪
 - `MySQL init process done. Ready for start up` - 初始化完成
 
 ### 步骤2：环境配置
 
 #### 2.1 创建环境变量文件
+
 ```bash
 # 复制环境变量模板
 cp env.example .env.local
@@ -73,11 +80,13 @@ sed -i '' 's/your_jwt_secret_key_here/blog_jwt_secret_key_2024/g' .env.local
 ```
 
 #### 2.2 验证环境变量配置
+
 ```bash
 cat .env.local
 ```
 
 **关键配置项**：
+
 ```env
 # 数据库配置
 DB_HOST=localhost
@@ -95,11 +104,13 @@ JWT_REFRESH_EXPIRES_IN=30d
 ### 步骤3：数据库连接测试
 
 #### 3.1 运行数据库连接测试
+
 ```bash
 pnpm test:db:connect
 ```
 
 **预期输出**：
+
 ```
 🚀 数据库连接测试工具
 ==================================================
@@ -130,11 +141,13 @@ pnpm test:db:connect
 ### 步骤4：数据库迁移
 
 #### 4.1 生成迁移文件（如果需要）
+
 ```bash
 pnpm db:generate
 ```
 
 **预期输出**：
+
 ```
 Reading config file '/Users/harveylee/Documents/CODE/nextjs-pro/blog-next/drizzle.config.ts'
 Reading schema files:
@@ -154,22 +167,26 @@ No schema changes, nothing to migrate 😴
 ```
 
 #### 4.2 执行数据库迁移
+
 ```bash
 pnpm db:migrate
 ```
 
 **预期输出**：
+
 ```
 Reading config file '/Users/harveylee/Documents/CODE/nextjs-pro/blog-next/drizzle.config.ts'
 [✓] migrations applied successfully!
 ```
 
 #### 4.3 验证数据库表结构
+
 ```bash
 pnpm test:db:connect
 ```
 
 **预期输出**：
+
 ```
 ✅ 数据库表检查成功！
    表数量: 9
@@ -188,11 +205,13 @@ pnpm test:db:connect
 ### 步骤5：填充测试数据
 
 #### 5.1 运行数据填充脚本
+
 ```bash
 pnpm db:seed
 ```
 
 **预期输出**：
+
 ```
 🌱 开始数据库种子数据初始化...
 ==================================================
@@ -221,11 +240,13 @@ pnpm db:seed
 ### 步骤6：API功能测试
 
 #### 6.1 运行API测试套件
+
 ```bash
 pnpm test:api
 ```
 
 **预期输出**：
+
 ```
 🚀 开始运行博客API测试...
 
@@ -256,11 +277,13 @@ pnpm test:api
 ### 步骤7：启动开发服务器
 
 #### 7.1 启动Next.js开发服务器
+
 ```bash
 pnpm dev
 ```
 
 **预期输出**：
+
 ```
 > next-app-template@0.0.1 dev /Users/harveylee/Documents/CODE/nextjs-pro/blog-next
 > next dev --turbopack
@@ -274,6 +297,7 @@ pnpm dev
 ```
 
 #### 7.2 测试API端点
+
 ```bash
 # 测试数据库连接API
 curl -s http://localhost:3000/api/test-db | head -20
@@ -283,14 +307,23 @@ curl -s http://localhost:3000/api/posts | head -20
 ```
 
 **预期输出**：
+
 ```json
 {
-  "success": true,
-  "message": "数据库连接测试成功",
   "details": {
     "version": "8.0.43",
     "tableCount": 9,
-    "tableNames": ["categories", "comments", "drizzle_migrations", "media", "post_tags", "posts", "settings", "tags", "users"],
+    "tableNames": [
+      "categories",
+      "comments",
+      "drizzle_migrations",
+      "media",
+      "post_tags",
+      "posts",
+      "settings",
+      "tags",
+      "users"
+    ],
     "config": {
       "host": "localhost",
       "port": 3306,
@@ -298,28 +331,34 @@ curl -s http://localhost:3000/api/posts | head -20
       "database": "blog_system",
       "passwordSet": true
     }
-  }
+  },
+  "message": "数据库连接测试成功",
+  "success": true
 }
 ```
 
 ### 步骤8：前端页面验证
 
 #### 8.1 测试首页访问
+
 ```bash
 curl -s http://localhost:3000/zh-CN | grep -o '<title>.*</title>'
 ```
 
 **预期输出**：
+
 ```html
 <title>荒野博客 | 在数字荒野中探索技术 - 在思考森林中寻找真理</title>
 ```
 
 #### 8.2 测试博客页面
+
 ```bash
 curl -s http://localhost:3000/zh-CN/blog | grep -o '<title>.*</title>'
 ```
 
 **预期输出**：
+
 ```html
 <title>荒野博客 | 在数字荒野中探索技术 - 在思考森林中寻找真理</title>
 ```
@@ -327,6 +366,7 @@ curl -s http://localhost:3000/zh-CN/blog | grep -o '<title>.*</title>'
 ## 📊 部署结果验证
 
 ### 数据库状态
+
 - **容器名称**: `blog-mysql`
 - **数据库版本**: MySQL 8.0.43
 - **数据库名称**: `blog_system`
@@ -335,6 +375,7 @@ curl -s http://localhost:3000/zh-CN/blog | grep -o '<title>.*</title>'
 - **端口映射**: `3306:3306`
 
 ### 系统功能验证
+
 - ✅ 数据库连接池正常工作
 - ✅ Drizzle ORM操作正常
 - ✅ API路由响应正常
@@ -343,6 +384,7 @@ curl -s http://localhost:3000/zh-CN/blog | grep -o '<title>.*</title>'
 - ✅ 文章CRUD操作正常
 
 ### 可访问的URL
+
 - **中文首页**: http://localhost:3000/zh-CN
 - **英文首页**: http://localhost:3000/en-US
 - **日文首页**: http://localhost:3000/ja-JP
@@ -354,6 +396,7 @@ curl -s http://localhost:3000/zh-CN/blog | grep -o '<title>.*</title>'
 ## 🔧 常用管理命令
 
 ### Docker容器管理
+
 ```bash
 # 查看容器状态
 docker ps -a | grep blog-mysql
@@ -375,6 +418,7 @@ docker rm blog-mysql
 ```
 
 ### 数据库管理
+
 ```bash
 # 测试数据库连接
 pnpm test:db:connect
@@ -396,6 +440,7 @@ pnpm db:seed
 ```
 
 ### 应用管理
+
 ```bash
 # 启动开发服务器
 pnpm dev
@@ -415,8 +460,10 @@ pnpm test:api
 ### 常见问题及解决方案
 
 #### 1. MySQL容器启动失败
+
 **问题**: 容器无法启动或立即退出
 **解决方案**:
+
 ```bash
 # 检查端口是否被占用
 lsof -i :3306
@@ -429,8 +476,10 @@ docker logs blog-mysql
 ```
 
 #### 2. 数据库连接失败
+
 **问题**: 应用无法连接到数据库
 **解决方案**:
+
 ```bash
 # 检查环境变量配置
 cat .env.local
@@ -443,8 +492,10 @@ docker exec -it blog-mysql mysql -u root -p -e "SELECT 1;"
 ```
 
 #### 3. 迁移失败
+
 **问题**: 数据库迁移执行失败
 **解决方案**:
+
 ```bash
 # 检查迁移文件
 ls -la drizzle/
@@ -457,8 +508,10 @@ pnpm db:push
 ```
 
 #### 4. 应用启动失败
+
 **问题**: Next.js应用无法启动
 **解决方案**:
+
 ```bash
 # 检查依赖安装
 pnpm install
@@ -473,12 +526,14 @@ pnpm dev
 ## 📝 部署检查清单
 
 ### 部署前检查
+
 - [ ] Docker已安装并运行
 - [ ] 项目代码已克隆
 - [ ] 环境变量文件已配置
 - [ ] 数据挂载目录已创建
 
 ### 部署过程检查
+
 - [ ] MySQL容器创建成功
 - [ ] 数据库连接测试通过
 - [ ] 数据库迁移执行成功
@@ -487,6 +542,7 @@ pnpm dev
 - [ ] 前端页面访问正常
 
 ### 部署后验证
+
 - [ ] 所有页面可正常访问
 - [ ] 数据库操作正常
 - [ ] 多语言切换正常
