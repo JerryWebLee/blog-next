@@ -1,29 +1,12 @@
 import fs from "fs";
 import path from "path";
 
-/**
- * 增强版API接口信息接口
- */
-export interface ApiEndpoint {
-  method: string;
-  path: string;
-  description?: string;
-  parameters?: ApiParameter[];
-  requestBody?: ApiRequestBody;
-  responses?: ApiResponse[];
-  examples?: ApiExample[];
-  tags?: string[];
-  deprecated?: boolean;
-  version?: string;
-}
-
 export interface ApiParameter {
   name: string;
   type: string;
+  location: "query" | "path" | "header";
   required: boolean;
   description?: string;
-  location: "query" | "path" | "header";
-  example?: any;
 }
 
 export interface ApiRequestBody {
@@ -54,20 +37,29 @@ export interface ApiExample {
   };
 }
 
-export interface ApiGroup {
-  name: string;
+export interface ApiEndpoint {
+  method: string;
+  path: string;
   description?: string;
-  endpoints: ApiEndpoint[];
+  parameters?: ApiParameter[];
+  requestBody?: ApiRequestBody;
+  responses?: ApiResponse[];
+  examples?: ApiExample[];
+  tags?: string[];
+  deprecated?: boolean;
   version?: string;
-  lastUpdated?: string;
 }
 
-/**
- * 增强版API扫描器 - 支持自动发现新API接口
- */
-export class EnhancedApiScanner {
+export interface ApiGroup {
+  name: string;
+  description: string;
+  endpoints: ApiEndpoint[];
+  lastUpdated: string;
+}
+
+export class ApiScanner {
   private apiDir: string;
-  private cache: Map<string, { timestamp: number; data: ApiGroup[] }> = new Map();
+  private cache: Map<string, { timestamp: number; data: any }> = new Map();
   private cacheTimeout: number = 5 * 60 * 1000; // 5分钟缓存
 
   constructor(apiDir: string = "app/api") {
@@ -75,7 +67,7 @@ export class EnhancedApiScanner {
   }
 
   /**
-   * 扫描所有API接口（带缓存优化）
+   * 扫描所有API接口（带缓存）
    */
   async scanAllApis(forceRefresh: boolean = false): Promise<ApiGroup[]> {
     const cacheKey = "all-apis";
@@ -207,31 +199,35 @@ export class EnhancedApiScanner {
    * 解析单个接口（增强版）
    */
   private parseEndpoint(content: string, method: string, apiPath: string, filePath: string): ApiEndpoint | null {
-    // 提取注释中的描述
-    const methodRegex = new RegExp(`export\\s+async\\s+function\\s+${method}\\s*\\(`, "g");
-    const methodMatch = methodRegex.exec(content);
+    // 首先尝试使用预定义的描述映射
+    let description: string | undefined = this.getEndpointDescription(method, apiPath);
 
-    let description: string | undefined;
     let tags: string[] = [];
     let deprecated = false;
     let version: string | undefined;
 
-    if (methodMatch) {
-      // 查找该函数前的注释
-      const beforeMethod = content.substring(0, methodMatch.index);
-      const commentMatch = beforeMethod.match(/\/\*\*([\s\S]*?)\*\/\s*$/m);
-      if (commentMatch) {
-        const commentInfo = this.extractCommentInfo(commentMatch[1]);
-        description = commentInfo.description;
-        tags = commentInfo.tags;
-        deprecated = commentInfo.deprecated;
-        version = commentInfo.version;
-      }
-    }
-
-    // 如果没有找到注释，使用智能描述生成
+    // 如果没有预定义描述，尝试提取注释中的描述
     if (!description) {
-      description = this.generateSmartDescription(method, apiPath, filePath);
+      const methodRegex = new RegExp(`export\\s+async\\s+function\\s+${method}\\s*\\(`, "g");
+      const methodMatch = methodRegex.exec(content);
+
+      if (methodMatch) {
+        // 查找该函数前的注释
+        const beforeMethod = content.substring(0, methodMatch.index);
+        const commentMatch = beforeMethod.match(/\/\*\*([\s\S]*?)\*\/\s*$/m);
+        if (commentMatch) {
+          const commentInfo = this.extractCommentInfo(commentMatch[1]);
+          description = commentInfo.description;
+          tags = commentInfo.tags;
+          deprecated = commentInfo.deprecated;
+          version = commentInfo.version;
+        }
+      }
+
+      // 如果仍然没有找到描述，使用智能描述生成
+      if (!description) {
+        description = this.generateSmartDescription(method, apiPath, filePath);
+      }
     }
 
     // 提取参数信息
@@ -243,8 +239,8 @@ export class EnhancedApiScanner {
     // 提取响应信息
     const responses = this.extractResponses(content);
 
-    // 生成示例
-    const examples = this.generateExamples(method, apiPath, parameters, requestBody);
+    // 提取示例信息
+    const examples = this.extractExamples(content, method, apiPath);
 
     return {
       method,
@@ -261,7 +257,7 @@ export class EnhancedApiScanner {
   }
 
   /**
-   * 提取注释信息（增强版）
+   * 提取注释信息
    */
   private extractCommentInfo(comment: string): {
     description?: string;
@@ -269,26 +265,24 @@ export class EnhancedApiScanner {
     deprecated: boolean;
     version?: string;
   } {
-    const lines = comment.split("\n");
+    const lines = comment.split("\n").map((line) => line.trim().replace(/^\*\s?/, ""));
     let description: string | undefined;
     const tags: string[] = [];
     let deprecated = false;
     let version: string | undefined;
 
     for (const line of lines) {
-      const trimmed = line.trim();
-      if (trimmed && !trimmed.startsWith("*") && !trimmed.startsWith("/") && !trimmed.includes("import")) {
-        const cleanLine = trimmed.replace(/^\*\s*/, "");
-
-        if (cleanLine.startsWith("@tag ")) {
-          tags.push(cleanLine.replace("@tag ", ""));
-        } else if (cleanLine.startsWith("@deprecated")) {
+      if (line.startsWith("@")) {
+        const [tag, ...value] = line.substring(1).split(" ");
+        if (tag === "tag") {
+          tags.push(value.join(" "));
+        } else if (tag === "deprecated") {
           deprecated = true;
-        } else if (cleanLine.startsWith("@version ")) {
-          version = cleanLine.replace("@version ", "");
-        } else if (!description && !cleanLine.startsWith("@")) {
-          description = cleanLine;
+        } else if (tag === "version") {
+          version = value.join(" ");
         }
+      } else if (line && !line.startsWith("@")) {
+        description = line;
       }
     }
 
@@ -296,26 +290,51 @@ export class EnhancedApiScanner {
   }
 
   /**
-   * 智能描述生成（增强版）
+   * 生成智能描述
    */
   private generateSmartDescription(method: string, apiPath: string, filePath: string): string {
-    // 根据文件路径推断功能
     const pathSegments = apiPath.split("/").filter(Boolean);
-    const lastSegment = pathSegments[pathSegments.length - 1];
 
-    // 特殊路径处理
-    if (apiPath.includes("/auth/login")) return "用户登录";
-    if (apiPath.includes("/auth/register")) return "用户注册";
-    if (apiPath.includes("/auth/forgot-password")) return "忘记密码";
-    if (apiPath.includes("/auth/reset-password")) return "重置密码";
-    if (apiPath.includes("/posts/{id}/view")) return "记录文章浏览";
-    if (apiPath.includes("/api-docs")) return "获取API文档";
-    if (apiPath.includes("/proxy")) return "代理请求";
-    if (apiPath.includes("/seed")) return "数据填充";
-    if (apiPath.includes("/test-db")) return "测试数据库连接";
-    if (apiPath.includes("/test-env")) return "测试环境变量";
+    // 查找资源名称：如果最后一个段是动态参数，使用前一个段
+    let resourceSegment = pathSegments[pathSegments.length - 1];
+    if (resourceSegment && resourceSegment.startsWith("{") && resourceSegment.endsWith("}")) {
+      // 如果最后一个段是动态参数，使用前一个段作为资源名称
+      resourceSegment = pathSegments[pathSegments.length - 2] || resourceSegment;
+    }
 
-    // 根据路径模式生成描述
+    const actionMap: Record<string, string> = {
+      GET: "获取",
+      POST: "创建",
+      PUT: "更新",
+      DELETE: "删除",
+      PATCH: "部分更新",
+    };
+
+    const action = actionMap[method] || method;
+    const resource = this.getResourceName(resourceSegment);
+
+    // 如果是动态路由参数，调整描述
+    const isDynamicRoute =
+      pathSegments[pathSegments.length - 1]?.startsWith("{") && pathSegments[pathSegments.length - 1]?.endsWith("}");
+    if (isDynamicRoute) {
+      if (method === "GET") {
+        return `获取指定${resource}`;
+      } else if (method === "PUT") {
+        return `更新指定${resource}`;
+      } else if (method === "DELETE") {
+        return `删除指定${resource}`;
+      } else if (method === "PATCH") {
+        return `部分更新指定${resource}`;
+      }
+    }
+
+    return `${action}${resource}`;
+  }
+
+  /**
+   * 获取资源名称
+   */
+  private getResourceName(segment: string): string {
     const resourceMap: Record<string, string> = {
       posts: "文章",
       categories: "分类",
@@ -324,63 +343,52 @@ export class EnhancedApiScanner {
       comments: "评论",
       media: "媒体",
       settings: "设置",
+      auth: "认证",
+      "api-docs": "API文档",
+      seed: "数据",
+      "test-db": "数据库",
+      "test-env": "环境",
+      proxy: "代理",
       notifications: "通知",
-      analytics: "分析",
-      reports: "报告",
     };
 
-    const resource = pathSegments.find((seg) => resourceMap[seg]);
-    const resourceName = resource ? resourceMap[resource] : "资源";
-
-    // 根据HTTP方法生成动作
-    const actionMap: Record<string, string> = {
-      GET: apiPath.includes("/{id}") ? `获取${resourceName}详情` : `获取${resourceName}列表`,
-      POST: apiPath.includes("/{id}") ? `创建${resourceName}操作` : `创建${resourceName}`,
-      PUT: `更新${resourceName}`,
-      DELETE: `删除${resourceName}`,
-      PATCH: `部分更新${resourceName}`,
-    };
-
-    return actionMap[method] || `${method} ${resourceName}`;
+    return resourceMap[segment] || segment;
   }
 
   /**
-   * 提取参数信息（增强版）
+   * 提取参数信息
    */
   private extractParameters(content: string, apiPath: string): ApiParameter[] {
     const parameters: ApiParameter[] = [];
 
-    // 提取路径参数
-    const pathParams = apiPath.match(/\[([^\]]+)\]/g);
+    // 从路径中提取路径参数
+    const pathParams = apiPath.match(/\{([^}]+)\}/g);
     if (pathParams) {
-      for (const param of pathParams) {
-        const paramName = param.replace(/[\[\]]/g, "");
+      pathParams.forEach((param) => {
+        const paramName = param.slice(1, -1);
         parameters.push({
           name: paramName,
           type: "string",
+          location: "path",
           required: true,
           description: `${paramName}参数`,
-          location: "path",
-          example: this.generateParameterExample(paramName),
         });
-      }
+      });
     }
 
-    // 提取查询参数
-    const queryParamMatches = content.match(/searchParams\.get\(["']([^"']+)["']\)/g);
-    if (queryParamMatches) {
-      for (const match of queryParamMatches) {
-        const paramName = match.match(/searchParams\.get\(["']([^"']+)["']\)/)?.[1];
-        if (paramName) {
-          parameters.push({
-            name: paramName,
-            type: "string",
-            required: false,
-            description: `查询参数: ${paramName}`,
-            location: "query",
-            example: this.generateParameterExample(paramName),
-          });
-        }
+    // 从代码中提取查询参数
+    const queryParamRegex = /searchParams\.get\(['"`]([^'"`]+)['"`]\)/g;
+    let match;
+    while ((match = queryParamRegex.exec(content)) !== null) {
+      const paramName = match[1];
+      if (!parameters.some((p) => p.name === paramName && p.location === "query")) {
+        parameters.push({
+          name: paramName,
+          type: "string",
+          location: "query",
+          required: false,
+          description: `${paramName}查询参数`,
+        });
       }
     }
 
@@ -388,87 +396,42 @@ export class EnhancedApiScanner {
   }
 
   /**
-   * 生成参数示例
-   */
-  private generateParameterExample(paramName: string): any {
-    const exampleMap: Record<string, any> = {
-      id: 1,
-      page: 1,
-      limit: 10,
-      search: "搜索关键词",
-      status: "active",
-      type: "public",
-      category: "技术",
-      tag: "javascript",
-    };
-    return exampleMap[paramName] || "示例值";
-  }
-
-  /**
-   * 提取请求体信息（增强版）
+   * 提取请求体信息
    */
   private extractRequestBody(content: string): ApiRequestBody | undefined {
-    if (content.includes("await request.json()")) {
+    // 查找请求体解析
+    const bodyRegex = /await\s+request\.json\(\)/;
+    if (bodyRegex.test(content)) {
       return {
         type: "application/json",
         required: true,
         description: "JSON格式的请求体",
-        example: this.generateRequestBodyExample(content),
+        example: {},
       };
     }
+
     return undefined;
   }
 
   /**
-   * 生成请求体示例
-   */
-  private generateRequestBodyExample(content: string): any {
-    // 根据文件内容推断请求体结构
-    if (content.includes("CreatePostRequest")) {
-      return {
-        title: "示例文章标题",
-        content: "这是文章内容...",
-        excerpt: "文章摘要",
-        status: "published",
-        visibility: "public",
-      };
-    } else if (content.includes("CreateCategoryRequest")) {
-      return {
-        name: "示例分类",
-        slug: "example-category",
-        description: "分类描述",
-      };
-    } else if (content.includes("CreateTagRequest")) {
-      return {
-        name: "示例标签",
-        slug: "example-tag",
-        description: "标签描述",
-        color: "#ff0000",
-      };
-    }
-    return {};
-  }
-
-  /**
-   * 提取响应信息（增强版）
+   * 提取响应信息
    */
   private extractResponses(content: string): ApiResponse[] {
     const responses: ApiResponse[] = [];
 
-    // 提取状态码
-    const statusMatches = content.match(/status:\s*(\d+)/g);
-    if (statusMatches) {
-      for (const match of statusMatches) {
-        const status = parseInt(match.replace("status:", "").trim());
-        responses.push({
-          status,
-          description: this.getStatusDescription(status),
-          example: this.generateResponseExample(status),
-        });
-      }
+    // 查找状态码
+    const statusRegex = /status:\s*(\d+)/g;
+    let match;
+    while ((match = statusRegex.exec(content)) !== null) {
+      const status = parseInt(match[1]);
+      responses.push({
+        status,
+        description: this.getStatusDescription(status),
+        example: this.getStatusExample(status),
+      });
     }
 
-    // 默认响应
+    // 如果没有找到状态码，添加默认响应
     if (responses.length === 0) {
       responses.push({
         status: 200,
@@ -481,70 +444,64 @@ export class EnhancedApiScanner {
   }
 
   /**
-   * 生成响应示例
+   * 获取状态码描述
    */
-  private generateResponseExample(status: number): any {
-    const baseResponse = {
-      success: true,
-      message: "操作成功",
-      timestamp: new Date().toISOString(),
+  private getStatusDescription(status: number): string {
+    const descriptions: Record<number, string> = {
+      200: "成功",
+      201: "创建成功",
+      400: "请求错误",
+      401: "未授权",
+      403: "禁止访问",
+      404: "未找到",
+      500: "服务器错误",
     };
-
-    if (status >= 400) {
-      return {
-        success: false,
-        message: "操作失败",
-        error: "错误详情",
-        timestamp: new Date().toISOString(),
-      };
-    }
-
-    return baseResponse;
+    return descriptions[status] || "响应";
   }
 
   /**
-   * 生成API示例（增强版）
+   * 获取状态码示例
    */
-  private generateExamples(
-    method: string,
-    apiPath: string,
-    parameters: ApiParameter[],
-    requestBody?: ApiRequestBody
-  ): ApiExample[] {
+  private getStatusExample(status: number): any {
+    const examples: Record<number, any> = {
+      200: { success: true, message: "操作成功", data: {} },
+      201: { success: true, message: "创建成功", data: { id: 1 } },
+      400: { success: false, message: "请求参数错误" },
+      401: { success: false, message: "未授权访问" },
+      403: { success: false, message: "禁止访问" },
+      404: { success: false, message: "资源未找到" },
+      500: { success: false, message: "服务器内部错误" },
+    };
+    return examples[status] || { success: true, message: "响应" };
+  }
+
+  /**
+   * 提取示例信息
+   */
+  private extractExamples(content: string, method: string, apiPath: string): ApiExample[] {
     const examples: ApiExample[] = [];
 
     // 生成基本示例
-    const example: ApiExample = {
+    const basicExample: ApiExample = {
       name: "基本示例",
       description: `${method} ${apiPath} 的基本使用示例`,
-    };
-
-    // 生成请求示例
-    if (method !== "GET") {
-      example.request = {
-        headers: {
-          "Content-Type": "application/json",
+      response: {
+        status: 200,
+        body: {
+          success: true,
+          message: "操作成功",
+          timestamp: new Date().toISOString(),
         },
-      };
-
-      if (requestBody) {
-        example.request.body = requestBody.example || this.generateRequestBodyExample("");
-      }
-    }
-
-    // 生成响应示例
-    example.response = {
-      status: 200,
-      body: this.generateResponseExample(200),
+      },
     };
 
-    examples.push(example);
+    examples.push(basicExample);
 
     return examples;
   }
 
   /**
-   * 获取API路径
+   * 获取API路径（修复版本）
    */
   private getApiPath(filePath: string, baseGroup: string): string {
     const relativePath = path.relative(path.join(process.cwd(), this.apiDir), filePath);
@@ -553,8 +510,8 @@ export class EnhancedApiScanner {
     // 移除文件名，只保留路径部分
     pathParts.pop();
 
-    // 构建API路径
-    let apiPath = "/" + pathParts.join("/");
+    // 构建API路径，添加 /api 前缀
+    let apiPath = "/api/" + pathParts.join("/");
 
     // 处理动态路由参数
     apiPath = apiPath.replace(/\[([^\]]+)\]/g, "{$1}");
@@ -579,60 +536,86 @@ export class EnhancedApiScanner {
       seed: "数据填充接口",
       "test-db": "数据库测试接口",
       "test-env": "环境测试接口",
-      "api-docs": "API文档相关接口",
-      notifications: "通知相关接口",
-      analytics: "数据分析相关接口",
-      reports: "报告相关接口",
-      uploads: "文件上传相关接口",
-      search: "搜索相关接口",
+      "api-docs": "API文档接口",
+      notifications: "通知管理相关接口",
     };
 
     return descriptions[groupName] || `${groupName}相关接口`;
   }
 
   /**
-   * 获取状态码描述
+   * 获取端点描述（增强版）
    */
-  private getStatusDescription(status: number): string {
-    const descriptions: Record<number, string> = {
-      200: "成功",
-      201: "创建成功",
-      400: "请求参数错误",
-      401: "未授权",
-      403: "禁止访问",
-      404: "资源不存在",
-      409: "冲突",
-      422: "参数验证失败",
-      429: "请求过于频繁",
-      500: "服务器内部错误",
-      502: "网关错误",
-      503: "服务不可用",
+  private getEndpointDescription(method: string, apiPath: string): string | undefined {
+    const descriptions: Record<string, Record<string, string>> = {
+      "/api/api-docs": {
+        GET: "获取API文档",
+      },
+      "/api/auth/forgot-password": {
+        POST: "忘记密码",
+      },
+      "/api/auth/login": {
+        POST: "用户登录",
+      },
+      "/api/auth/register": {
+        POST: "用户注册",
+      },
+      "/api/auth/reset-password": {
+        POST: "重置密码",
+      },
+      "/api/categories": {
+        GET: "获取分类列表",
+        POST: "创建分类",
+      },
+      "/api/categories/{id}": {
+        GET: "获取分类详情",
+        PUT: "更新分类",
+        DELETE: "删除分类",
+      },
+      "/api/posts": {
+        GET: "获取文章列表",
+        POST: "创建文章",
+      },
+      "/api/posts/{id}": {
+        GET: "获取文章详情",
+        PUT: "更新文章",
+        DELETE: "删除文章",
+        PATCH: "部分更新文章",
+      },
+      "/api/posts/{id}/view": {
+        POST: "记录文章浏览",
+      },
+      "/api/proxy/{...path}": {
+        GET: "代理请求",
+      },
+      "/api/seed": {
+        GET: "数据填充",
+      },
+      "/api/tags": {
+        GET: "获取标签列表",
+        POST: "创建标签",
+      },
+      "/api/tags/{id}": {
+        GET: "获取标签详情",
+        PUT: "更新标签",
+        DELETE: "删除标签",
+      },
+      "/api/test-db": {
+        GET: "测试数据库连接",
+      },
+      "/api/test-env": {
+        GET: "测试环境变量",
+      },
+      "/api/notifications": {
+        GET: "获取通知列表",
+        POST: "创建通知",
+      },
+      "/api/notifications/{id}": {
+        GET: "获取通知详情",
+        PUT: "更新通知",
+        DELETE: "删除通知",
+      },
     };
-
-    return descriptions[status] || `HTTP ${status}`;
-  }
-
-  /**
-   * 清除缓存
-   */
-  clearCache(): void {
-    this.cache.clear();
-  }
-
-  /**
-   * 获取扫描统计信息
-   */
-  getScanStats(): { totalGroups: number; totalEndpoints: number; lastScan: string } {
-    const allApis = this.cache.get("all-apis");
-    if (!allApis) {
-      return { totalGroups: 0, totalEndpoints: 0, lastScan: "未扫描" };
-    }
-
-    const totalEndpoints = allApis.data.reduce((sum, group) => sum + group.endpoints.length, 0);
-    return {
-      totalGroups: allApis.data.length,
-      totalEndpoints,
-      lastScan: new Date(allApis.timestamp).toLocaleString(),
-    };
+    return descriptions[apiPath]?.[method];
   }
 }

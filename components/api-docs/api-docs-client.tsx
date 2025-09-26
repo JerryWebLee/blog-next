@@ -35,18 +35,29 @@ export function ApiDocsClient() {
     filterApiGroups();
   }, [apiData, searchQuery, selectedMethod]);
 
-  const loadApiData = async (forceRefresh = false) => {
+  const loadApiData = async (forceRefresh: boolean = false) => {
     try {
-      setRefreshing(forceRefresh);
+      setLoading(true);
       const response = await fetch(`/api/api-docs${forceRefresh ? '?refresh=true' : ''}`);
-      if (response.ok) {
-        const data = await response.json();
-        setApiData(data);
+      const result = await response.json();
+      
+      if (result.success && result.data) {
+        // 转换API响应格式
+        const transformedData: ApiDocsData = {
+          groups: result.data,
+          stats: result.stats || {
+            totalGroups: result.data.length,
+            totalEndpoints: result.data.reduce((sum: number, group: ApiGroup) => sum + group.endpoints.length, 0),
+            lastScan: new Date().toLocaleString('zh-CN')
+          },
+          message: result.message || 'API文档获取成功'
+        };
+        setApiData(transformedData);
       } else {
-        console.error('Failed to load API data');
+        console.error('获取API数据失败:', result.message);
       }
     } catch (error) {
-      console.error('Error loading API data:', error);
+      console.error('获取API数据失败:', error);
     } finally {
       setLoading(false);
       setRefreshing(false);
@@ -83,74 +94,75 @@ export function ApiDocsClient() {
   };
 
   const handleRefresh = () => {
+    setRefreshing(true);
     loadApiData(true);
   };
 
   if (loading) {
-    return <PageLoading text="加载API文档中..." />;
+    return <PageLoading />;
+  }
+
+  if (!apiData) {
+    return (
+      <div className="text-center py-8">
+        <p className="text-muted-foreground">无法加载API文档</p>
+        <Button onClick={() => loadApiData(true)} className="mt-4">
+          重试
+        </Button>
+      </div>
+    );
   }
 
   return (
     <div className="space-y-6">
-      {/* 统计信息和刷新按钮 */}
-      <div className="bg-card p-6 rounded-lg border">
-        <div className="flex items-center justify-between mb-4">
-          <div>
-            <h2 className="text-xl font-semibold">API接口统计</h2>
-            {apiData?.stats && (
-              <p className="text-sm text-muted-foreground mt-1">
-                共 {apiData.stats.totalGroups} 个API组，{apiData.stats.totalEndpoints} 个接口
-                {apiData.stats.lastScan !== '未扫描' && (
-                  <span className="ml-2">最后扫描：{apiData.stats.lastScan}</span>
-                )}
-              </p>
-            )}
-          </div>
-          <Button
-            onClick={handleRefresh}
-            disabled={refreshing}
-            variant="outline"
-            size="sm"
-            className="flex items-center gap-2"
-          >
-            <RotateCcw className={`h-4 w-4 ${refreshing ? 'animate-spin' : ''}`} />
-            {refreshing ? '刷新中...' : '刷新'}
-          </Button>
+      {/* 头部信息 */}
+      <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
+        <div>
+          <h1 className="text-3xl font-bold">API 文档</h1>
+          <p className="text-muted-foreground mt-1">
+            发现 {apiData.stats.totalGroups} 个API组，共 {apiData.stats.totalEndpoints} 个接口
+          </p>
+          <p className="text-sm text-muted-foreground">
+            最后扫描时间: {apiData.stats.lastScan}
+          </p>
         </div>
+        <Button
+          onClick={handleRefresh}
+          disabled={refreshing}
+          variant="outline"
+          size="sm"
+          className="flex items-center gap-2"
+        >
+          <RotateCcw className={`h-4 w-4 ${refreshing ? 'animate-spin' : ''}`} />
+          {refreshing ? '刷新中...' : '刷新'}
+        </Button>
+      </div>
 
-        {/* 搜索和过滤栏 */}
-        <ApiSearchBar 
-          value={searchQuery}
-          onChange={setSearchQuery}
-        />
-        <div className="mt-4">
-          <ApiFilterTabs
-            selectedMethod={selectedMethod}
-            onMethodChange={setSelectedMethod}
+      {/* 搜索和过滤 */}
+      <div className="flex flex-col sm:flex-row gap-4">
+        <div className="flex-1">
+          <ApiSearchBar
+            value={searchQuery}
+            onChange={setSearchQuery}
+            placeholder="搜索API接口..."
           />
         </div>
+        <ApiFilterTabs
+          selectedMethod={selectedMethod}
+          onMethodChange={setSelectedMethod}
+        />
       </div>
 
       {/* API组列表 */}
-      <div className="space-y-6">
+      <div className="space-y-4">
         {filteredGroups.length === 0 ? (
           <div className="text-center py-12">
-            <p className="text-muted-foreground text-lg">
+            <p className="text-muted-foreground">
               {searchQuery || selectedMethod !== 'all' 
                 ? '没有找到匹配的API接口' 
-                : '暂无API接口数据'
+                : '暂无API接口'
               }
             </p>
-            {!searchQuery && selectedMethod === 'all' && (
-              <Button 
-                onClick={handleRefresh} 
-                variant="outline" 
-                className="mt-4"
-                disabled={refreshing}
-              >
-                重新扫描
-              </Button>
-            )}
           </div>
         ) : (
           filteredGroups.map((group) => (

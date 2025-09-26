@@ -1,5 +1,14 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { EnhancedApiScanner } from '@/lib/utils/api-scanner';
+import { ApiScanner } from '@/lib/utils/api-scanner';
+import { createErrorResponse, createSuccessResponse } from '@/lib/utils';
+
+// Simple in-memory cache
+let apiCache: {
+  data: any;
+  timestamp: number;
+  stats: { totalGroups: number; totalEndpoints: number; lastScan: string };
+} | null = null;
+const CACHE_DURATION = 5 * 60 * 1000; // 5 minutes
 
 /**
  * GET /api/api-docs
@@ -7,36 +16,40 @@ import { EnhancedApiScanner } from '@/lib/utils/api-scanner';
  */
 export async function GET(request: NextRequest) {
   try {
-    const scanner = new EnhancedApiScanner();
-    const forceRefresh = request.nextUrl.searchParams.get('refresh') === 'true';
-    
-    const apiGroups = await scanner.scanAllApis(forceRefresh);
-    
-    // 添加扫描统计信息
-    const stats = scanner.getScanStats();
-    
-    return NextResponse.json({
-      groups: apiGroups,
-      stats,
-      message: 'API文档获取成功'
-    }, {
+    const url = new URL(request.url);
+    const refresh = url.searchParams.get("refresh") === "true";
+
+    if (apiCache && !refresh && Date.now() - apiCache.timestamp < CACHE_DURATION) {
+      return NextResponse.json(createSuccessResponse(apiCache.data, "API文档获取成功", apiCache.stats), {
+        status: 200,
+      });
+    }
+
+    const scanner = new ApiScanner();
+    const apiGroups = await scanner.scanAllApis();
+
+    const totalGroups = apiGroups.length;
+    const totalEndpoints = apiGroups.reduce((sum, group) => sum + group.endpoints.length, 0);
+    const lastScan = new Date().toLocaleString("zh-CN", {
+      year: "numeric",
+      month: "numeric",
+      day: "numeric",
+      hour: "numeric",
+      minute: "numeric",
+      second: "numeric",
+    });
+
+    const stats = { totalGroups, totalEndpoints, lastScan };
+
+    apiCache = { data: apiGroups, timestamp: Date.now(), stats };
+
+    return NextResponse.json(createSuccessResponse(apiGroups, "API文档获取成功", stats), {
       status: 200,
-      headers: {
-        'Cache-Control': forceRefresh ? 'no-cache, no-store, must-revalidate' : 'public, max-age=300',
-        'Pragma': 'no-cache',
-        'Expires': '0'
-      }
     });
   } catch (error) {
-    console.error('获取API文档失败:', error);
-    
+    console.error("获取API文档失败:", error);
     return NextResponse.json(
-      {
-        success: false,
-        message: '获取API文档失败',
-        error: error instanceof Error ? error.message : '未知错误',
-        timestamp: new Date().toISOString(),
-      },
+      createErrorResponse("获取API文档失败", error instanceof Error ? error.message : "未知错误"),
       { status: 500 }
     );
   }
