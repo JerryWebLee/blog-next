@@ -60,7 +60,7 @@ lib/utils/api-scanner.ts      # API扫描器
 - **TypeScript** - 类型安全
 - **Tailwind CSS** - 样式设计
 - **HeroUI** - UI组件库
-- **@heroicons/react** - 图标库
+- **lucide-react** - 图标库
 - **多语言支持** - 国际化
 
 ### 3. 关键特性

@@ -38,8 +38,17 @@ export function ApiRequestBody({ requestBody }: ApiRequestBodyProps) {
         {requestBody.schema && (
           <div>
             <span className="text-sm font-medium">数据结构:</span>
-            <pre className="mt-2 p-3 bg-muted rounded-md text-xs overflow-x-auto">
+            <pre className="mt-2 p-4 bg-slate-900 text-slate-100 rounded-lg text-xs overflow-x-auto font-mono">
               {JSON.stringify(requestBody.schema, null, 2)}
+            </pre>
+          </div>
+        )}
+
+        {requestBody.example && (
+          <div>
+            <span className="text-sm font-medium">示例数据:</span>
+            <pre className="mt-2 p-4 bg-slate-900 text-slate-100 rounded-lg text-xs overflow-x-auto font-mono">
+              {JSON.stringify(requestBody.example, null, 2)}
             </pre>
           </div>
         )}

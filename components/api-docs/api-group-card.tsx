@@ -1,10 +1,9 @@
 "use client";
 
 import { useState } from "react";
-import { ChevronDownIcon, ChevronRightIcon } from "@heroicons/react/24/outline";
+import { ChevronDown, ChevronRight } from "lucide-react";
 
 import { Badge } from "@/components/ui/badge";
-import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { ApiGroup } from "@/lib/utils/api-scanner";
 import { ApiEndpointCard } from "./api-endpoint-card";
@@ -36,9 +35,9 @@ export function ApiGroupCard({ group }: ApiGroupCardProps) {
         <div className="flex items-center justify-between">
           <div className="flex items-center gap-3">
             {isExpanded ? (
-              <ChevronDownIcon className="h-5 w-5 text-muted-foreground" />
+              <ChevronDown className="h-5 w-5 text-muted-foreground" />
             ) : (
-              <ChevronRightIcon className="h-5 w-5 text-muted-foreground" />
+              <ChevronRight className="h-5 w-5 text-muted-foreground" />
             )}
             <CardTitle className="text-xl">{group.name}</CardTitle>
             <Badge variant="secondary">{group.endpoints.length} 个接口</Badge>

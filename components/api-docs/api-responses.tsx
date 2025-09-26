@@ -37,8 +37,17 @@ export function ApiResponses({ responses }: ApiResponsesProps) {
             {response.schema && (
               <div className="mt-3">
                 <span className="text-sm font-medium text-muted-foreground">数据结构:</span>
-                <pre className="mt-1 p-3 bg-muted rounded-md text-xs overflow-x-auto">
+                <pre className="mt-2 p-4 bg-slate-900 text-slate-100 rounded-lg text-xs overflow-x-auto font-mono">
                   {JSON.stringify(response.schema, null, 2)}
+                </pre>
+              </div>
+            )}
+
+            {response.example && (
+              <div className="mt-3">
+                <span className="text-sm font-medium text-muted-foreground">示例响应:</span>
+                <pre className="mt-2 p-4 bg-slate-900 text-slate-100 rounded-lg text-xs overflow-x-auto font-mono">
+                  {JSON.stringify(response.example, null, 2)}
                 </pre>
               </div>
             )}

@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import { ChevronDownIcon, ChevronRightIcon, ClipboardDocumentIcon, CodeBracketIcon } from "@heroicons/react/24/outline";
+import { ChevronDown, ChevronRight, Clipboard, Code } from "lucide-react";
 
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
@@ -55,9 +55,9 @@ export function ApiEndpointCard({ endpoint }: ApiEndpointCardProps) {
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-3">
               {isExpanded ? (
-                <ChevronDownIcon className="h-4 w-4 text-muted-foreground" />
+                <ChevronDown className="h-4 w-4 text-muted-foreground" />
               ) : (
-                <ChevronRightIcon className="h-4 w-4 text-muted-foreground" />
+                <ChevronRight className="h-4 w-4 text-muted-foreground" />
               )}
               <Badge className={getMethodColor(endpoint.method)}>{endpoint.method}</Badge>
               <code className="text-sm font-mono bg-muted px-2 py-1 rounded">{endpoint.path}</code>
@@ -72,7 +72,7 @@ export function ApiEndpointCard({ endpoint }: ApiEndpointCardProps) {
                 }}
                 className="h-8 w-8 p-0"
               >
-                <ClipboardDocumentIcon className="h-4 w-4" />
+                <Clipboard className="h-4 w-4" />
               </Button>
               <Button
                 variant="ghost"
@@ -83,7 +83,7 @@ export function ApiEndpointCard({ endpoint }: ApiEndpointCardProps) {
                 }}
                 className="h-8 w-8 p-0"
               >
-                <CodeBracketIcon className="h-4 w-4" />
+                <Code className="h-4 w-4" />
               </Button>
             </div>
           </div>

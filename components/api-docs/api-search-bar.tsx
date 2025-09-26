@@ -1,6 +1,6 @@
 "use client";
 
-import { MagnifyingGlassIcon } from "@heroicons/react/24/outline";
+import { Search } from "lucide-react";
 
 interface ApiSearchBarProps {
   value: string;
@@ -10,7 +10,7 @@ interface ApiSearchBarProps {
 export function ApiSearchBar({ value, onChange }: ApiSearchBarProps) {
   return (
     <div className="relative">
-      <MagnifyingGlassIcon className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-muted-foreground" />
+      <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-muted-foreground" />
       <input
         type="text"
         placeholder="搜索API接口..."
