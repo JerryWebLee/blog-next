@@ -10,9 +10,5 @@ interface CategoriesManageLayoutProps {
 }
 
 export default function CategoriesManageLayout({ children }: CategoriesManageLayoutProps) {
-  return (
-    <div className="container mx-auto px-4 py-8 max-w-7xl">
-      {children}
-    </div>
-  );
+  return <div className="container mx-auto px-4 py-8">{children}</div>;
 }

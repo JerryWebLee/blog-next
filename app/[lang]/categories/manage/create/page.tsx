@@ -176,7 +176,7 @@ export default function CreateCategoryPage() {
                       }}
                     >
                       {categories.map((category) => (
-                        <SelectItem key={category.id.toString()} key={category.id.toString()}>
+                        <SelectItem key={category.id.toString()}>
                           {category.name}
                         </SelectItem>
                       ))}

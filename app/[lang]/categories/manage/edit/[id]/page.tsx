@@ -246,7 +246,7 @@ export default function EditCategoryPage({ params }: EditCategoryPageProps) {
                       }}
                     >
                       {categories.map((cat) => (
-                        <SelectItem key={cat.id.toString()} key={cat.id.toString()}>
+                        <SelectItem key={cat.id.toString()}>
                           {cat.name}
                         </SelectItem>
                       ))}

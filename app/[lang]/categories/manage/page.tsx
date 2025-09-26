@@ -50,7 +50,7 @@ import {
 } from "lucide-react";
 
 import { message } from "@/lib/utils";
-import { ApiResponse, PaginatedResponseData, Category, CategoryQueryParams } from "@/types/blog";
+import { ApiResponse, Category, CategoryQueryParams, PaginatedResponseData } from "@/types/blog";
 
 /**
  * 分类管理页面组件
@@ -293,7 +293,7 @@ export default function CategoriesManagePage() {
           <div className="flex items-center gap-2">
             <Folder className="w-5 h-5" />
             <span className="text-lg font-semibold">分类列表</span>
-            <Badge content={total} color="primary" variant="flat">
+            <Badge color="primary" variant="flat">
               <Chip size="sm" variant="flat">
                 共 {total} 个分类
               </Chip>

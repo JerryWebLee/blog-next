@@ -5,7 +5,7 @@
 
 "use client";
 
-import { useEffect, useMemo, useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { Button, Card, CardBody, Chip, Divider, Input, Spinner } from "@heroui/react";
 import {
   BookOpen,
@@ -22,8 +22,8 @@ import {
   Users,
 } from "lucide-react";
 
-import { mockCategories } from "@/lib/data/mock-data";
 import { Category } from "@/types/blog";
+import { useCategories } from "@/lib/hooks/useCategories";
 import { shadowManager } from "./shadow-effects";
 // 导入样式
 import "./categories.scss";
@@ -101,7 +101,7 @@ function CategoryCard({ category, level = 0 }: { category: Category; level?: num
             <div className="category-meta-info">
               <div className="meta-item">
                 <Calendar className="w-4 h-4" />
-                <span>{category.createdAt.toLocaleDateString("zh-CN")}</span>
+                <span>{new Date(category.createdAt).toLocaleDateString("zh-CN")}</span>
               </div>
               <div className="meta-item">
                 <TrendingUp className="w-4 h-4" />
@@ -270,10 +270,21 @@ function SearchAndFilter({
  * 主分类页面组件
  */
 export default function CategoriesPage() {
-  // 状态管理
-  const [searchQuery, setSearchQuery] = useState("");
-  const [showOnlyActive, setShowOnlyActive] = useState(false);
-  const [isLoading, setIsLoading] = useState(false);
+  // 使用分类数据管理 Hook
+  const {
+    categories,
+    filteredCategories,
+    loading,
+    error,
+    searchQuery,
+    showOnlyActive,
+    setSearchQuery,
+    setShowOnlyActive,
+    refetch,
+  } = useCategories({
+    autoFetch: true,
+    limit: 100,
+  });
 
   // 检查用户权限（这里简化处理，实际应该从认证上下文获取）
   const isAdmin = true; // 假设当前用户是管理员
@@ -281,42 +292,6 @@ export default function CategoriesPage() {
   // 管理功能处理
   const handleManageCategories = () => {
     window.location.href = "/categories/manage";
-  };
-
-  // 获取分类数据
-  const categories = mockCategories;
-
-  // 搜索和筛选逻辑
-  const filteredCategories = useMemo(() => {
-    let filtered = categories;
-
-    // 按搜索关键词筛选
-    if (searchQuery.trim()) {
-      const query = searchQuery.toLowerCase();
-      filtered = filtered.filter(
-        (category) =>
-          category.name.toLowerCase().includes(query) ||
-          category.description?.toLowerCase().includes(query) ||
-          category.slug.toLowerCase().includes(query)
-      );
-    }
-
-    // 按活跃状态筛选
-    if (showOnlyActive) {
-      filtered = filtered.filter((category) => category.isActive);
-    }
-
-    return filtered;
-  }, [categories, searchQuery, showOnlyActive]);
-
-  // 处理搜索
-  const handleSearch = (query: string) => {
-    setSearchQuery(query);
-  };
-
-  // 处理筛选切换
-  const handleToggleActive = (show: boolean) => {
-    setShowOnlyActive(show);
   };
 
   return (
@@ -355,17 +330,32 @@ export default function CategoriesPage() {
       {/* 搜索和筛选 */}
       <SearchAndFilter
         searchQuery={searchQuery}
-        onSearchChange={handleSearch}
+        onSearchChange={setSearchQuery}
         showOnlyActive={showOnlyActive}
-        onToggleActive={handleToggleActive}
+        onToggleActive={setShowOnlyActive}
       />
 
       {/* 分类列表 - 全新设计 + 动态阴影 */}
       <div className="categories-section">
-        {isLoading ? (
+        {loading ? (
           <div className="loading-state">
             <Spinner size="lg" color="primary" />
             <p>加载分类中...</p>
+          </div>
+        ) : error ? (
+          <div className="error-state">
+            <div className="empty-icon">
+              <Folder className="w-16 h-16 text-danger" />
+            </div>
+            <h3 className="empty-title">加载失败</h3>
+            <p className="empty-description">{error}</p>
+            <Button
+              color="primary"
+              onPress={refetch}
+              className="mt-4"
+            >
+              重试
+            </Button>
           </div>
         ) : filteredCategories.length > 0 ? (
           <div className="categories-grid">
