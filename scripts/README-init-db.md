@@ -18,7 +18,7 @@
 docker ps | grep mysql
 
 # 执行初始化脚本
-docker exec -i mysql-local mysql -u root -p < scripts/init-db.sql
+docker exec -i mysql-server mysql -u root -p < scripts/init-db.sql
 ```
 
 ### 方法2：直接使用MySQL客户端
@@ -73,7 +73,7 @@ source scripts/init-db.sql;
 npm run test:db:connect
 
 # 查看数据库表
-docker exec -it mysql-local mysql -u blog_user -pblog_password_123 -e "USE blog_system; SHOW TABLES;"
+docker exec -it mysql-server mysql -u blog_user -pblog_password_123 -e "USE blog_system; SHOW TABLES;"
 ```
 
 ## 注意事项
