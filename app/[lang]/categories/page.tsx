@@ -5,9 +5,22 @@
 
 "use client";
 
-import { useMemo, useState, useRef, useEffect } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import { Button, Card, CardBody, Chip, Divider, Input, Spinner } from "@heroui/react";
-import { Calendar, ChevronRight, FileText, Filter, Folder, FolderOpen, Hash, Search, Users, BookOpen, TrendingUp } from "lucide-react";
+import {
+  BookOpen,
+  Calendar,
+  ChevronRight,
+  FileText,
+  Filter,
+  Folder,
+  FolderOpen,
+  Hash,
+  Search,
+  Settings,
+  TrendingUp,
+  Users,
+} from "lucide-react";
 
 import { mockCategories } from "@/lib/data/mock-data";
 import { Category } from "@/types/blog";
@@ -21,7 +34,6 @@ import "./categories.scss";
  */
 function CategoryCard({ category, level = 0 }: { category: Category; level?: number }) {
   const [isExpanded, setIsExpanded] = useState(false);
-  const [isHovered, setIsHovered] = useState(false);
   const [isSelected, setIsSelected] = useState(false);
   const cardRef = useRef<HTMLDivElement>(null);
   const hasChildren = category.children && category.children.length > 0;
@@ -31,22 +43,20 @@ function CategoryCard({ category, level = 0 }: { category: Category; level?: num
     if (cardRef.current) {
       // 根据层级应用不同的阴影效果
       shadowManager.applyLevelShadow(cardRef.current, level);
-      
+
       // 应用悬停和点击效果
       shadowManager.applyHoverShadow(cardRef.current, {
         intensity: 0.15,
-        color: level === 0 ? 'rgba(59, 130, 246, 0.3)' : 
-               level === 1 ? 'rgba(16, 185, 129, 0.3)' : 
-               'rgba(139, 92, 246, 0.3)',
-        blur: 25
+        color:
+          level === 0 ? "rgba(59, 130, 246, 0.3)" : level === 1 ? "rgba(16, 185, 129, 0.3)" : "rgba(139, 92, 246, 0.3)",
+        blur: 25,
       });
 
       shadowManager.applyClickShadow(cardRef.current, {
         intensity: 0.1,
-        color: level === 0 ? 'rgba(59, 130, 246, 0.2)' : 
-               level === 1 ? 'rgba(16, 185, 129, 0.2)' : 
-               'rgba(139, 92, 246, 0.2)',
-        blur: 15
+        color:
+          level === 0 ? "rgba(59, 130, 246, 0.2)" : level === 1 ? "rgba(16, 185, 129, 0.2)" : "rgba(139, 92, 246, 0.2)",
+        blur: 15,
       });
     }
   }, [level]);
@@ -59,22 +69,11 @@ function CategoryCard({ category, level = 0 }: { category: Category; level?: num
     }
   };
 
-  // 处理悬停状态
-  const handleMouseEnter = () => {
-    setIsHovered(true);
-  };
-
-  const handleMouseLeave = () => {
-    setIsHovered(false);
-  };
-
   return (
-    <div 
+    <div
       ref={cardRef}
-      className={`category-card-modern ${level > 0 ? `level-${level}` : ""} ${isSelected ? 'selected' : ''} ${isExpanded ? 'expanded' : ''}`}
+      className={`category-card-modern ${level > 0 ? `level-${level}` : ""} ${isSelected ? "selected" : ""} ${isExpanded ? "expanded" : ""}`}
       onClick={handleCardClick}
-      onMouseEnter={handleMouseEnter}
-      onMouseLeave={handleMouseLeave}
     >
       <div className="category-card-content">
         {/* 卡片头部 */}
@@ -98,9 +97,7 @@ function CategoryCard({ category, level = 0 }: { category: Category; level?: num
 
           <div className="category-info-section">
             <h3 className="category-title">{category.name}</h3>
-            {category.description && (
-              <p className="category-desc">{category.description}</p>
-            )}
+            {category.description && <p className="category-desc">{category.description}</p>}
             <div className="category-meta-info">
               <div className="meta-item">
                 <Calendar className="w-4 h-4" />
@@ -278,6 +275,14 @@ export default function CategoriesPage() {
   const [showOnlyActive, setShowOnlyActive] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
 
+  // 检查用户权限（这里简化处理，实际应该从认证上下文获取）
+  const isAdmin = true; // 假设当前用户是管理员
+
+  // 管理功能处理
+  const handleManageCategories = () => {
+    window.location.href = "/categories/manage";
+  };
+
   // 获取分类数据
   const categories = mockCategories;
 
@@ -316,15 +321,33 @@ export default function CategoriesPage() {
 
   return (
     <div className="categories-page">
-      {/* 页面标题 */}
-      <div className="page-header">
-        <div className="header-content">
-          <div className="title-section">
-            <h1 className="page-title">博客分类</h1>
-            <p className="page-subtitle">探索我们的技术分类，找到您感兴趣的内容</p>
-          </div>
+      {/* 管理功能入口 */}
+      {isAdmin && (
+        <div className="mb-6">
+          <Card className="bg-gradient-to-r from-primary-50 to-secondary-50 border-primary-200">
+            <CardBody className="flex flex-row items-center justify-between">
+              <div className="flex items-center gap-3">
+                <div className="w-10 h-10 rounded-full bg-primary-100 flex items-center justify-center">
+                  <Settings className="w-5 h-5 text-primary" />
+                </div>
+                <div>
+                  <h3 className="text-lg font-semibold text-foreground">分类管理</h3>
+                  <p className="text-sm text-default-600">管理分类的创建、编辑、删除和状态控制</p>
+                </div>
+              </div>
+              <Button
+                color="primary"
+                variant="solid"
+                startContent={<Settings className="w-4 h-4" />}
+                onPress={handleManageCategories}
+                className="ml-4"
+              >
+                进入管理
+              </Button>
+            </CardBody>
+          </Card>
         </div>
-      </div>
+      )}
 
       {/* 统计信息 */}
       <CategoryStats categories={categories} />
@@ -356,9 +379,7 @@ export default function CategoriesPage() {
               <Folder className="w-16 h-16" />
             </div>
             <h3 className="empty-title">未找到分类</h3>
-            <p className="empty-description">
-              {searchQuery ? `没有找到包含 "${searchQuery}" 的分类` : "暂无分类数据"}
-            </p>
+            <p className="empty-description">{searchQuery ? `没有找到包含 "${searchQuery}" 的分类` : "暂无分类数据"}</p>
           </div>
         )}
       </div>

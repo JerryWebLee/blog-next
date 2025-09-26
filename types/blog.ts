@@ -137,7 +137,7 @@ export interface Category extends BaseEntity {
   slug: string;
   description?: string;
   parentId?: number;
-  sortOrder: number;
+  sortOrder: number | null;
   isActive: boolean;
   parent?: Category; // 父分类
   children?: Category[]; // 子分类
@@ -505,4 +505,13 @@ export interface SearchResult<T> {
   query: string;
   filters: Record<string, any>;
   suggestions?: string[];
+}
+
+/**
+ * 分类查询参数接口
+ */
+export interface CategoryQueryParams extends PaginationParams {
+  search?: string; // 搜索关键词
+  isActive?: boolean; // 是否激活
+  parentId?: number; // 父分类ID
 }
