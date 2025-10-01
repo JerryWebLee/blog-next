@@ -53,7 +53,7 @@ export default function BlogDetailPage({ params }: { params: Promise<{ lang: str
     const fetchPost = async () => {
       try {
         setLoading(true);
-        const response = await fetch(`/api/posts/${resolvedParams.slug}?includeRelations=true`);
+        const response = await fetch(`/api/posts/slug/${resolvedParams.slug}?includeRelations=true`);
         const result = await response.json();
 
         if (result.success) {
@@ -136,7 +136,7 @@ export default function BlogDetailPage({ params }: { params: Promise<{ lang: str
           "Content-Type": "application/json",
         },
         body: JSON.stringify({
-          postId: post?.id,
+          postId: post?.posts.id,
           content: comment,
           authorName: "访客",
         }),

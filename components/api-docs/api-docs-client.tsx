@@ -144,7 +144,7 @@ export function ApiDocsClient() {
           <ApiSearchBar
             value={searchQuery}
             onChange={setSearchQuery}
-            placeholder="搜索API接口..."
+            
           />
         </div>
         <ApiFilterTabs

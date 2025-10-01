@@ -5,7 +5,7 @@ import { Button } from "@heroui/button";
 import { Card, CardBody, CardFooter, CardHeader } from "@heroui/card";
 import { Chip } from "@heroui/chip";
 import dayjs from "dayjs";
-import { ArrowRight, Calendar, Clock, Eye, Heart, MessageCircle, Tag, User } from "lucide-react";
+import { ArrowRight, Calendar, Clock, Eye, Folder, Heart, MessageCircle, Tag, User } from "lucide-react";
 
 import { PostData } from "@/types/blog";
 
@@ -35,19 +35,66 @@ export function PostCard({ post, onView, onLike }: PostCardProps) {
 
         {/* 头部区域 - 固定高度 */}
         <CardHeader className="blog-card-header pb-2">
-          <div className="flex flex-col gap-2 w-full">
-            {/* 分类标签 */}
-            {post.category && (
-              <Chip
-                size="sm"
-                variant="flat"
-                color="primary"
-                className="self-start backdrop-blur-xl bg-white/10 dark:bg-black/10 hover:bg-white/20 dark:hover:bg-black/20 transition-all duration-300"
-              >
-                <Tag className="w-3 h-3 mr-1" />
-                {post.category.name}
-              </Chip>
-            )}
+          <div className="flex flex-col gap-3 w-full">
+            {/* 分类和标签组合展示区域 */}
+            <div className="flex items-center justify-between flex-wrap gap-2">
+              {/* 分类标签 - 更突出的设计 */}
+              {post.category && (
+                <div className="relative group/category">
+                  <div className="absolute -inset-1 bg-gradient-to-r from-primary to-secondary rounded-lg opacity-30 blur group-hover/category:opacity-60 transition-opacity"></div>
+                  <Chip
+                    size="md"
+                    variant="shadow"
+                    color="primary"
+                    startContent={<Folder className="w-3.5 h-3.5" />}
+                    className="relative backdrop-blur-xl bg-gradient-to-r from-primary/90 to-primary/70 text-white font-medium shadow-lg transition-all duration-300 hover:scale-105"
+                  >
+                    {post.category.name}
+                  </Chip>
+                </div>
+              )}
+
+              {/* 标签预览 - 仅显示最多2个 */}
+              {post.tags && post.tags.length > 0 && (
+                <div className="flex items-center gap-1.5 flex-wrap">
+                  {post.tags.slice(0, 2).map((tag, index) => (
+                    <div key={tag.slug} className="relative group/tag" style={{ animationDelay: `${index * 50}ms` }}>
+                      <div
+                        className="absolute -inset-0.5 rounded-full opacity-20 blur-sm group-hover/tag:opacity-50 transition-opacity"
+                        style={{
+                          background:
+                            tag.color ||
+                            "linear-gradient(to right, rgb(var(--heroui-secondary)), rgb(var(--heroui-secondary-400)))",
+                        }}
+                      ></div>
+                      <Chip
+                        size="sm"
+                        variant="dot"
+                        classNames={{
+                          base: "relative backdrop-blur-lg bg-white/20 dark:bg-black/20 border border-white/30 dark:border-white/10 transition-all duration-300 hover:scale-105 hover:bg-white/30 dark:hover:bg-black/30",
+                          content: "text-xs font-medium px-2",
+                          dot: "w-1.5 h-1.5",
+                        }}
+                        style={{
+                          borderColor: tag.color ? `${tag.color}40` : undefined,
+                        }}
+                      >
+                        <span style={{ color: tag.color || undefined }}>{tag.name}</span>
+                      </Chip>
+                    </div>
+                  ))}
+                  {post.tags.length > 2 && (
+                    <Chip
+                      size="sm"
+                      variant="flat"
+                      className="text-xs backdrop-blur-lg bg-white/10 dark:bg-black/10 border border-white/20 dark:border-white/10"
+                    >
+                      +{post.tags.length - 2}
+                    </Chip>
+                  )}
+                </div>
+              )}
+            </div>
 
             {/* 标题 - 固定行数 */}
             <h3 className="text-lg font-semibold text-foreground group-hover:text-primary transition-colors line-clamp-2 min-h-[3.5rem]">
@@ -68,42 +115,73 @@ export function PostCard({ post, onView, onLike }: PostCardProps) {
                 src={post.featuredImage}
                 alt={post.title}
                 fill
-                className="object-cover group-hover:scale-105 transition-transform duration-300"
+                className="object-cover group-hover:scale-110 transition-transform duration-500"
               />
               {/* 图片遮罩效果 */}
-              <div className="absolute inset-0 bg-gradient-to-t from-black/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
+              <div className="absolute inset-0 bg-gradient-to-t from-black/40 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
+
+              {/* 图片上的分类标签（备用位置） */}
+              {post.category && (
+                <div className="absolute top-3 left-3 opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+                  <Chip
+                    size="sm"
+                    variant="solid"
+                    color="primary"
+                    startContent={<Folder className="w-3 h-3" />}
+                    className="backdrop-blur-md bg-primary/90 text-white font-medium shadow-lg"
+                  >
+                    {post.category.name}
+                  </Chip>
+                </div>
+              )}
             </div>
           )}
 
-          {/* 标签区域 - 固定最大高度 */}
+          {/* 完整标签列表 - 底部展示 */}
           {post.tags && post.tags.length > 0 && (
-            <div className="tag-container flex flex-wrap gap-1 mb-4">
-              {post.tags.slice(0, 4).map((tag) => (
-                <Chip
-                  key={tag.slug}
-                  size="sm"
-                  variant="flat"
-                  color="secondary"
-                  className="text-xs backdrop-blur-xl bg-white/10 dark:bg-black/10 hover:bg-white/20 dark:hover:bg-black/20 transition-all duration-300 hover:scale-105"
-                  style={{
-                    backgroundColor: tag.color ? `${tag.color}20` : undefined,
-                    color: tag.color || undefined,
-                  }}
-                >
-                  <Tag className="w-3 h-3 mr-1" />
-                  {tag.name}
-                </Chip>
-              ))}
-              {post.tags.length > 4 && (
-                <Chip
-                  size="sm"
-                  variant="flat"
-                  color="default"
-                  className="text-xs backdrop-blur-xl bg-white/10 dark:bg-black/10"
-                >
-                  +{post.tags.length - 4}
-                </Chip>
-              )}
+            <div className="tag-container mb-4">
+              <div className="flex items-center gap-1.5 mb-2">
+                <Tag className="w-3.5 h-3.5 text-default-500" />
+                <span className="text-xs text-default-500 font-medium">标签</span>
+              </div>
+              <div className="flex flex-wrap gap-2">
+                {post.tags.map((tag, index) => (
+                  <div key={tag.slug} className="relative group/tag-full" style={{ animationDelay: `${index * 50}ms` }}>
+                    <div
+                      className="absolute -inset-1 rounded-lg opacity-0 blur-sm group-hover/tag-full:opacity-40 transition-all duration-300"
+                      style={{
+                        background:
+                          tag.color ||
+                          "linear-gradient(to right, rgb(var(--heroui-secondary)), rgb(var(--heroui-secondary-400)))",
+                      }}
+                    ></div>
+                    <Chip
+                      size="sm"
+                      variant="bordered"
+                      startContent={
+                        <div
+                          className="w-2 h-2 rounded-full"
+                          style={{
+                            background:
+                              tag.color ||
+                              "linear-gradient(to right, rgb(var(--heroui-secondary)), rgb(var(--heroui-secondary-400)))",
+                          }}
+                        />
+                      }
+                      classNames={{
+                        base: "relative backdrop-blur-lg bg-white/10 dark:bg-black/10 transition-all duration-300 hover:scale-105 hover:bg-white/20 dark:hover:bg-black/20",
+                        content: "text-xs font-medium",
+                      }}
+                      style={{
+                        borderColor: tag.color ? `${tag.color}50` : undefined,
+                        background: tag.color ? `${tag.color}10` : undefined,
+                      }}
+                    >
+                      <span style={{ color: tag.color || undefined }}>{tag.name}</span>
+                    </Chip>
+                  </div>
+                ))}
+              </div>
             </div>
           )}
 
@@ -118,12 +196,12 @@ export function PostCard({ post, onView, onLike }: PostCardProps) {
                     icon={<User className="w-3 h-3" />}
                     className="w-6 h-6 backdrop-blur-xl bg-white/10 dark:bg-black/10"
                   />
-                  <span className="truncate">{post.author.displayName}</span>
+                  <span className="truncate text-xs">{post.author.displayName}</span>
                 </div>
                 <div className="flex items-center gap-1">
                   <Calendar className="w-3 h-3" />
                   <span className="text-xs">
-                    {dayjs(post.publishedAt || post.createdAt || post.updatedAt).format("YYYY-MM-DD HH:mm:ss")}
+                    {dayjs(post.publishedAt || post.createdAt || post.updatedAt).format("YYYY-MM-DD")}
                   </span>
                 </div>
               </div>
@@ -142,7 +220,7 @@ export function PostCard({ post, onView, onLike }: PostCardProps) {
                 </div>
                 <div className="flex items-center gap-1">
                   <Clock className="w-3 h-3" />
-                  <span className="text-xs">{post.readTime || 5} 分钟阅读</span>
+                  <span className="text-xs">{post.readTime || 5} 分钟</span>
                 </div>
               </div>
             </div>
@@ -150,18 +228,18 @@ export function PostCard({ post, onView, onLike }: PostCardProps) {
         </CardBody>
 
         {/* 底部按钮 - 固定在底部 */}
-        <CardFooter className="blog-card-footer pt-2">
+        <CardFooter className="blog-card-footer pt-2 border-t border-white/10 dark:border-white/5">
           <div className="flex items-center justify-between w-full">
             <Button
               size="sm"
               variant="flat"
-              color="primary"
-              startContent={<Heart className={`w-4 h-4 ${isLiked ? "fill-red-500 text-red-500" : ""}`} />}
+              color="danger"
+              startContent={<Heart className={`w-4 h-4 transition-all ${isLiked ? "fill-current" : ""}`} />}
               onPress={() => {
                 setIsLiked(!isLiked);
                 onLike?.();
               }}
-              className="backdrop-blur-xl bg-white/10 dark:bg-black/10 hover:bg-white/20 dark:hover:bg-black/20 transition-all duration-300 hover:scale-105"
+              className="backdrop-blur-xl bg-white/10 dark:bg-black/10 hover:bg-danger/20 dark:hover:bg-danger/20 transition-all duration-300 hover:scale-105"
             >
               {isLiked ? "已点赞" : "点赞"}
             </Button>
@@ -169,10 +247,10 @@ export function PostCard({ post, onView, onLike }: PostCardProps) {
             <Button
               size="sm"
               variant="flat"
-              color="default"
-              endContent={<ArrowRight className="w-4 h-4" />}
+              color="primary"
+              endContent={<ArrowRight className="w-4 h-4 transition-transform group-hover:translate-x-1" />}
               onPress={() => onView?.()}
-              className="backdrop-blur-xl bg-white/10 dark:bg-black/10 hover:bg-white/20 dark:hover:bg-black/20 transition-all duration-300 hover:scale-105"
+              className="backdrop-blur-xl bg-white/10 dark:bg-black/10 hover:bg-primary/20 dark:hover:bg-primary/20 transition-all duration-300 hover:scale-105"
             >
               阅读更多
             </Button>
@@ -181,7 +259,7 @@ export function PostCard({ post, onView, onLike }: PostCardProps) {
 
         {/* 悬停时的光效 */}
         {isHovered && (
-          <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/5 to-transparent animate-shimmer" />
+          <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/5 to-transparent animate-shimmer pointer-events-none" />
         )}
       </Card>
     </div>

@@ -222,11 +222,11 @@ export function ApiTester({ endpoint }: ApiTesterProps) {
                       </div>
 
                       {/* 路径参数 */}
-                      {endpoint.parameters?.filter(p => p.location === 'path').length > 0 && (
+                      {((endpoint.parameters?.filter(p => p.location === 'path') || [])).length > 0 && (
                         <div>
                           <h4 className="text-sm font-medium mb-2">路径参数</h4>
                           <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
-                            {endpoint.parameters
+                            {(endpoint.parameters || [])
                               .filter(p => p.location === 'path')
                               .map((param) => (
                                 <Input
@@ -247,11 +247,11 @@ export function ApiTester({ endpoint }: ApiTesterProps) {
                       )}
 
                       {/* 查询参数 */}
-                      {endpoint.parameters?.filter(p => p.location === 'query').length > 0 && (
+                      {((endpoint.parameters?.filter(p => p.location === 'query') || [])).length > 0 && (
                         <div>
                           <h4 className="text-sm font-medium mb-2">查询参数</h4>
                           <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
-                            {endpoint.parameters
+                            {(endpoint.parameters || [])
                               .filter(p => p.location === 'query')
                               .map((param) => (
                                 <Input

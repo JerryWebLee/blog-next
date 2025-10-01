@@ -165,16 +165,16 @@ export class PostService {
       if (includeRelations) {
         const [tags, comments] = await Promise.all([this.getPostTags(post.id), this.getPostComments(post.id)]);
 
-        return {
+        return ({
           ...post,
           tags,
           comments,
           author: (post as any).users,
           category: (post as any).categories,
-        } as Post;
+        } as any) as Post;
       }
 
-      return post as Post;
+      return (post as any) as Post;
     } catch (error) {
       console.error("根据slug获取文章失败:", error);
       throw error;
@@ -304,6 +304,12 @@ export class PostService {
           : undefined,
       }));
 
+      // 为每个文章获取标签数据
+      for (let i = 0; i < postsData.length; i++) {
+        const post = postsData[i];
+        const postTags = await this.getPostTags(post.id);
+        postsData[i].tags = postTags || [];
+      }
       return {
         data: postsData,
         pagination: {

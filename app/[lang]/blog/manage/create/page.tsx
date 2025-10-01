@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import { Button } from "@heroui/button";
 import { Card, CardBody, CardHeader } from "@heroui/card";
@@ -23,15 +23,23 @@ import {
   Settings,
   Sparkles,
   Type,
+  Tag as TagIcon,
+  Folder,
 } from "lucide-react";
 
 import { message } from "@/lib/utils";
-import { CreatePostRequest, PostStatus, PostVisibility } from "@/types/blog";
+import { CreatePostRequest, PostStatus, PostVisibility, Category, Tag } from "@/types/blog";
+import { useCategories } from "@/lib/hooks/useCategories";
+import { useTags } from "@/lib/hooks/useTags";
 
 export default function CreateBlogPage() {
   const router = useRouter();
   const [loading, setLoading] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
+
+  // 获取分类和标签数据
+  const { categories, loading: categoriesLoading } = useCategories({ autoFetch: true });
+  const { tags, loading: tagsLoading, fetchTags } = useTags({ autoFetch: true });
 
   const [formData, setFormData] = useState<CreatePostRequest>({
     title: "",
@@ -71,6 +79,17 @@ export default function CreateBlogPage() {
     if (!formData.slug) {
       handleInputChange("slug", generateSlug(title));
     }
+  };
+
+  // 处理标签选择
+  const handleTagToggle = (tagId: number) => {
+    setFormData((prev) => {
+      const currentTagIds = prev.tagIds || [];
+      const newTagIds = currentTagIds.includes(tagId)
+        ? currentTagIds.filter((id) => id !== tagId)
+        : [...currentTagIds, tagId];
+      return { ...prev, tagIds: newTagIds };
+    });
   };
 
   // 提交表单
@@ -210,6 +229,73 @@ export default function CreateBlogPage() {
                 className="w-full"
               />
               <p className="text-xs text-default-400">建议使用高质量图片，尺寸推荐 1200x630</p>
+            </div>
+          </CardBody>
+        </Card>
+
+        {/* 分类和标签 */}
+        <Card className="shadow-lg border-0 bg-gradient-to-r from-success-50 to-info-50 dark:from-success-900/20 dark:to-info-900/20">
+          <CardHeader className="pb-4">
+            <div className="flex items-center gap-3">
+              <div className="p-2 rounded-lg bg-success/10">
+                <Folder className="w-6 h-6 text-success" />
+              </div>
+              <div>
+                <h3 className="text-xl font-semibold">分类和标签</h3>
+                <p className="text-default-500">为您的博客选择合适的分类和标签</p>
+              </div>
+            </div>
+          </CardHeader>
+          <CardBody className="pt-0 space-y-6">
+            <div className="space-y-2">
+              <Select
+                label="选择分类"
+                placeholder="选择一个分类"
+                selectedKeys={formData.categoryId ? new Set([formData.categoryId.toString()]) : new Set()}
+                onSelectionChange={(keys) => {
+                  const selectedKey = Array.from(keys)[0] as string;
+                  handleInputChange("categoryId", selectedKey ? parseInt(selectedKey) : undefined);
+                }}
+                variant="bordered"
+                size="lg"
+                startContent={<Folder className="w-4 h-4 text-default-400" />}
+                className="w-full"
+                isLoading={categoriesLoading}
+              >
+                {categories.map((category) => (
+                  <SelectItem key={category.id.toString()}>
+                    {category.name}
+                  </SelectItem>
+                ))}
+              </Select>
+              <p className="text-xs text-default-400">选择最适合的分类，帮助读者找到您的文章</p>
+            </div>
+
+            <div className="space-y-3">
+              <div className="flex items-center gap-2">
+                <TagIcon className="w-4 h-4 text-default-400" />
+                <span className="text-sm font-medium">选择标签</span>
+                {tagsLoading && <Spinner size="sm" />}
+              </div>
+              
+              {tags.length > 0 ? (
+                <div className="flex flex-wrap gap-2">
+                  {tags.map((tag) => (
+                    <Chip
+                      key={tag.id}
+                      color={formData.tagIds?.includes(tag.id) ? "primary" : "default"}
+                      variant={formData.tagIds?.includes(tag.id) ? "solid" : "bordered"}
+                      className="cursor-pointer hover:scale-105 transition-transform"
+                      onClick={() => handleTagToggle(tag.id)}
+                    >
+                      {tag.name}
+                    </Chip>
+                  ))}
+                </div>
+              ) : (
+                <p className="text-sm text-default-400">暂无可用标签</p>
+              )}
+              <p className="text-xs text-default-400">点击标签进行选择，可以多选</p>
             </div>
           </CardBody>
         </Card>

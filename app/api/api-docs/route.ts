@@ -20,7 +20,7 @@ export async function GET(request: NextRequest) {
     const refresh = url.searchParams.get("refresh") === "true";
 
     if (apiCache && !refresh && Date.now() - apiCache.timestamp < CACHE_DURATION) {
-      return NextResponse.json(createSuccessResponse(apiCache.data, "API文档获取成功", apiCache.stats), {
+      return NextResponse.json(createSuccessResponse(apiCache.data, "API文档获取成功"), {
         status: 200,
       });
     }
@@ -43,7 +43,7 @@ export async function GET(request: NextRequest) {
 
     apiCache = { data: apiGroups, timestamp: Date.now(), stats };
 
-    return NextResponse.json(createSuccessResponse(apiGroups, "API文档获取成功", stats), {
+    return NextResponse.json(createSuccessResponse(apiGroups, "API文档获取成功"), {
       status: 200,
     });
   } catch (error) {

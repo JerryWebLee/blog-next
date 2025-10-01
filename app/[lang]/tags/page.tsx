@@ -541,19 +541,6 @@ export default function TagsPage() {
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-background via-background to-primary/5">
-      {/* 页面标题 */}
-      <div className="mb-12 text-center animate-fade-in-up">
-        <div className="inline-flex items-center gap-3 mb-4">
-          <div className="p-3 rounded-full bg-gradient-to-br from-primary/20 to-secondary/20">
-            <Layers className="w-8 h-8 text-primary" />
-          </div>
-          <h1 className="text-4xl md:text-5xl font-bold bg-gradient-to-r from-primary via-secondary to-accent bg-clip-text text-transparent">
-            博客标签
-          </h1>
-        </div>
-        <p className="text-lg text-default-600 max-w-2xl mx-auto">探索技术世界的标签海洋，发现您感兴趣的话题和内容</p>
-      </div>
-
       {/* 错误提示 */}
       {error && <ErrorAlert error={error} onRetry={handleRefresh} />}
 

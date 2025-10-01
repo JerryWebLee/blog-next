@@ -1,7 +1,7 @@
 "use client";
 
 import { Badge } from "@/components/ui/badge";
-import { ApiRequestBody } from "@/lib/utils/api-scanner";
+import type { ApiRequestBody } from "@/lib/utils/api-scanner";
 
 interface ApiRequestBodyProps {
   requestBody?: ApiRequestBody;

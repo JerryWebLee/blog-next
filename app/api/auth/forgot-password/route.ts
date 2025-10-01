@@ -4,6 +4,7 @@ import { eq } from "drizzle-orm";
 import { db } from "@/lib/db/config";
 import { users } from "@/lib/db/schema";
 import { ApiResponse } from "@/types/blog";
+import { isValidEmail, generatePasswordResetToken } from "@/lib/utils";
 
 // 模拟发送邮件功能（实际项目中应该集成真实的邮件服务）
 async function sendPasswordResetEmail(email: string, resetToken: string) {
@@ -48,37 +49,22 @@ export async function POST(request: NextRequest) {
     // 查找用户
     const user = await db.select().from(users).where(eq(users.email, email)).limit(1);
 
-    // 无论用户是否存在，都返回成功消息（防止邮箱枚举攻击）
     if (user.length === 0) {
-      return NextResponse.json<ApiResponse>({
-        success: true,
-        message: "如果该邮箱已注册，密码重置邮件已发送",
-        timestamp: new Date().toISOString(),
-      });
-    }
-
-    const userData = user[0];
-
-    // 检查用户状态
-    if (userData.status !== "active") {
       return NextResponse.json<ApiResponse>(
         {
           success: false,
-          message: "账户已被禁用，无法重置密码",
+          message: "该邮箱地址未注册",
           timestamp: new Date().toISOString(),
         },
-        { status: 403 }
+        { status: 404 }
       );
     }
 
     // 生成重置令牌
     const resetToken = generatePasswordResetToken();
-    const resetTokenExpiry = new Date(Date.now() + 30 * 60 * 1000); // 30分钟后过期
 
-    // 更新用户重置令牌（这里需要在用户表中添加相应字段）
-    // 由于当前schema中没有这些字段，我们使用一个简单的内存存储
-    // 实际项目中应该在用户表中添加 resetToken 和 resetTokenExpiry 字段
-    console.log(`用户 ${userData.username} 的密码重置令牌: ${resetToken}`);
+    // 这里应该将重置令牌存储到数据库，并设置过期时间
+    // 为了简化，我们暂时跳过这一步
 
     // 发送重置邮件
     const emailSent = await sendPasswordResetEmail(email, resetToken);
@@ -94,18 +80,20 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    return NextResponse.json<ApiResponse>({
-      success: true,
-      message: "密码重置邮件已发送，请检查您的邮箱",
-      timestamp: new Date().toISOString(),
-    });
+    return NextResponse.json<ApiResponse>(
+      {
+        success: true,
+        message: "密码重置邮件已发送，请检查您的邮箱",
+        timestamp: new Date().toISOString(),
+      },
+      { status: 200 }
+    );
   } catch (error) {
-    console.error("忘记密码错误:", error);
+    console.error("忘记密码处理失败:", error);
     return NextResponse.json<ApiResponse>(
       {
         success: false,
         message: "服务器内部错误",
-        error: error instanceof Error ? error.message : "未知错误",
         timestamp: new Date().toISOString(),
       },
       { status: 500 }
