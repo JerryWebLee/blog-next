@@ -91,7 +91,7 @@ export default function BlogDetailPage({ params }: { params: Promise<{ lang: str
     setPasswordError("");
 
     try {
-      const response = await fetch(`/api/posts/${resolvedParams?.slug}`, {
+      const response = await fetch(`/api/posts/slug/${resolvedParams?.slug}`, {
         method: "PATCH",
         headers: {
           "Content-Type": "application/json",
@@ -104,7 +104,7 @@ export default function BlogDetailPage({ params }: { params: Promise<{ lang: str
       if (result.success) {
         setShowPasswordForm(false);
         // 重新获取博客数据
-        const postResponse = await fetch(`/api/posts/${resolvedParams?.slug}?includeRelations=true`);
+        const postResponse = await fetch(`/api/posts/slug/${resolvedParams?.slug}?includeRelations=true`);
         const postResult = await postResponse.json();
         if (postResult.success) {
           setPost(postResult.data);
@@ -148,7 +148,7 @@ export default function BlogDetailPage({ params }: { params: Promise<{ lang: str
         setComment("");
         message.success("评论提交成功！");
         // 重新获取博客数据以显示新评论
-        const postResponse = await fetch(`/api/posts/${resolvedParams?.slug}?includeRelations=true`);
+        const postResponse = await fetch(`/api/posts/slug/${resolvedParams?.slug}?includeRelations=true`);
         const postResult = await postResponse.json();
         if (postResult.success) {
           setPost(postResult.data);
@@ -305,37 +305,37 @@ export default function BlogDetailPage({ params }: { params: Promise<{ lang: str
               <div className="flex flex-col lg:flex-row lg:items-start lg:justify-between gap-4">
                 <div className="space-y-4 flex-1">
                   <h1 className="text-4xl lg:text-5xl font-bold blog-title-gradient leading-tight">
-                    {post.posts.title}
+                    {post.title}
                   </h1>
-                  {post.posts.excerpt && (
-                    <p className="text-xl text-default-600 leading-relaxed">{post.posts.excerpt}</p>
+                  {post.excerpt && (
+                    <p className="text-xl text-default-600 leading-relaxed">{post.excerpt}</p>
                   )}
                 </div>
                 <div className="flex flex-wrap items-center gap-3">
                   <Chip
-                    color={getStatusColor(post.posts.status)}
+                    color={getStatusColor(post.status)}
                     variant="flat"
                     size="lg"
                     className={`animate-blog-scale-in delay-200 ${
-                      post.posts.status === "published"
+                      post.status === "published"
                         ? "status-published"
-                        : post.posts.status === "draft"
+                        : post.status === "draft"
                           ? "status-draft"
                           : "status-archived"
                     }`}
                   >
-                    {post.posts.status === "published"
+                    {post.status === "published"
                       ? "✨ 已发布"
-                      : post.posts.status === "draft"
+                      : post.status === "draft"
                         ? "📝 草稿"
                         : "📦 已归档"}
                   </Chip>
-                  {post.posts.visibility === "private" && (
+                  {post.visibility === "private" && (
                     <Chip color="secondary" variant="flat" size="lg" className="animate-blog-scale-in delay-300">
                       🔒 私有
                     </Chip>
                   )}
-                  {post.posts.visibility === "password" && (
+                  {post.visibility === "password" && (
                     <Chip color="warning" variant="flat" size="lg" className="animate-blog-scale-in delay-400">
                       🔐 密码保护
                     </Chip>
@@ -344,11 +344,11 @@ export default function BlogDetailPage({ params }: { params: Promise<{ lang: str
               </div>
 
               {/* 特色图片 - 使用渐变色遮罩 */}
-              {post.posts.featuredImage && (
+              {post.featuredImage && (
                 <div className="featured-image-container w-full h-80 lg:h-96 rounded-2xl overflow-hidden hover-lift-enhanced animate-blog-scale-in delay-200">
                   <Image
-                    src={post.posts.featuredImage}
-                    alt={post.posts.title}
+                    src={post.featuredImage}
+                    alt={post.title}
                     width={1200}
                     height={600}
                     className="w-full h-full object-cover transition-transform duration-500 hover:scale-105"
@@ -366,7 +366,7 @@ export default function BlogDetailPage({ params }: { params: Promise<{ lang: str
                 <div className="meta-item flex items-center gap-2">
                   <Calendar className="w-4 h-4" />
                   <span>
-                    {new Date(post.posts.createdAt).toLocaleDateString("zh-CN", {
+                    {new Date(post.createdAt).toLocaleDateString("zh-CN", {
                       year: "numeric",
                       month: "long",
                       day: "numeric",
@@ -375,7 +375,7 @@ export default function BlogDetailPage({ params }: { params: Promise<{ lang: str
                 </div>
                 <div className="meta-item flex items-center gap-2">
                   <Eye className="w-4 h-4" />
-                  <span>{post.posts.viewCount} 次浏览</span>
+                  <span>{post.viewCount} 次浏览</span>
                 </div>
                 <div className="meta-item flex items-center gap-2">
                   <MessageCircle className="w-4 h-4" />
@@ -383,7 +383,7 @@ export default function BlogDetailPage({ params }: { params: Promise<{ lang: str
                 </div>
                 <div className="meta-item flex items-center gap-2">
                   <Heart className="w-4 h-4" />
-                  <span>{post.posts.likeCount} 个赞</span>
+                  <span>{post.likeCount} 个赞</span>
                 </div>
               </div>
 
@@ -434,10 +434,10 @@ export default function BlogDetailPage({ params }: { params: Promise<{ lang: str
           <Card className="card-hover-effect glass-enhanced">
             <CardBody className="p-8">
               <div className="prose prose-lg max-w-none prose-headings:gradient-text prose-a:text-primary hover:prose-a:text-primary-600">
-                {post.posts.contentHtml ? (
-                  <div dangerouslySetInnerHTML={{ __html: post.posts.contentHtml }} />
+                {post.contentHtml ? (
+                  <div dangerouslySetInnerHTML={{ __html: post.contentHtml }} />
                 ) : (
-                  <div className="whitespace-pre-wrap leading-relaxed text-base">{post.posts.content}</div>
+                  <div className="whitespace-pre-wrap leading-relaxed text-base">{post.content}</div>
                 )}
               </div>
             </CardBody>
@@ -460,7 +460,7 @@ export default function BlogDetailPage({ params }: { params: Promise<{ lang: str
                       isLiked ? "gradient-button-danger" : ""
                     }`}
                   >
-                    {isLiked ? "已点赞" : "点赞"} ({post.posts.likeCount})
+                    {isLiked ? "已点赞" : "点赞"} ({post.likeCount})
                   </Button>
                   <Button
                     variant="flat"
@@ -487,7 +487,7 @@ export default function BlogDetailPage({ params }: { params: Promise<{ lang: str
                   variant="bordered"
                   size="lg"
                   as="a"
-                  href={`/blog/manage/edit/${post.posts.id}`}
+                  href={`/blog/manage/edit/${post.id}`}
                   startContent={<Edit className="w-5 h-5" />}
                   className="button-hover-effect animate-blog-scale-in delay-400"
                 >
@@ -499,7 +499,7 @@ export default function BlogDetailPage({ params }: { params: Promise<{ lang: str
         </div>
 
         {/* 评论区域 - 使用渐变色样式 */}
-        {post.posts.allowComments && (
+        {post.allowComments && (
           <div className="animate-blog-fade-in-up delay-400">
             <Card className="card-hover-effect glass-enhanced">
               <CardHeader className="pb-6">

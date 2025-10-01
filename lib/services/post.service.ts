@@ -94,7 +94,10 @@ export class PostService {
 
       // 如果包含关联数据，获取标签和评论
       if (includeRelations) {
-        const [tags, comments] = await Promise.all([this.getPostTags(post.id), this.getPostComments(post.id)]);
+        const [tags, comments] = await Promise.all([
+          this.getPostTags(post.posts.id),
+          this.getPostComments(post.posts.id),
+        ]);
 
         return {
           ...post,
@@ -163,18 +166,31 @@ export class PostService {
       const post = result[0];
 
       if (includeRelations) {
-        const [tags, comments] = await Promise.all([this.getPostTags(post.id), this.getPostComments(post.id)]);
+        // 如果使用了leftJoin，post结构是{posts: {...}, users: {...}, categories: {...}}
+        const postId = (post as any).posts?.id || post.id;
+        const [tags, comments] = await Promise.all([
+          this.getPostTags(postId),
+          this.getPostComments(postId),
+        ]);
 
-        return ({
-          ...post,
+        // 将分类对象转换为数组格式
+        const categoryData = (post as any).categories;
+        const categories = categoryData ? [categoryData] : [];
+        
+        // 获取posts对象
+        const postData = (post as any).posts || post;
+
+        return {
+          ...postData,
           tags,
           comments,
+          categories, // 新增：数组格式的分类
           author: (post as any).users,
-          category: (post as any).categories,
-        } as any) as Post;
+          category: categoryData, // 保留：单对象格式的分类
+        } as any as Post;
       }
 
-      return (post as any) as Post;
+      return ((post as any).posts || post) as any as Post;
     } catch (error) {
       console.error("根据slug获取文章失败:", error);
       throw error;

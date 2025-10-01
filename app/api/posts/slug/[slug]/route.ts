@@ -34,7 +34,7 @@ export async function GET(request: NextRequest, { params }: { params: Promise<{ 
     }
 
     // 增加浏览次数（异步操作，不等待结果）
-    postService.incrementViewCount(post.posts.id).catch((error) => {
+    postService.incrementViewCount(post.id).catch((error) => {
       console.error("增加浏览次数失败:", error);
     });
 
