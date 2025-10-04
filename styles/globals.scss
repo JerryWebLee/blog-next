@@ -565,3 +565,97 @@
   justify-content: space-between;
   min-height: 3rem;
 }
+
+/* 按钮专用动画效果 */
+@keyframes button-glow {
+  0% {
+    box-shadow: 0 0 5px rgba(59, 130, 246, 0.3);
+  }
+  50% {
+    box-shadow:
+      0 0 20px rgba(59, 130, 246, 0.6),
+      0 0 30px rgba(59, 130, 246, 0.4);
+  }
+  100% {
+    box-shadow: 0 0 5px rgba(59, 130, 246, 0.3);
+  }
+}
+
+@keyframes button-pulse {
+  0% {
+    transform: scale(1);
+  }
+  50% {
+    transform: scale(1.05);
+  }
+  100% {
+    transform: scale(1);
+  }
+}
+
+@keyframes button-shake {
+  0%,
+  100% {
+    transform: translateX(0);
+  }
+  25% {
+    transform: translateX(-2px);
+  }
+  75% {
+    transform: translateX(2px);
+  }
+}
+
+@keyframes button-bounce {
+  0%,
+  20%,
+  50%,
+  80%,
+  100% {
+    transform: translateY(0);
+  }
+  40% {
+    transform: translateY(-4px);
+  }
+  60% {
+    transform: translateY(-2px);
+  }
+}
+
+/* 按钮动画类 */
+.animate-button-glow {
+  animation: button-glow 2s ease-in-out infinite;
+}
+
+.animate-button-pulse {
+  animation: button-pulse 1s ease-in-out infinite;
+}
+
+.animate-button-shake {
+  animation: button-shake 0.5s ease-in-out;
+}
+
+.animate-button-bounce {
+  animation: button-bounce 1s ease-in-out;
+}
+
+/* 按钮悬停效果增强 */
+.button-hover-effect {
+  overflow: hidden;
+  position: relative;
+}
+
+.button-hover-effect::before {
+  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+  content: "";
+  height: 100%;
+  left: -100%;
+  position: absolute;
+  top: 0;
+  transition: left 0.5s;
+  width: 100%;
+}
+
+.button-hover-effect:hover::before {
+  left: 100%;
+}

@@ -198,9 +198,9 @@ export function BlogSidebar() {
           />
           <Button
             color="primary"
-            variant="solid"
+            variant="gradient"
             size="sm"
-            className="w-full backdrop-blur-xl bg-white/10 dark:bg-black/10 hover:bg-white/20 dark:hover:bg-black/20 transition-all duration-300 hover:scale-105"
+            className="w-full font-semibold tracking-wide"
             endContent={<Mail className="w-4 h-4" />}
           >
             订阅

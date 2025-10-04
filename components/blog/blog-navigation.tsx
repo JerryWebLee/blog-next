@@ -73,7 +73,7 @@ export function BlogNavigation() {
                 variant={isActive ? "solid" : "bordered"}
                 size="sm"
                 startContent={<Icon className="w-4 h-4" />}
-                className="flex items-center gap-2 relative"
+                className={`flex items-center gap-2 relative font-medium tracking-wide ${isActive ? "bg-gradient-to-r from-primary to-primary/80 hover:from-primary/90 hover:to-primary/70 shadow-lg hover:shadow-xl" : "backdrop-blur-xl bg-white/10 dark:bg-black/10 hover:bg-white/20 dark:hover:bg-black/20"}`}
               >
                 {item.title}
                 {isActive && <Chip size="sm" color="success" variant="dot" className="absolute -top-1 -right-1" />}

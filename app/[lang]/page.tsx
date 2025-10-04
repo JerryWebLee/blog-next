@@ -1,6 +1,6 @@
 import Image from "next/image";
 import Link from "next/link";
-import { ArrowRight, BookOpen, FileText, Shield, Sparkles, TrendingUp, Users, Zap } from "lucide-react";
+import { BookOpen, FileText, Shield, Sparkles, TrendingUp, Users, Zap } from "lucide-react";
 
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
@@ -182,23 +182,16 @@ export default async function HomePage({ params }: { params: Promise<{ lang: Loc
             {lang === "ja-JP" && "Next.js 15とDrizzle ORMで構築されたモダンなブログシステム"}
           </p>
 
-          <div className="flex flex-col sm:flex-row gap-4 justify-center animate-fade-in-up delay-300">
+          <div className="flex flex-col sm:flex-row gap-6 justify-center animate-fade-in-up delay-300">
             <Button
-              size="lg"
+              variant="gradient"
+              size="xl"
               asChild
-              className="group hover:scale-105 transition-all duration-300 shadow-lg hover:shadow-xl"
+              className="group font-semibold tracking-wide animate-button-glow button-hover-effect"
             >
-              <Link href={`/${lang}/blog`}>
-                {dict.navigation.blog}
-                <ArrowRight className="ml-2 h-5 w-5 group-hover:translate-x-1 transition-transform" />
-              </Link>
+              <Link href={`/${lang}/blog`}>{dict.navigation.blog}</Link>
             </Button>
-            <Button
-              variant="outline"
-              size="lg"
-              asChild
-              className="group hover:scale-105 transition-all duration-300 backdrop-blur-sm"
-            >
+            <Button variant="glass" size="xl" asChild className="group font-semibold tracking-wide button-hover-effect">
               <Link href={`/${lang}/about`}>{dict.navigation.about}</Link>
             </Button>
           </div>
@@ -285,7 +278,6 @@ export default async function HomePage({ params }: { params: Promise<{ lang: Loc
                   <p className="mb-4 line-clamp-3 text-gray-600 dark:text-gray-300">{post.excerpt[lang]}</p>
                   <div className="flex items-center justify-between text-sm text-gray-500 dark:text-gray-400">
                     <span>{post.publishedAt}</span>
-                    <ArrowRight className="h-4 w-4 group-hover:translate-x-1 transition-transform" />
                   </div>
                 </CardContent>
               </Card>
@@ -293,17 +285,11 @@ export default async function HomePage({ params }: { params: Promise<{ lang: Loc
           </div>
 
           <div className="text-center mt-12 animate-fade-in-up delay-500">
-            <Button
-              size="lg"
-              variant="outline"
-              asChild
-              className="group hover:scale-105 transition-all duration-300 shadow-lg hover:shadow-xl"
-            >
+            <Button size="lg" variant="neon" asChild className="group font-semibold tracking-wide button-hover-effect">
               <Link href={`/${lang}/blog`}>
                 {lang === "zh-CN" && "查看所有文章"}
                 {lang === "en-US" && "View All Posts"}
                 {lang === "ja-JP" && "すべての記事を見る"}
-                <ArrowRight className="ml-2 h-5 w-5 group-hover:translate-x-1 transition-transform" />
               </Link>
             </Button>
           </div>

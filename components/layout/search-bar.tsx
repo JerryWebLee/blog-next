@@ -11,7 +11,14 @@ export function SearchBar() {
   const onClose = () => setIsOpen(false);
   return (
     <>
-      <Button onPress={() => setIsOpen(true)} isIconOnly aria-label="搜索" color="default" variant="light">
+      <Button
+        onPress={() => setIsOpen(true)}
+        isIconOnly
+        aria-label="搜索"
+        color="primary"
+        variant="glass"
+        className="font-semibold"
+      >
         <Search />
       </Button>
 
@@ -24,10 +31,20 @@ export function SearchBar() {
                 <Input type="text" placeholder="请输入搜索内容" />
               </ModalBody>
               <ModalFooter>
-                <Button color="danger" variant="light" onPress={onClose}>
+                <Button 
+                  color="danger" 
+                  variant="outline" 
+                  onPress={onClose}
+                  className="font-semibold tracking-wide"
+                >
                   取消
                 </Button>
-                <Button color="primary" onPress={onClose}>
+                <Button 
+                  color="primary" 
+                  variant="gradient"
+                  onPress={onClose}
+                  className="font-semibold tracking-wide"
+                >
                   确认
                 </Button>
               </ModalFooter>

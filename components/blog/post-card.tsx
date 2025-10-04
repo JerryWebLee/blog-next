@@ -184,25 +184,27 @@ export function PostCard({ post, onView, onLike }: PostCardProps) {
           <div className="flex items-center justify-between w-full">
             <Button
               size="sm"
-              variant="flat"
+              variant={isLiked ? "solid" : "flat"}
               color="danger"
               startContent={<Heart className={`w-4 h-4 transition-all ${isLiked ? "fill-current" : ""}`} />}
               onPress={() => {
                 setIsLiked(!isLiked);
                 onLike?.();
               }}
-              className="backdrop-blur-xl bg-white/10 dark:bg-black/10 hover:bg-danger/20 dark:hover:bg-danger/20 transition-all duration-300 hover:scale-105"
+              className={`font-semibold tracking-wide button-hover-effect ${isLiked ? "bg-gradient-to-r from-red-500 to-pink-500 hover:from-red-600 hover:to-pink-600 shadow-lg hover:shadow-xl animate-button-pulse" : "backdrop-blur-xl bg-white/10 dark:bg-black/10 hover:bg-danger/20 dark:hover:bg-danger/20"}`}
             >
               {isLiked ? "已点赞" : "点赞"}
             </Button>
 
             <Button
               size="sm"
-              variant="flat"
+              variant="bordered"
               color="primary"
-              endContent={<ArrowRight className="w-4 h-4 transition-transform group-hover:translate-x-1" />}
+              endContent={
+                <ArrowRight className="w-4 h-4 transition-transform group-hover:translate-x-1 duration-300" />
+              }
               onPress={() => onView?.()}
-              className="backdrop-blur-xl bg-white/10 dark:bg-black/10 hover:bg-primary/20 dark:hover:bg-primary/20 transition-all duration-300 hover:scale-105"
+              className="font-semibold tracking-wide border-2 border-primary/20 hover:border-primary/40 hover:bg-primary/10 hover:shadow-[0_0_20px_rgba(var(--primary),0.3)] button-hover-effect"
             >
               阅读更多
             </Button>

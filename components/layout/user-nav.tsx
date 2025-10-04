@@ -29,7 +29,16 @@ export function UserNav() {
   if (!isAuthenticated || !user) {
     return (
       <div className="flex items-center space-x-2">
-        <Button isIconOnly aria-label="login" color="default" size="sm" variant="faded" as={Link} href="/auth/login">
+        <Button
+          isIconOnly
+          aria-label="login"
+          color="primary"
+          size="sm"
+          variant="gradient"
+          as={Link}
+          href="/auth/login"
+          className="font-semibold"
+        >
           <LogInIcon width="1em" height="1em" className="text-base" />
         </Button>
       </div>
