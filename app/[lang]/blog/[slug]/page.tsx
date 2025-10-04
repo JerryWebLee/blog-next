@@ -422,7 +422,7 @@ export default function BlogDetailPage({ params }: { params: Promise<{ lang: str
 
         {/* 博客内容 - 使用 Markdown 渲染器 */}
         <div className="animate-blog-fade-in-up delay-200">
-          <Card className="card-hover-effect glass-enhanced">
+          <Card className="glass-enhanced">
             <CardBody className="p-8">
               <MarkdownRenderer content={post.content} />
             </CardBody>

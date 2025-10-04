@@ -4,26 +4,21 @@ import { useCallback, useEffect, useRef, useState } from "react";
 import dynamic from "next/dynamic";
 import { Button } from "@heroui/button";
 import { Card, CardBody, CardHeader } from "@heroui/card";
-import { Divider } from "@heroui/divider";
 import { Maximize2, Minimize2, Save, Settings, Sparkles, Type } from "lucide-react";
+import { useTheme } from "next-themes";
 
-// 动态导入 Toast UI Editor，禁用服务端渲染
+// 动态导入Toast UI Editor，禁用SSR
 const Editor = dynamic(() => import("@toast-ui/react-editor").then((mod) => mod.Editor), {
   ssr: false,
   loading: () => (
-    <div className="flex items-center justify-center h-96 bg-default-50 rounded-lg">
+    <div className="flex items-center justify-center h-96 bg-gray-50 dark:bg-gray-800 rounded-lg">
       <div className="text-center">
         <div className="w-8 h-8 border-4 border-primary border-t-transparent rounded-full animate-spin mx-auto mb-4"></div>
-        <p className="text-default-500">编辑器加载中...</p>
+        <p className="text-gray-600 dark:text-gray-400">编辑器加载中...</p>
       </div>
     </div>
   ),
-});
-
-// 动态导入 CSS
-if (typeof window !== "undefined") {
-  import("@toast-ui/editor/dist/toastui-editor.css");
-}
+}) as any; // 临时类型断言，避免SSR问题
 
 interface SimpleEditorProps {
   value?: string;
@@ -48,7 +43,69 @@ const SimpleEditor = ({
 }: SimpleEditorProps) => {
   const [isFullscreen, setIsFullscreen] = useState(false);
   const [isAutoSaving, setIsAutoSaving] = useState(false);
-  const editorRef = useRef<Editor>(null);
+  const [isMounted, setIsMounted] = useState(false);
+  const [currentTheme, setCurrentTheme] = useState<string>("light");
+  const editorRef = useRef<typeof Editor>(null);
+  const { theme, resolvedTheme } = useTheme();
+
+  // 确保组件只在客户端挂载后渲染
+  useEffect(() => {
+    setIsMounted(true);
+  }, []);
+
+  // 更新编辑器主题的函数
+  const updateEditorTheme = useCallback((theme: string) => {
+    if (editorRef.current) {
+      try {
+        // 获取编辑器根元素
+        const editorContainer = editorRef.current.getRootElement();
+        if (editorContainer) {
+          // 更新根容器的主题属性
+          editorContainer.setAttribute("data-theme", theme);
+          editorContainer.classList.add("theme-transitioning");
+
+          // 查找并更新所有相关的编辑器元素
+          const editorElements = editorContainer.querySelectorAll(
+            ".tui-editor-defaultUI, .te-toolbar, .te-editor, .te-preview, .ProseMirror"
+          );
+          editorElements.forEach((element: Element) => {
+            element.setAttribute("data-theme", theme);
+          });
+
+          // 移除过渡效果类
+          setTimeout(() => {
+            editorContainer.classList.remove("theme-transitioning");
+          }, 300);
+        }
+      } catch (error) {
+        console.warn("Failed to update editor theme:", error);
+        // 如果更新失败，至少通过CSS类名更新主题
+        try {
+          const editorContainer = editorRef.current.getRootElement();
+          if (editorContainer) {
+            editorContainer.setAttribute("data-theme", theme);
+          }
+        } catch (fallbackError) {
+          console.warn("Fallback theme update also failed:", fallbackError);
+        }
+      }
+    }
+  }, []);
+
+  // 监听主题变化
+  useEffect(() => {
+    if (isMounted) {
+      const actualTheme = resolvedTheme || theme || "light";
+      setCurrentTheme(actualTheme);
+
+      // 延迟更新编辑器的主题，确保编辑器已完全加载
+      const timer = setTimeout(() => {
+        updateEditorTheme(actualTheme);
+      }, 100);
+
+      return () => clearTimeout(timer);
+    }
+  }, [isMounted, theme, resolvedTheme, updateEditorTheme]);
 
   const handleContentChange = useCallback(() => {
     if (editorRef.current && onChange) {
@@ -104,13 +161,16 @@ const SimpleEditor = ({
 
   // 初始化编辑器
   useEffect(() => {
-    if (editorRef.current) {
+    if (isMounted && editorRef.current) {
       const editorInstance = editorRef.current.getInstance();
 
       // 设置初始内容
       if (value && value !== editorInstance.getMarkdown()) {
         editorInstance.setMarkdown(value);
       }
+
+      // 应用当前主题
+      updateEditorTheme(currentTheme);
 
       // 监听内容变化
       editorInstance.on("change", handleContentChange);
@@ -119,7 +179,43 @@ const SimpleEditor = ({
         editorInstance.off("change", handleContentChange);
       };
     }
-  }, [value, handleContentChange]);
+  }, [isMounted, value, handleContentChange, currentTheme, updateEditorTheme]);
+
+  // 如果组件未挂载，显示加载状态
+  if (!isMounted) {
+    return (
+      <div className={`${className}`}>
+        <Card className="shadow-xl border-0 bg-gradient-to-br from-background to-default-50 rounded-2xl">
+          <CardHeader className="pb-4 bg-gradient-to-r from-primary-50 to-secondary-50 dark:from-primary-900/20 dark:to-secondary-900/20">
+            <div className="flex items-center justify-between w-full">
+              <div className="flex items-center gap-4">
+                <div className="p-3 rounded-xl bg-gradient-to-br from-primary to-secondary shadow-lg">
+                  <Type className="w-6 h-6 text-white" />
+                </div>
+                <div>
+                  <h3 className="text-2xl font-bold bg-gradient-to-r from-primary to-secondary bg-clip-text text-transparent">
+                    编辑器
+                  </h3>
+                  <p className="text-default-600 flex items-center gap-2">
+                    <Sparkles className="w-4 h-4" />
+                    支持 Markdown / WYSIWYG 双模式
+                  </p>
+                </div>
+              </div>
+            </div>
+          </CardHeader>
+          <CardBody className="pt-4 p-0">
+            <div className="flex items-center justify-center h-96 bg-gray-50 dark:bg-gray-800 rounded-lg">
+              <div className="text-center">
+                <div className="w-8 h-8 border-4 border-primary border-t-transparent rounded-full animate-spin mx-auto mb-4"></div>
+                <p className="text-gray-600 dark:text-gray-400">编辑器加载中...</p>
+              </div>
+            </div>
+          </CardBody>
+        </Card>
+      </div>
+    );
+  }
 
   return (
     <div className={`${isFullscreen ? "fixed inset-0 z-50 bg-background" : ""} ${className}`}>
@@ -134,22 +230,32 @@ const SimpleEditor = ({
               </div>
               <div>
                 <h3 className="text-2xl font-bold bg-gradient-to-r from-primary to-secondary bg-clip-text text-transparent">
-                  Markdown 编辑器
+                  编辑器
                 </h3>
                 <p className="text-default-600 flex items-center gap-2">
                   <Sparkles className="w-4 h-4" />
-                  基于 Toast UI Editor，支持 Markdown / WYSIWYG 双模式
+                  支持 Markdown / WYSIWYG 双模式
                 </p>
               </div>
             </div>
 
             <div className="flex items-center gap-3">
+              {/* 主题指示器 */}
+              <div className="flex items-center gap-2 px-3 py-1 rounded-full bg-white/80 dark:bg-gray-800/80 backdrop-blur-sm border border-gray-200 dark:border-gray-700">
+                <div
+                  className={`w-2 h-2 rounded-full ${currentTheme === "dark" ? "bg-blue-500" : "bg-yellow-500"}`}
+                ></div>
+                <span className="text-xs font-medium text-gray-600 dark:text-gray-300">
+                  {currentTheme === "dark" ? "暗色" : "亮色"}
+                </span>
+              </div>
+
               <Button
                 isIconOnly
                 size="sm"
                 variant="ghost"
                 className="hover:bg-primary/10 hover:text-primary transition-all duration-200"
-                onClick={handleFullscreenToggle}
+                onPress={handleFullscreenToggle}
                 title={isFullscreen ? "退出全屏" : "全屏编辑"}
               >
                 {isFullscreen ? <Minimize2 className="w-4 h-4" /> : <Maximize2 className="w-4 h-4" />}
@@ -158,9 +264,9 @@ const SimpleEditor = ({
           </div>
         </CardHeader>
 
-        <CardBody className="pt-0 space-y-6">
+        <CardBody className="pt-4 p-0 space-y-6">
           {/* 状态栏 */}
-          <div className="flex items-center justify-between p-4 bg-gradient-to-r from-success-50 to-info-50 dark:from-success-900/20 dark:to-info-900/20 rounded-xl border border-success-200 dark:border-success-800">
+          <div className="flex items-center justify-between mt-4 p-4 bg-gradient-to-r from-success-50 to-info-50 dark:from-success-900/20 dark:to-info-900/20 border border-success-200 dark:border-success-800">
             <div className="flex items-center gap-6 text-sm">
               <div className="flex items-center gap-2">
                 <div className="w-2 h-2 bg-success rounded-full animate-pulse"></div>
@@ -185,7 +291,7 @@ const SimpleEditor = ({
               color="primary"
               variant="shadow"
               className="font-medium"
-              onClick={handleSave}
+              onPress={handleSave}
               startContent={<Save className="w-4 h-4" />}
             >
               保存
@@ -195,6 +301,8 @@ const SimpleEditor = ({
           {/* Toast UI Editor */}
           <div className="relative">
             <Editor
+              key={currentTheme}
+              theme={currentTheme}
               ref={editorRef}
               height={isFullscreen ? "calc(100vh - 200px)" : height}
               initialEditType="markdown"
@@ -210,10 +318,10 @@ const SimpleEditor = ({
                 ["scrollSync"],
               ]}
               hooks={{
-                addImageBlobHook: (blob, callback) => {
+                addImageBlobHook: (blob: Blob, callback: (dataUrl: string, type: string) => void) => {
                   // 处理图片上传
                   const reader = new FileReader();
-                  reader.onload = (e) => {
+                  reader.onload = (e: ProgressEvent<FileReader>) => {
                     callback(e.target?.result as string, "image");
                   };
                   reader.readAsDataURL(blob);
@@ -223,7 +331,7 @@ const SimpleEditor = ({
           </div>
 
           {/* 功能说明 */}
-          <div className="mt-6 p-4 bg-gradient-to-r from-info-50 to-primary-50 dark:from-info-900/20 dark:to-primary-900/20 rounded-xl border border-info-200 dark:border-info-800">
+          <div className="mt-6 p-4 bg-gradient-to-r from-info-50 to-primary-50 dark:from-info-900/20 dark:to-primary-900/20">
             <div className="flex items-start gap-3">
               <div className="p-2 rounded-lg bg-info/20">
                 <Settings className="w-5 h-5 text-info" />
@@ -231,7 +339,7 @@ const SimpleEditor = ({
               <div className="text-sm">
                 <p className="font-semibold mb-3 text-info-700 dark:text-info-300 flex items-center gap-2">
                   <Sparkles className="w-4 h-4" />
-                  Toast UI Editor 功能
+                  Editor 功能
                 </p>
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-3 text-xs text-info-600 dark:text-info-400">
                   <div className="flex items-center gap-2">
