@@ -172,7 +172,6 @@ export class PostService {
 
         // 将分类对象转换为数组格式
         const categoryData = (post as any).categories;
-        const categories = categoryData ? [categoryData] : [];
 
         // 获取posts对象
         const postData = (post as any).posts || post;
@@ -181,7 +180,6 @@ export class PostService {
           ...postData,
           tags,
           comments,
-          categories, // 新增：数组格式的分类
           author: (post as any).users,
           category: categoryData, // 保留：单对象格式的分类
         } as any as PostData;

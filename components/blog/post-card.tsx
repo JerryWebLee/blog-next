@@ -137,54 +137,6 @@ export function PostCard({ post, onView, onLike }: PostCardProps) {
             </div>
           )}
 
-          {/* 完整标签列表 - 底部展示 */}
-          {post.tags && post.tags.length > 0 && (
-            <div className="tag-container mb-4">
-              <div className="flex items-center gap-1.5 mb-2">
-                <Tag className="w-3.5 h-3.5 text-default-500" />
-                <span className="text-xs text-default-500 font-medium">标签</span>
-              </div>
-              <div className="flex flex-wrap gap-2">
-                {post.tags.map((tag, index) => (
-                  <div key={tag.slug} className="relative group/tag-full" style={{ animationDelay: `${index * 50}ms` }}>
-                    <div
-                      className="absolute -inset-1 rounded-lg opacity-0 blur-sm group-hover/tag-full:opacity-40 transition-all duration-300"
-                      style={{
-                        background:
-                          tag.color ||
-                          "linear-gradient(to right, rgb(var(--heroui-secondary)), rgb(var(--heroui-secondary-400)))",
-                      }}
-                    ></div>
-                    <Chip
-                      size="sm"
-                      variant="bordered"
-                      startContent={
-                        <div
-                          className="w-2 h-2 rounded-full"
-                          style={{
-                            background:
-                              tag.color ||
-                              "linear-gradient(to right, rgb(var(--heroui-secondary)), rgb(var(--heroui-secondary-400)))",
-                          }}
-                        />
-                      }
-                      classNames={{
-                        base: "relative backdrop-blur-lg bg-white/10 dark:bg-black/10 transition-all duration-300 hover:scale-105 hover:bg-white/20 dark:hover:bg-black/20",
-                        content: "text-xs font-medium",
-                      }}
-                      style={{
-                        borderColor: tag.color ? `${tag.color}50` : undefined,
-                        background: tag.color ? `${tag.color}10` : undefined,
-                      }}
-                    >
-                      <span style={{ color: tag.color || undefined }}>{tag.name}</span>
-                    </Chip>
-                  </div>
-                ))}
-              </div>
-            </div>
-          )}
-
           {/* 元信息 - 固定在底部 */}
           <div className="meta-info mt-auto">
             <div className="flex flex-col gap-2 text-small text-default-500">

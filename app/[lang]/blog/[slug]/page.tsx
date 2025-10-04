@@ -382,20 +382,18 @@ export default function BlogDetailPage({ params }: { params: Promise<{ lang: str
 
               {/* 分类和标签 - 使用渐变色样式 */}
               <div className="flex flex-col lg:flex-row lg:items-center gap-6 animate-blog-slide-in-right delay-400">
-                {post.categories && post.categories.length > 0 && (
+                {post.category && (
                   <div className="flex items-center gap-3">
                     <span className="text-sm font-medium text-default-600">📁 分类:</span>
                     <div className="flex flex-wrap gap-2">
-                      {post.categories.map((category, index) => (
-                        <Chip
-                          key={category.slug}
-                          variant="flat"
-                          color="secondary"
-                          className={`hover-lift animate-blog-scale-in delay-${500 + index * 100}`}
-                        >
-                          {category.name}
-                        </Chip>
-                      ))}
+                      <Chip
+                        key={post.category?.slug}
+                        variant="flat"
+                        color="secondary"
+                        className={`hover-lift animate-blog-scale-in delay-${500 + 0 * 100}`}
+                      >
+                        {post.category?.name}
+                      </Chip>
                     </div>
                   </div>
                 )}
@@ -431,7 +429,7 @@ export default function BlogDetailPage({ params }: { params: Promise<{ lang: str
           </Card>
 
           {/* 操作按钮 - 使用渐变色按钮 */}
-          <div className="animate-blog-fade-in-up delay-300">
+          <div className="animate-blog-fade-in-up delay-300 mt-4">
             <Card className="glass-enhanced">
               <CardBody className="p-6">
                 <div className="flex flex-col sm:flex-row items-center justify-between gap-4">
@@ -486,7 +484,7 @@ export default function BlogDetailPage({ params }: { params: Promise<{ lang: str
 
           {/* 评论区域 - 使用渐变色样式 */}
           {post.allowComments && (
-            <div className="animate-blog-fade-in-up delay-400">
+            <div className="animate-blog-fade-in-up delay-400 mt-4">
               <Card className="card-hover-effect glass-enhanced">
                 <CardHeader className="pb-6">
                   <div className="flex items-center gap-3">
@@ -509,7 +507,7 @@ export default function BlogDetailPage({ params }: { params: Promise<{ lang: str
                         variant="bordered"
                         minRows={4}
                         isRequired
-                        className="hover-lift"
+                        className="hover-lift mt-4"
                         classNames={{
                           input: "text-base",
                           inputWrapper: "border-2 hover:border-primary transition-colors",

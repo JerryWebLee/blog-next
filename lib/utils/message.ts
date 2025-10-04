@@ -32,8 +32,6 @@ export interface MessageOptions {
   description?: string;
   /** 自动关闭延迟时间（毫秒） */
   timeout?: number;
-  /** 是否可关闭 */
-  closable?: boolean;
   /** 自定义类名 */
   className?: string;
   /** 自定义样式 */
@@ -54,8 +52,6 @@ export interface MessageOptions {
 export interface MessageConfig {
   /** 默认超时时间 */
   defaultTimeout?: number;
-  /** 默认是否可关闭 */
-  defaultClosable?: boolean;
   /** 最大显示数量 */
   maxCount?: number;
 }
@@ -66,7 +62,6 @@ export interface MessageConfig {
 class MessageManager {
   private config: MessageConfig = {
     defaultTimeout: 3000,
-    defaultClosable: true,
     maxCount: 5,
   };
 
@@ -85,7 +80,6 @@ class MessageManager {
 
     return {
       timeout: this.config.defaultTimeout,
-      closable: this.config.defaultClosable,
       ...opts,
       color: MESSAGE_COLOR_MAP[type],
     };
