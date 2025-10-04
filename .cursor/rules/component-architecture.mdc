@@ -1,13 +1,15 @@
 ---
-description: 
-globs: 
+description:
+globs:
 alwaysApply: true
 ---
+
 # 项目概览
 
 这是一个基于 Next.js 15 构建的现代化多语言博客系统，名为"荒野博客"。
 
 ## 技术栈
+
 - **框架**: Next.js 15 (App Router)
 - **语言**: TypeScript
 - **数据库**: MySQL + Drizzle ORM
@@ -18,6 +20,7 @@ alwaysApply: true
 - **部署**: Vercel
 
 ## 项目结构
+
 - [app/](mdc:app) - Next.js App Router 页面和API路由
 - [components/](mdc:components) - React 自定义组件库
 - [lib/](mdc:lib) - 工具函数、数据库配置、服务层
@@ -27,6 +30,7 @@ alwaysApply: true
 - [styles/](mdc:styles) - 全局样式文件
 
 ## 核心功能
+
 - 多语言支持 (zh-CN, en-US, ja-JP)
 - 用户认证和权限管理
 - 文章管理系统 (CRUD)
@@ -36,7 +40,7 @@ alwaysApply: true
 - 主题切换 (明暗模式)
 - SEO 优化
 
-```mdc:.cursor/rules/database-schema.mdc
+````mdc:.cursor/rules/database-schema.mdc
 # 数据库架构
 
 项目使用 MySQL 数据库，通过 Drizzle ORM 进行管理。
@@ -72,9 +76,9 @@ pnpm db:migrate   # 执行迁移
 pnpm db:push      # 推送到数据库
 pnpm db:studio    # 打开数据库管理界面
 pnpm db:seed      # 填充测试数据
-```
+````
 
-```mdc:.cursor/rules/type-definitions.mdc
+````mdc:.cursor/rules/type-definitions.mdc
 # 类型定义
 
 项目使用 TypeScript 进行类型安全开发，所有类型定义在 [types/](mdc:types) 目录中。
@@ -93,7 +97,7 @@ pnpm db:seed      # 填充测试数据
 
 ### 业务类型
 - `User` - 用户实体
-- `Post` - 文章实体
+- `PostData` - 文章实体
 - `Category` - 分类实体
 - `Tag` - 标签实体
 - `Comment` - 评论实体
@@ -196,10 +200,10 @@ pnpm db:seed      # 填充测试数据
 ```typescript
 // 获取文章列表
 const response = await fetch('/api/posts?page=1&limit=10');
-const data: ApiResponse<PaginatedResponseData<Post>> = await response.json();
-```
+const data: ApiResponse<PaginatedResponseData<PostData>> = await response.json();
+````
 
-```mdc:.cursor/rules/internationalization.mdc
+````mdc:.cursor/rules/internationalization.mdc
 # 国际化 (i18n)
 
 项目支持多语言，包括中文、英文和日文。
@@ -227,18 +231,20 @@ const dict = await getDictionary(lang);
 // 使用翻译
 <h1>{dict.about.title}</h1>
 <p>{dict.about.description}</p>
-```
+````
 
 ## 路由结构
+
 - `/[lang]/` - 语言前缀路由
 - `/[lang]/about` - 关于页面
 - `/[lang]/blog` - 博客页面
 - `/[lang]/auth` - 认证页面
 
 ## 语言切换
+
 使用 `LanguageSwitcher` 组件进行语言切换，支持URL参数和本地存储。
 
-```mdc:.cursor/rules/development-workflow.mdc
+````mdc:.cursor/rules/development-workflow.mdc
 # 开发工作流
 
 ## 开发环境设置
@@ -254,9 +260,10 @@ pnpm build
 
 # 启动生产服务器
 pnpm start
-```
+````
 
 ## 代码质量
+
 ```bash
 # 代码检查
 pnpm lint
@@ -272,6 +279,7 @@ pnpm format:check
 ```
 
 ## 数据库操作
+
 ```bash
 # 生成迁移文件
 pnpm db:generate
@@ -290,6 +298,7 @@ pnpm db:seed
 ```
 
 ## 测试
+
 ```bash
 # 测试API
 pnpm test:api
@@ -302,13 +311,14 @@ pnpm test:db:env
 ```
 
 ## 项目配置
+
 - [next.config.ts](mdc:next.config.ts) - Next.js 配置
 - [tailwind.config.mjs](mdc:tailwind.config.mjs) - Tailwind CSS 配置
 - [tsconfig.json](mdc:tsconfig.json) - TypeScript 配置
 - [eslint.config.mjs](mdc:eslint.config.mjs) - ESLint 配置
 - [drizzle.config.ts](mdc:drizzle.config.ts) - Drizzle ORM 配置
 
-```mdc:.cursor/rules/styling-guidelines.mdc
+````mdc:.cursor/rules/styling-guidelines.mdc
 # 样式指南
 
 项目使用 Tailwind CSS 和 SCSS 进行样式设计。
@@ -395,5 +405,4 @@ const { user, isAuthenticated } = useAuth();
 if (!isAuthenticated) {
   redirect('/auth/login');
 }
-```
-
+````

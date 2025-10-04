@@ -226,83 +226,29 @@ export type PostVisibility = "public" | "private" | "password";
 
 /**
  * 文章实体接口
+ * 基于数据库 posts 表的扁平结构
  */
-
-export interface Post {
-  posts: {
-    id: number;
-    title: string;
-    slug: string;
-    excerpt: string;
-    content: string;
-    contentHtml: string | null;
-    featuredImage: string;
-    authorId: number;
-    categoryId: number | null;
-    status: PostStatus;
-    visibility: PostVisibility;
-    password: string;
-    allowComments: boolean;
-    viewCount: number;
-    likeCount: number;
-    publishedAt: string;
-    createdAt: string;
-    updatedAt: string;
-  };
-
-  users: {
-    id: number;
-    username: string;
-    email: string;
-    password: string;
-    displayName: string | null;
-    avatar: string | null;
-    bio: string | null;
-    role: UserRole;
-    status: UserStatus;
-    emailVerified: boolean;
-    lastLoginAt: string | null;
-    createdAt: string;
-    updatedAt: string;
-  };
-  categories: Category[];
-  tags: Tag[];
-  comments: Comment[];
-  author: {
-    id: number;
-    username: string;
-    displayName: string;
-    email: string;
-    avatar: string | null;
-    bio: string | null;
-    role: UserRole;
-    status: UserStatus;
-    emailVerified: boolean;
-    lastLoginAt: string | null;
-    createdAt: string;
-    updatedAt: string;
-  };
-}
-
 export interface PostData extends BaseEntity {
-  allowComments: boolean;
-  author: User;
-  authorId: number;
-  category: { id: number; name: string };
-  categoryId: number;
-  content: string;
-  excerpt: string;
-  featuredImage: string;
-  likeCount: number;
-  publishedAt: string | null;
-  slug: string;
-  status: PostStatus;
   title: string;
-  viewCount: number;
+  slug: string;
+  excerpt: string | null;
+  content: string;
+  contentHtml: string | null;
+  featuredImage: string | null;
+  authorId: number;
+  categoryId: number | null;
+  status: PostStatus;
   visibility: PostVisibility;
-  comments: Comment[];
-  readTime: number;
+  password: string | null;
+  allowComments: boolean;
+  viewCount: number;
+  likeCount: number;
+  publishedAt: Date | null;
+  author: User;
+  category: Category | null;
   tags: Tag[];
+  comments: Comment[];
+  readTime: number; // 阅读时间（分钟）
 }
 
 /**
@@ -375,7 +321,7 @@ export interface Comment extends BaseEntity {
   userAgent?: string;
 
   // 关联数据
-  post?: Post;
+  post?: PostData;
   author?: User;
   parent?: Comment;
   replies?: Comment[];

@@ -18,21 +18,22 @@ import {
   Eye,
   EyeOff,
   FileText,
+  Folder,
   Image,
   Lock,
   MessageSquare,
   Save,
   Settings,
   Sparkles,
-  Type,
   Tag as TagIcon,
-  Folder,
+  Type,
 } from "lucide-react";
 
-import { message } from "@/lib/utils";
-import { Post, PostStatus, PostVisibility, UpdatePostRequest, Category, Tag } from "@/types/blog";
+import SimpleEditor from "@/components/blog/simple-editor";
 import { useCategories } from "@/lib/hooks/useCategories";
 import { useTags } from "@/lib/hooks/useTags";
+import { message } from "@/lib/utils";
+import { Category, PostData, PostStatus, PostVisibility, Tag, UpdatePostRequest } from "@/types/blog";
 
 export default function EditBlogPage() {
   const router = useRouter();
@@ -42,7 +43,7 @@ export default function EditBlogPage() {
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
-  const [post, setPost] = useState<Post | null>(null);
+  const [post, setPost] = useState<PostData | null>(null);
 
   // 获取分类和标签数据
   const { categories, loading: categoriesLoading } = useCategories({ autoFetch: true });
@@ -348,9 +349,7 @@ export default function EditBlogPage() {
                 isLoading={categoriesLoading}
               >
                 {categories.map((category) => (
-                  <SelectItem key={category.id.toString()}>
-                    {category.name}
-                  </SelectItem>
+                  <SelectItem key={category.id.toString()}>{category.name}</SelectItem>
                 ))}
               </Select>
               <p className="text-xs text-default-400">选择最适合的分类，帮助读者找到您的文章</p>
@@ -362,7 +361,7 @@ export default function EditBlogPage() {
                 <span className="text-sm font-medium">选择标签</span>
                 {tagsLoading && <Spinner size="sm" />}
               </div>
-              
+
               {tags.length > 0 ? (
                 <div className="flex flex-wrap gap-2">
                   {tags.map((tag) => (
@@ -385,36 +384,19 @@ export default function EditBlogPage() {
           </CardBody>
         </Card>
 
-        {/* 内容编辑 */}
-        <Card className="shadow-lg border-0 bg-gradient-to-r from-primary-50 to-secondary-50 dark:from-primary-900/20 dark:to-secondary-900/20">
-          <CardHeader className="pb-4">
-            <div className="flex items-center gap-3">
-              <div className="p-2 rounded-lg bg-secondary/10">
-                <Type className="w-6 h-6 text-secondary" />
-              </div>
-              <div>
-                <h3 className="text-xl font-semibold">内容编辑</h3>
-                <p className="text-default-500">编辑您的博客内容</p>
-              </div>
-            </div>
-          </CardHeader>
-          <CardBody className="pt-0">
-            <div className="space-y-2">
-              <Textarea
-                label="博客内容"
-                placeholder="开始编写您的博客内容...支持Markdown格式"
-                value={formData.content}
-                onValueChange={(value: string) => handleInputChange("content", value)}
-                variant="bordered"
-                size="lg"
-                minRows={20}
-                className="w-full"
-                isRequired
-              />
-              <p className="text-xs text-default-400">支持Markdown格式，建议内容不少于500字</p>
-            </div>
-          </CardBody>
-        </Card>
+        {/* 内容编辑 - 使用高级编辑器 */}
+        <SimpleEditor
+          value={formData.content}
+          onChange={(content: string) => handleInputChange("content", content)}
+          placeholder="开始编写您的博客内容...支持Markdown格式"
+          height="600px"
+          onSave={() => {
+            // 自动保存逻辑
+            console.log("自动保存内容");
+          }}
+          autoSave={true}
+          autoSaveInterval={30000}
+        />
 
         {/* 发布设置 */}
         <Card className="shadow-lg border-0 bg-gradient-to-r from-warning-50 to-success-50 dark:from-warning-900/20 dark:to-success-900/20">

@@ -1,16 +1,19 @@
 ---
-description: 
-globs: 
+description:
+globs:
 alwaysApply: true
 ---
+
 # 数据库架构
 
 项目使用 MySQL 数据库，通过 Drizzle ORM 进行管理。
 
 ## 核心表结构
+
 参考 [lib/db/schema.ts](mdc:lib/db/schema.ts) 了解完整的数据库架构。
 
 ### 主要表
+
 - **users** - 用户表 (管理员、作者、普通用户)
 - **posts** - 文章表 (支持草稿、发布、归档状态)
 - **categories** - 分类表 (支持层级结构)
@@ -20,6 +23,7 @@ alwaysApply: true
 - **settings** - 系统设置表
 
 ### 关系
+
 - 用户 → 文章 (一对多)
 - 文章 → 分类 (多对一)
 - 文章 → 标签 (多对多)
@@ -27,11 +31,13 @@ alwaysApply: true
 - 评论 → 评论 (自引用，支持嵌套)
 
 ## 数据库操作
+
 - 使用 Drizzle ORM 进行类型安全的数据库操作
 - 配置文件: [drizzle.config.ts](mdc:drizzle.config.ts)
 - 数据库连接: [lib/db/config.ts](mdc:lib/db/config.ts)
 
 ## 脚本命令
+
 ```bash
 pnpm db:generate  # 生成迁移文件
 pnpm db:migrate   # 执行迁移
@@ -39,7 +45,8 @@ pnpm db:push      # 推送到数据库
 pnpm db:studio    # 打开数据库管理界面
 pnpm db:seed      # 填充测试数据
 ```
-```
+
+````
 
 ```mdc:.cursor/rules/type-definitions.mdc
 # 类型定义
@@ -60,7 +67,7 @@ pnpm db:seed      # 填充测试数据
 
 ### 业务类型
 - `User` - 用户实体
-- `Post` - 文章实体
+- `PostData` - 文章实体
 - `Category` - 分类实体
 - `Tag` - 标签实体
 - `Comment` - 评论实体
@@ -78,7 +85,7 @@ pnpm db:seed      # 填充测试数据
 - 新增功能时先定义类型接口
 - 使用泛型提高代码复用性
 - 保持类型定义与数据库schema同步
-```
+````
 
 ```mdc:.cursor/rules/component-architecture.mdc
 # 组件架构
@@ -125,4 +132,3 @@ pnpm db:seed      # 填充测试数据
 - 使用 CSS 变量支持主题切换
 - 遵循移动优先的响应式设计
 ```
-

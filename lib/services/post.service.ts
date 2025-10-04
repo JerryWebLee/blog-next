@@ -8,7 +8,7 @@ import { and, asc, count, desc, eq, like, or, sql } from "drizzle-orm";
 import { db } from "@/lib/db/config";
 import { categories, comments, posts, postTags, tags, users } from "@/lib/db/schema";
 import { calculatePagination, generateSlug, truncateText } from "@/lib/utils";
-import { CreatePostRequest, PaginatedResponseData, Post, PostQueryParams, UpdatePostRequest } from "@/types/blog";
+import { CreatePostRequest, PaginatedResponseData, PostData, PostQueryParams, UpdatePostRequest } from "@/types/blog";
 
 /**
  * 文章服务类
@@ -21,7 +21,7 @@ export class PostService {
    * @param authorId 作者ID
    * @returns 创建的文章信息
    */
-  async createPost(data: CreatePostRequest, authorId: number): Promise<Post | null> {
+  async createPost(data: CreatePostRequest, authorId: number): Promise<PostData | null> {
     try {
       // 生成slug（如果未提供）
       const slug = data.slug || generateSlug(data.title);
@@ -73,7 +73,7 @@ export class PostService {
    * @param includeRelations 是否包含关联数据
    * @returns 文章详情
    */
-  async getPostById(id: number, includeRelations: boolean = true): Promise<Post | null> {
+  async getPostById(id: number, includeRelations: boolean = true): Promise<PostData | null> {
     try {
       let query: any = db.select().from(posts).where(eq(posts.id, id));
 
@@ -135,7 +135,7 @@ export class PostService {
         } as any;
       }
 
-      return post as Post;
+      return post as PostData;
     } catch (error) {
       console.error("获取文章详情失败:", error);
       throw error;
@@ -148,7 +148,7 @@ export class PostService {
    * @param includeRelations 是否包含关联数据
    * @returns 文章详情
    */
-  async getPostBySlug(slug: string, includeRelations: boolean = true): Promise<Post | null> {
+  async getPostBySlug(slug: string, includeRelations: boolean = true): Promise<PostData | null> {
     try {
       let query = db.select().from(posts).where(eq(posts.slug, slug));
 
@@ -168,15 +168,12 @@ export class PostService {
       if (includeRelations) {
         // 如果使用了leftJoin，post结构是{posts: {...}, users: {...}, categories: {...}}
         const postId = (post as any).posts?.id || post.id;
-        const [tags, comments] = await Promise.all([
-          this.getPostTags(postId),
-          this.getPostComments(postId),
-        ]);
+        const [tags, comments] = await Promise.all([this.getPostTags(postId), this.getPostComments(postId)]);
 
         // 将分类对象转换为数组格式
         const categoryData = (post as any).categories;
         const categories = categoryData ? [categoryData] : [];
-        
+
         // 获取posts对象
         const postData = (post as any).posts || post;
 
@@ -187,10 +184,10 @@ export class PostService {
           categories, // 新增：数组格式的分类
           author: (post as any).users,
           category: categoryData, // 保留：单对象格式的分类
-        } as any as Post;
+        } as any as PostData;
       }
 
-      return ((post as any).posts || post) as any as Post;
+      return ((post as any).posts || post) as any as PostData;
     } catch (error) {
       console.error("根据slug获取文章失败:", error);
       throw error;
@@ -202,7 +199,7 @@ export class PostService {
    * @param params 查询参数
    * @returns 分页的文章列表
    */
-  async getPosts(params: PostQueryParams = {}): Promise<PaginatedResponseData<Post>> {
+  async getPosts(params: PostQueryParams = {}): Promise<PaginatedResponseData<PostData>> {
     try {
       const pagination = calculatePagination(0, params.page || 1, params.limit || 10);
       const { page, limit } = pagination;
@@ -349,7 +346,7 @@ export class PostService {
    * @param data 更新数据
    * @returns 更新后的文章
    */
-  async updatePost(id: number, data: UpdatePostRequest): Promise<Post> {
+  async updatePost(id: number, data: UpdatePostRequest): Promise<PostData> {
     try {
       // 检查文章是否存在
       const existingPost = await this.getPostById(id, false);
@@ -410,7 +407,7 @@ export class PostService {
       }
 
       // 返回更新后的完整文章信息
-      return (await this.getPostById(id)) as Post;
+      return (await this.getPostById(id)) as PostData;
     } catch (error) {
       console.error("更新文章失败:", error);
       throw error;
@@ -452,7 +449,7 @@ export class PostService {
    * @param status 新状态
    * @returns 更新结果
    */
-  async updatePostStatus(id: number, status: Post["status"]): Promise<Post> {
+  async updatePostStatus(id: number, status: PostData["status"]): Promise<PostData> {
     try {
       const updateData: UpdatePostRequest = { status };
 

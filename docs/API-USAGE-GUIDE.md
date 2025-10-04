@@ -247,13 +247,13 @@ export default function ManagePage() {
     initialParams: { limit: 20 }
   });
 
-  const handleDelete = async (post: Post) => {
+  const handleDelete = async (post: PostData) => {
     if (confirm('确定要删除这篇文章吗？')) {
       await deletePost(post.id);
     }
   };
 
-  const handleStatusChange = async (post: Post, status: PostStatus) => {
+  const handleStatusChange = async (post: PostData, status: PostStatus) => {
     await updatePostStatus(post.id, status);
   };
 
@@ -276,7 +276,7 @@ export default function ManagePage() {
 // app/blog/[slug]/page.tsx
 export default function PostDetailPage({ params }: { params: { slug: string } }) {
   const { getPostBySlug, incrementViewCount } = usePosts({ autoFetch: false });
-  const [post, setPost] = useState<Post | null>(null);
+  const [post, setPost] = useState<PostData | null>(null);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
@@ -492,7 +492,7 @@ class PostErrorBoundary extends React.Component {
   }
 
   componentDidCatch(error, errorInfo) {
-    console.error('Post error:', error, errorInfo);
+    console.error('PostData error:', error, errorInfo);
   }
 
   render() {

@@ -25,14 +25,15 @@ import {
   ThumbsUp,
 } from "lucide-react";
 
+import MarkdownRenderer from "@/components/blog/markdown-renderer";
 import { message } from "@/lib/utils";
-import { Post } from "@/types/blog";
+import { PostData } from "@/types/blog";
 
 export default function BlogDetailPage({ params }: { params: Promise<{ lang: string; slug: string }> }) {
   const [resolvedParams, setResolvedParams] = useState<{ lang: string; slug: string } | null>(null);
   const router = useRouter();
 
-  const [post, setPost] = useState<Post | null>(null);
+  const [post, setPost] = useState<PostData | null>(null);
   const [loading, setLoading] = useState(true);
   const [showPasswordForm, setShowPasswordForm] = useState(false);
   const [password, setPassword] = useState("");
@@ -304,12 +305,8 @@ export default function BlogDetailPage({ params }: { params: Promise<{ lang: str
               {/* 标题和状态 */}
               <div className="flex flex-col lg:flex-row lg:items-start lg:justify-between gap-4">
                 <div className="space-y-4 flex-1">
-                  <h1 className="text-4xl lg:text-5xl font-bold blog-title-gradient leading-tight">
-                    {post.title}
-                  </h1>
-                  {post.excerpt && (
-                    <p className="text-xl text-default-600 leading-relaxed">{post.excerpt}</p>
-                  )}
+                  <h1 className="text-4xl lg:text-5xl font-bold blog-title-gradient leading-tight">{post.title}</h1>
+                  {post.excerpt && <p className="text-xl text-default-600 leading-relaxed">{post.excerpt}</p>}
                 </div>
                 <div className="flex flex-wrap items-center gap-3">
                   <Chip
@@ -324,11 +321,7 @@ export default function BlogDetailPage({ params }: { params: Promise<{ lang: str
                           : "status-archived"
                     }`}
                   >
-                    {post.status === "published"
-                      ? "✨ 已发布"
-                      : post.status === "draft"
-                        ? "📝 草稿"
-                        : "📦 已归档"}
+                    {post.status === "published" ? "✨ 已发布" : post.status === "draft" ? "📝 草稿" : "📦 已归档"}
                   </Chip>
                   {post.visibility === "private" && (
                     <Chip color="secondary" variant="flat" size="lg" className="animate-blog-scale-in delay-300">
@@ -429,174 +422,168 @@ export default function BlogDetailPage({ params }: { params: Promise<{ lang: str
           </Card>
         </div>
 
-        {/* 博客内容 - 使用渐变色样式 */}
+        {/* 博客内容 - 使用 Markdown 渲染器 */}
         <div className="animate-blog-fade-in-up delay-200">
           <Card className="card-hover-effect glass-enhanced">
             <CardBody className="p-8">
-              <div className="prose prose-lg max-w-none prose-headings:gradient-text prose-a:text-primary hover:prose-a:text-primary-600">
-                {post.contentHtml ? (
-                  <div dangerouslySetInnerHTML={{ __html: post.contentHtml }} />
-                ) : (
-                  <div className="whitespace-pre-wrap leading-relaxed text-base">{post.content}</div>
-                )}
-              </div>
+              <MarkdownRenderer content={post.content} />
             </CardBody>
           </Card>
-        </div>
 
-        {/* 操作按钮 - 使用渐变色按钮 */}
-        <div className="animate-blog-fade-in-up delay-300">
-          <Card className="glass-enhanced">
-            <CardBody className="p-6">
-              <div className="flex flex-col sm:flex-row items-center justify-between gap-4">
-                <div className="flex items-center gap-3">
-                  <Button
-                    variant="flat"
-                    color={isLiked ? "danger" : "default"}
-                    size="lg"
-                    onPress={handleLike}
-                    startContent={<Heart className={`w-5 h-5 ${isLiked ? "fill-current" : ""}`} />}
-                    className={`button-hover-effect animate-blog-scale-in delay-100 ${
-                      isLiked ? "gradient-button-danger" : ""
-                    }`}
-                  >
-                    {isLiked ? "已点赞" : "点赞"} ({post.likeCount})
-                  </Button>
-                  <Button
-                    variant="flat"
-                    color="primary"
-                    size="lg"
-                    startContent={<Share2 className="w-5 h-5" />}
-                    className="button-hover-effect animate-blog-scale-in delay-200 gradient-button-primary"
-                  >
-                    分享文章
-                  </Button>
-                  <Button
-                    variant="flat"
-                    color="secondary"
-                    size="lg"
-                    startContent={<Bookmark className="w-5 h-5" />}
-                    className="button-hover-effect animate-blog-scale-in delay-300 gradient-button-secondary"
-                  >
-                    收藏
-                  </Button>
-                </div>
-
-                {/* 编辑按钮 */}
-                <Button
-                  variant="bordered"
-                  size="lg"
-                  as="a"
-                  href={`/blog/manage/edit/${post.id}`}
-                  startContent={<Edit className="w-5 h-5" />}
-                  className="button-hover-effect animate-blog-scale-in delay-400"
-                >
-                  编辑文章
-                </Button>
-              </div>
-            </CardBody>
-          </Card>
-        </div>
-
-        {/* 评论区域 - 使用渐变色样式 */}
-        {post.allowComments && (
-          <div className="animate-blog-fade-in-up delay-400">
-            <Card className="card-hover-effect glass-enhanced">
-              <CardHeader className="pb-6">
-                <div className="flex items-center gap-3">
-                  <MessageCircle className="w-6 h-6 text-primary" />
-                  <p className="text-2xl font-bold blog-title-gradient">💬 评论区</p>
-                  <Chip variant="flat" color="primary" size="sm">
-                    {post.comments?.length || 0} 条评论
-                  </Chip>
-                </div>
-              </CardHeader>
-              <CardBody className="space-y-8 pt-0">
-                {/* 发表评论表单 - 使用渐变色样式 */}
-                <div className="animate-blog-slide-in-right delay-100">
-                  <form onSubmit={handleCommentSubmit} className="space-y-6">
-                    <Textarea
-                      label="💭 发表您的评论"
-                      placeholder="写下您的想法和见解..."
-                      value={comment}
-                      onValueChange={setComment}
-                      variant="bordered"
-                      minRows={4}
-                      isRequired
-                      className="hover-lift"
-                      classNames={{
-                        input: "text-base",
-                        inputWrapper: "border-2 hover:border-primary transition-colors",
-                      }}
-                    />
+          {/* 操作按钮 - 使用渐变色按钮 */}
+          <div className="animate-blog-fade-in-up delay-300">
+            <Card className="glass-enhanced">
+              <CardBody className="p-6">
+                <div className="flex flex-col sm:flex-row items-center justify-between gap-4">
+                  <div className="flex items-center gap-3">
                     <Button
-                      type="submit"
+                      variant="flat"
+                      color={isLiked ? "danger" : "default"}
+                      size="lg"
+                      onPress={handleLike}
+                      startContent={<Heart className={`w-5 h-5 ${isLiked ? "fill-current" : ""}`} />}
+                      className={`button-hover-effect animate-blog-scale-in delay-100 ${
+                        isLiked ? "gradient-button-danger" : ""
+                      }`}
+                    >
+                      {isLiked ? "已点赞" : "点赞"} ({post.likeCount})
+                    </Button>
+                    <Button
+                      variant="flat"
                       color="primary"
                       size="lg"
-                      isLoading={submittingComment}
-                      className="button-hover-effect gradient-button-primary"
-                      startContent={!submittingComment && <ThumbsUp className="w-5 h-5" />}
+                      startContent={<Share2 className="w-5 h-5" />}
+                      className="button-hover-effect animate-blog-scale-in delay-200 gradient-button-primary"
                     >
-                      {submittingComment ? "发布中..." : "发表评论"}
+                      分享文章
                     </Button>
-                  </form>
+                    <Button
+                      variant="flat"
+                      color="secondary"
+                      size="lg"
+                      startContent={<Bookmark className="w-5 h-5" />}
+                      className="button-hover-effect animate-blog-scale-in delay-300 gradient-button-secondary"
+                    >
+                      收藏
+                    </Button>
+                  </div>
+
+                  {/* 编辑按钮 */}
+                  <Button
+                    variant="bordered"
+                    size="lg"
+                    as="a"
+                    href={`/blog/manage/edit/${post.id}`}
+                    startContent={<Edit className="w-5 h-5" />}
+                    className="button-hover-effect animate-blog-scale-in delay-400"
+                  >
+                    编辑文章
+                  </Button>
                 </div>
-
-                <Divider className="my-8" />
-
-                {/* 评论列表 - 使用渐变色样式 */}
-                {post.comments && post.comments.length > 0 ? (
-                  <div className="space-y-6">
-                    <h3 className="text-xl font-bold flex items-center gap-2">
-                      <MessageCircle className="w-5 h-5 text-secondary" />
-                      全部评论
-                    </h3>
-                    <div className="space-y-4">
-                      {post.comments.map((comment, index) => (
-                        <div key={comment.id} className={`animate-blog-slide-in-right delay-${200 + index * 100}`}>
-                          <Card className="comment-card hover-lift card-hover-effect">
-                            <CardBody className="p-6">
-                              <div className="flex items-center gap-3 mb-4">
-                                <Avatar
-                                  size="md"
-                                  name={comment.author?.displayName || comment.authorName || "匿名用户"}
-                                  className="hover-lift"
-                                />
-                                <div className="flex-1">
-                                  <p className="font-semibold text-lg">
-                                    {comment.author?.displayName || comment.authorName || "匿名用户"}
-                                  </p>
-                                  <p className="text-sm text-default-400">
-                                    {new Date(comment.createdAt).toLocaleDateString("zh-CN", {
-                                      year: "numeric",
-                                      month: "long",
-                                      day: "numeric",
-                                      hour: "2-digit",
-                                      minute: "2-digit",
-                                    })}
-                                  </p>
-                                </div>
-                              </div>
-                              <p className="text-base leading-relaxed">{comment.content}</p>
-                            </CardBody>
-                          </Card>
-                        </div>
-                      ))}
-                    </div>
-                  </div>
-                ) : (
-                  <div className="text-center py-16 animate-blog-scale-in delay-200">
-                    <div className="animate-blog-float">
-                      <MessageCircle className="w-20 h-20 mx-auto mb-6 text-default-300" />
-                    </div>
-                    <p className="text-xl text-default-500 mb-4">暂无评论</p>
-                    <p className="text-default-400">成为第一个评论的人，分享您的想法！</p>
-                  </div>
-                )}
               </CardBody>
             </Card>
           </div>
-        )}
+
+          {/* 评论区域 - 使用渐变色样式 */}
+          {post.allowComments && (
+            <div className="animate-blog-fade-in-up delay-400">
+              <Card className="card-hover-effect glass-enhanced">
+                <CardHeader className="pb-6">
+                  <div className="flex items-center gap-3">
+                    <MessageCircle className="w-6 h-6 text-primary" />
+                    <p className="text-2xl font-bold blog-title-gradient">💬 评论区</p>
+                    <Chip variant="flat" color="primary" size="sm">
+                      {post.comments?.length || 0} 条评论
+                    </Chip>
+                  </div>
+                </CardHeader>
+                <CardBody className="space-y-8 pt-0">
+                  {/* 发表评论表单 - 使用渐变色样式 */}
+                  <div className="animate-blog-slide-in-right delay-100">
+                    <form onSubmit={handleCommentSubmit} className="space-y-6">
+                      <Textarea
+                        label="💭 发表您的评论"
+                        placeholder="写下您的想法和见解..."
+                        value={comment}
+                        onValueChange={setComment}
+                        variant="bordered"
+                        minRows={4}
+                        isRequired
+                        className="hover-lift"
+                        classNames={{
+                          input: "text-base",
+                          inputWrapper: "border-2 hover:border-primary transition-colors",
+                        }}
+                      />
+                      <Button
+                        type="submit"
+                        color="primary"
+                        size="lg"
+                        isLoading={submittingComment}
+                        className="button-hover-effect gradient-button-primary"
+                        startContent={!submittingComment && <ThumbsUp className="w-5 h-5" />}
+                      >
+                        {submittingComment ? "发布中..." : "发表评论"}
+                      </Button>
+                    </form>
+                  </div>
+
+                  <Divider className="my-8" />
+
+                  {/* 评论列表 - 使用渐变色样式 */}
+                  {post.comments && post.comments.length > 0 ? (
+                    <div className="space-y-6">
+                      <h3 className="text-xl font-bold flex items-center gap-2">
+                        <MessageCircle className="w-5 h-5 text-secondary" />
+                        全部评论
+                      </h3>
+                      <div className="space-y-4">
+                        {post.comments.map((comment, index) => (
+                          <div key={comment.id} className={`animate-blog-slide-in-right delay-${200 + index * 100}`}>
+                            <Card className="comment-card hover-lift card-hover-effect">
+                              <CardBody className="p-6">
+                                <div className="flex items-center gap-3 mb-4">
+                                  <Avatar
+                                    size="md"
+                                    name={comment.author?.displayName || comment.authorName || "匿名用户"}
+                                    className="hover-lift"
+                                  />
+                                  <div className="flex-1">
+                                    <p className="font-semibold text-lg">
+                                      {comment.author?.displayName || comment.authorName || "匿名用户"}
+                                    </p>
+                                    <p className="text-sm text-default-400">
+                                      {new Date(comment.createdAt).toLocaleDateString("zh-CN", {
+                                        year: "numeric",
+                                        month: "long",
+                                        day: "numeric",
+                                        hour: "2-digit",
+                                        minute: "2-digit",
+                                      })}
+                                    </p>
+                                  </div>
+                                </div>
+                                <p className="text-base leading-relaxed">{comment.content}</p>
+                              </CardBody>
+                            </Card>
+                          </div>
+                        ))}
+                      </div>
+                    </div>
+                  ) : (
+                    <div className="text-center py-16 animate-blog-scale-in delay-200">
+                      <div className="animate-blog-float">
+                        <MessageCircle className="w-20 h-20 mx-auto mb-6 text-default-300" />
+                      </div>
+                      <p className="text-xl text-default-500 mb-4">暂无评论</p>
+                      <p className="text-default-400">成为第一个评论的人，分享您的想法！</p>
+                    </div>
+                  )}
+                </CardBody>
+              </Card>
+            </div>
+          )}
+        </div>
       </div>
     </div>
   );

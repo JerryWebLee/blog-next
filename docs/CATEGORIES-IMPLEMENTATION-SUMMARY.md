@@ -77,7 +77,7 @@
 #### 新增类型接口 (`types/blog.ts`)
 
 - `CategoryQueryParams` - 分类查询参数
-- 修复了 `Post` 接口的类型问题
+- 修复了 `PostData` 接口的类型问题
 - 更新了 `Category` 接口的 `sortOrder` 类型
 
 ## 技术特性

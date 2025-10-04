@@ -7,6 +7,7 @@ import { Card, CardBody, CardHeader } from "@heroui/card";
 import { Chip } from "@heroui/chip";
 import { Input } from "@heroui/input";
 import { Textarea } from "@heroui/react";
+import SimpleEditor from "@/components/blog/simple-editor";
 import { Select, SelectItem } from "@heroui/select";
 import { Spinner } from "@heroui/spinner";
 import { Switch } from "@heroui/switch";
@@ -300,36 +301,19 @@ export default function CreateBlogPage() {
           </CardBody>
         </Card>
 
-        {/* 内容编辑 */}
-        <Card className="shadow-lg border-0 bg-gradient-to-r from-primary-50 to-secondary-50 dark:from-primary-900/20 dark:to-secondary-900/20">
-          <CardHeader className="pb-4">
-            <div className="flex items-center gap-3">
-              <div className="p-2 rounded-lg bg-secondary/10">
-                <Type className="w-6 h-6 text-secondary" />
-              </div>
-              <div>
-                <h3 className="text-xl font-semibold">内容编辑</h3>
-                <p className="text-default-500">编写您的博客内容</p>
-              </div>
-            </div>
-          </CardHeader>
-          <CardBody className="pt-0">
-            <div className="space-y-2">
-              <Textarea
-                label="博客内容"
-                placeholder="开始编写您的博客内容...支持Markdown格式"
-                value={formData.content}
-                onValueChange={(value: string) => handleInputChange("content", value)}
-                variant="bordered"
-                size="lg"
-                minRows={20}
-                className="w-full"
-                isRequired
-              />
-              <p className="text-xs text-default-400">支持Markdown格式，建议内容不少于500字</p>
-            </div>
-          </CardBody>
-        </Card>
+        {/* 内容编辑 - 使用高级编辑器 */}
+        <SimpleEditor
+          value={formData.content}
+          onChange={(content: string) => handleInputChange("content", content)}
+          placeholder="开始编写您的博客内容...支持Markdown格式"
+          height="600px"
+          onSave={() => {
+            // 自动保存逻辑
+            console.log("自动保存内容");
+          }}
+          autoSave={true}
+          autoSaveInterval={30000}
+        />
 
         {/* 发布设置 */}
         <Card className="shadow-lg border-0 bg-gradient-to-r from-warning-50 to-success-50 dark:from-warning-900/20 dark:to-success-900/20">

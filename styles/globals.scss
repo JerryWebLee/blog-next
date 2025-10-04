@@ -1,8 +1,9 @@
 @use "tailwindcss";
+@use "./class.scss";
+@use "./toast-ui-editor.scss";
 @layer theme, base, components, utilities, blog;
 
 @config "../tailwind.config.mjs";
-@import url(./class.scss);
 
 @layer blog {
   .light {
@@ -53,14 +54,14 @@
 /* 添加一些自定义样式 */
 .line-clamp-2 {
   display: -webkit-box;
-  -webkit-line-clamp: 2;
+  line-clamp: 2;
   -webkit-box-orient: vertical;
   overflow: hidden;
 }
 
 .line-clamp-3 {
   display: -webkit-box;
-  -webkit-line-clamp: 3;
+  line-clamp: 3;
   overflow: hidden;
   -webkit-box-orient: vertical;
 }
