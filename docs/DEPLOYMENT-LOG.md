@@ -47,7 +47,7 @@ docker run --name blog-mysql \
   -e MYSQL_CHARSET=utf8mb4 \
   -e MYSQL_COLLATION=utf8mb4_unicode_ci \
   -p 3306:3306 \
-  -v /Users/harveylee/Documents/mysql-data:/var/lib/mysql \
+  -v /e/mysql_data \
   -d mysql:8.0
 ```
 
