@@ -152,6 +152,63 @@
     "titleRequired": "Title is required",
     "contentRequired": "Content is required"
   },
+  "privacy": {
+    "title": "Privacy Policy",
+    "subtitle": "We value your privacy rights. This policy details how we collect, use, and protect your personal information",
+    "lastUpdated": "Last Updated",
+    "sections": {
+      "introduction": {
+        "title": "1. Policy Introduction",
+        "content": "Wilderness Blog (hereinafter referred to as \"we\" or \"this website\") understands the importance of personal information to you. We will take corresponding security protection measures in accordance with legal and regulatory requirements to protect your personal information security and controllability."
+      },
+      "informationCollection": {
+        "title": "2. Information Collection",
+        "content": "We may collect the following types of information:\n• Account information: username, email address, password\n• Profile information: avatar, personal bio, contact information\n• Usage information: access records, operation logs, device information\n• Content information: articles, comments, and interactive content you publish\n• Technical information: IP address, browser type, operating system information"
+      },
+      "informationUsage": {
+        "title": "3. Information Usage",
+        "content": "The information we collect will be used for:\n• Providing and maintaining service functions\n• Improving user experience and website performance\n• Sending important notifications and updates\n• Preventing fraud and ensuring security\n• Complying with legal and regulatory requirements\n• Conducting data analysis and statistics"
+      },
+      "informationSharing": {
+        "title": "4. Information Sharing",
+        "content": "We will not sell, rent, or otherwise disclose your personal information unless:\n• We have your explicit consent\n• Required by laws and regulations or government agencies\n• To protect our legitimate interests\n• Cooperating with trusted third-party service providers (under strict confidentiality agreements)\n• During mergers, acquisitions, or asset transfers"
+      },
+      "dataSecurity": {
+        "title": "5. Data Security",
+        "content": "We take various security measures to protect your information:\n• Data encryption in transmission and storage\n• Access control and permission management\n• Regular security audits and vulnerability scans\n• Employee security training and confidentiality agreements\n• Data backup and disaster recovery plans\n• Continuous monitoring and threat detection"
+      },
+      "cookies": {
+        "title": "6. Cookie Usage",
+        "content": "We use cookies and similar technologies to:\n• Remember your login status and preference settings\n• Analyze website usage and performance\n• Provide personalized content and recommendations\n• Improve user experience\n\nYou can manage cookies through browser settings, but disabling certain cookies may affect website functionality."
+      },
+      "dataRetention": {
+        "title": "7. Data Retention",
+        "content": "We only retain your personal information for the necessary period:\n• Account information: during account existence\n• Usage records: typically retained for 12 months\n• Legal requirements: retained as required by relevant regulations\n• Business needs: necessary for providing services\n\nData exceeding the retention period will be securely deleted or anonymized."
+      },
+      "userRights": {
+        "title": "8. User Rights",
+        "content": "You have the following rights regarding your personal information:\n• Access right: view your personal information we hold\n• Correction right: request correction of inaccurate personal information\n• Deletion right: request deletion of your personal information\n• Restriction right: restrict our processing of your information\n• Data portability: obtain a copy of your data\n• Objection right: object to certain data processing activities"
+      },
+      "childrenPrivacy": {
+        "title": "9. Children's Privacy",
+        "content": "We do not knowingly collect personal information from children under 13. If we discover that we have collected personal information from children, we will immediately delete the relevant data. If you are a parent or guardian and discover that your child has provided us with personal information, please contact us."
+      },
+      "internationalTransfer": {
+        "title": "10. International Transfer",
+        "content": "If your information needs to be transferred to other countries or regions, we will:\n• Ensure recipients have appropriate data protection measures\n• Comply with relevant international data transfer regulations\n• Obtain necessary legal authorization and consent\n• Adopt standard contractual clauses and other protective measures\n• Regularly assess transfer risks and security measures"
+      },
+      "policyChanges": {
+        "title": "11. Policy Changes",
+        "content": "We may update this privacy policy from time to time. Significant changes will be notified to you through:\n• Publishing prominent notices on the website\n• Sending email notifications\n• Prompting on your next visit\n• Through other appropriate means\n\nContinued use of our services indicates acceptance of the updated policy."
+      },
+      "contact": {
+        "title": "12. Contact Us",
+        "content": "If you have any questions, comments, or suggestions about this privacy policy, please contact us through:\n• Email: privacy@huangye.cn\n• Website: https://blog.huangye.cn\n• Address: Beijing, China\n\nWe will respond to your inquiries within 30 days."
+      }
+    },
+    "agreement": "I have read and understood the privacy policy",
+    "backToHome": "Back to Home"
+  },
   "tag": {
     "name": "Tag Name",
     "slug": "Tag Slug",
