@@ -168,7 +168,7 @@ export default function LoginPage() {
 
         {/* 底部信息 */}
         <div className="mt-8 text-center">
-          <p className="text-xs text-gray-500">
+          <p className="text-xs text-gray-200">
             登录即表示您同意我们的{" "}
             <Link href="/terms" className="text-blue-600 hover:underline">
               服务条款

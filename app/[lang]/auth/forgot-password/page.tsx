@@ -144,7 +144,7 @@ export default function ForgotPasswordPage() {
           <CardHeader className="text-center pb-2">
             <div className="w-full">
               <h1 className="text-2xl font-bold text-gray-900 mb-2">忘记密码</h1>
-              <p className="text-gray-400">输入您的邮箱地址，我们将发送密码重置链接给您</p>
+              <p className="text-gray-600">输入您的邮箱地址，我们将发送密码重置链接给您</p>
             </div>
           </CardHeader>
 
@@ -201,7 +201,7 @@ export default function ForgotPasswordPage() {
 
         {/* 底部信息 */}
         <div className="mt-8 text-center">
-          <p className="text-xs text-gray-300">
+          <p className="text-xs text-gray-100">
             如果您在几分钟内没有收到邮件，请检查您的垃圾邮件文件夹。
             <br />
             如果问题仍然存在，请联系我们的支持团队。
