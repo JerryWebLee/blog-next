@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import { Clipboard, Copy, Check, Code, Send, ArrowRight } from "lucide-react";
+import { ArrowRight, Check, Clipboard, Code, Copy, Send } from "lucide-react";
 
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
@@ -30,26 +30,31 @@ export function ApiExamples({ examples }: ApiExamplesProps) {
   const copyToClipboard = async (text: string, itemId: string) => {
     try {
       await navigator.clipboard.writeText(text);
-      setCopiedItems(prev => new Set(prev).add(itemId));
+      setCopiedItems((prev) => new Set(prev).add(itemId));
       setTimeout(() => {
-        setCopiedItems(prev => {
+        setCopiedItems((prev) => {
           const newSet = new Set(prev);
           newSet.delete(itemId);
           return newSet;
         });
       }, 2000);
     } catch (err) {
-      console.error('复制失败:', err);
+      console.error("复制失败:", err);
     }
   };
 
   const generateCurlCommand = (example: ApiExample) => {
-    const method = example.name.includes("GET") ? "GET" : 
-                  example.name.includes("POST") ? "POST" : 
-                  example.name.includes("PUT") ? "PUT" : 
-                  example.name.includes("DELETE") ? "DELETE" : "GET";
-    
-    let curl = `curl -X ${method} "${window.location.origin}${example.name.replace('基本示例', '').trim()}"`;
+    const method = example.name.includes("GET")
+      ? "GET"
+      : example.name.includes("POST")
+        ? "POST"
+        : example.name.includes("PUT")
+          ? "PUT"
+          : example.name.includes("DELETE")
+            ? "DELETE"
+            : "GET";
+
+    let curl = `curl -X ${method} "${window.location.origin}${example.name.replace("基本示例", "").trim()}"`;
 
     if (example.request?.headers) {
       Object.entries(example.request.headers).forEach(([key, value]) => {
@@ -101,9 +106,7 @@ export function ApiExamples({ examples }: ApiExamplesProps) {
           {examples[activeExample].description && (
             <Card className="bg-muted/30">
               <CardContent className="p-4">
-                <p className="text-sm text-muted-foreground leading-relaxed">
-                  {examples[activeExample].description}
-                </p>
+                <p className="text-sm text-muted-foreground leading-relaxed">{examples[activeExample].description}</p>
               </CardContent>
             </Card>
           )}
@@ -120,10 +123,10 @@ export function ApiExamples({ examples }: ApiExamplesProps) {
                   <Button
                     variant="ghost"
                     size="sm"
-                    onClick={() => copyToClipboard(generateCurlCommand(examples[activeExample]), 'curl')}
+                    onClick={() => copyToClipboard(generateCurlCommand(examples[activeExample]), "curl")}
                     className="h-8 w-8 p-0"
                   >
-                    {copiedItems.has('curl') ? (
+                    {copiedItems.has("curl") ? (
                       <Check className="h-4 w-4 text-green-500" />
                     ) : (
                       <Copy className="h-4 w-4" />
@@ -135,14 +138,16 @@ export function ApiExamples({ examples }: ApiExamplesProps) {
                 {/* cURL 命令 */}
                 <div className="space-y-2">
                   <div className="flex items-center gap-2">
-                    <Badge variant="outline" className="text-xs">cURL</Badge>
+                    <Badge variant="outline" className="text-xs">
+                      cURL
+                    </Badge>
                     <Button
                       variant="ghost"
                       size="sm"
-                      onClick={() => copyToClipboard(generateCurlCommand(examples[activeExample]), 'curl')}
+                      onClick={() => copyToClipboard(generateCurlCommand(examples[activeExample]), "curl")}
                       className="h-6 px-2 text-xs"
                     >
-                      {copiedItems.has('curl') ? (
+                      {copiedItems.has("curl") ? (
                         <>
                           <Check className="h-3 w-3 mr-1" />
                           已复制
@@ -168,10 +173,12 @@ export function ApiExamples({ examples }: ApiExamplesProps) {
                       <Button
                         variant="ghost"
                         size="sm"
-                        onClick={() => copyToClipboard(JSON.stringify(examples[activeExample].request?.headers, null, 2), 'headers')}
+                        onClick={() =>
+                          copyToClipboard(JSON.stringify(examples[activeExample].request?.headers, null, 2), "headers")
+                        }
                         className="h-6 px-2 text-xs"
                       >
-                        {copiedItems.has('headers') ? (
+                        {copiedItems.has("headers") ? (
                           <>
                             <Check className="h-3 w-3 mr-1" />
                             已复制
@@ -198,10 +205,12 @@ export function ApiExamples({ examples }: ApiExamplesProps) {
                       <Button
                         variant="ghost"
                         size="sm"
-                        onClick={() => copyToClipboard(JSON.stringify(examples[activeExample].request?.body, null, 2), 'body')}
+                        onClick={() =>
+                          copyToClipboard(JSON.stringify(examples[activeExample].request?.body, null, 2), "body")
+                        }
                         className="h-6 px-2 text-xs"
                       >
-                        {copiedItems.has('body') ? (
+                        {copiedItems.has("body") ? (
                           <>
                             <Check className="h-3 w-3 mr-1" />
                             已复制
@@ -239,10 +248,12 @@ export function ApiExamples({ examples }: ApiExamplesProps) {
                     <Button
                       variant="ghost"
                       size="sm"
-                      onClick={() => copyToClipboard(JSON.stringify(examples[activeExample].response?.body, null, 2), 'response')}
+                      onClick={() =>
+                        copyToClipboard(JSON.stringify(examples[activeExample].response?.body, null, 2), "response")
+                      }
                       className="h-8 w-8 p-0"
                     >
-                      {copiedItems.has('response') ? (
+                      {copiedItems.has("response") ? (
                         <Check className="h-4 w-4 text-green-500" />
                       ) : (
                         <Copy className="h-4 w-4" />

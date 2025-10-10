@@ -19,7 +19,7 @@ export async function GET(request: NextRequest) {
 
 export async function POST(request: NextRequest) {
   const body = await request.json();
-  
+
   return NextResponse.json({
     success: true,
     data: { id: 1, ...body },

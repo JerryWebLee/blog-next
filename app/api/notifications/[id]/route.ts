@@ -7,7 +7,7 @@
  * DELETE /api/notifications/[id] - 删除通知
  */
 
-import { NextRequest, NextResponse } from 'next/server';
+import { NextRequest, NextResponse } from "next/server";
 
 /**
  * GET /api/notifications/[id]
@@ -24,8 +24,8 @@ export async function GET(request: NextRequest, { params }: { params: Promise<{ 
       return NextResponse.json(
         {
           success: false,
-          message: '无效的通知ID',
-          timestamp: new Date().toISOString()
+          message: "无效的通知ID",
+          timestamp: new Date().toISOString(),
         },
         { status: 400 }
       );
@@ -34,29 +34,29 @@ export async function GET(request: NextRequest, { params }: { params: Promise<{ 
     // 模拟获取通知详情
     const notification = {
       id: notificationId,
-      title: '示例通知',
-      content: '这是一个示例通知的内容',
-      type: 'comment',
-      status: 'unread',
+      title: "示例通知",
+      content: "这是一个示例通知的内容",
+      type: "comment",
+      status: "unread",
       userId: 1,
       createdAt: new Date().toISOString(),
-      updatedAt: new Date().toISOString()
+      updatedAt: new Date().toISOString(),
     };
 
     return NextResponse.json({
       success: true,
       data: notification,
-      message: '获取通知详情成功',
-      timestamp: new Date().toISOString()
+      message: "获取通知详情成功",
+      timestamp: new Date().toISOString(),
     });
   } catch (error) {
-    console.error('获取通知详情失败:', error);
+    console.error("获取通知详情失败:", error);
     return NextResponse.json(
       {
         success: false,
-        message: '获取通知详情失败',
-        error: error instanceof Error ? error.message : '未知错误',
-        timestamp: new Date().toISOString()
+        message: "获取通知详情失败",
+        error: error instanceof Error ? error.message : "未知错误",
+        timestamp: new Date().toISOString(),
       },
       { status: 500 }
     );
@@ -79,8 +79,8 @@ export async function PUT(request: NextRequest, { params }: { params: Promise<{ 
       return NextResponse.json(
         {
           success: false,
-          message: '无效的通知ID',
-          timestamp: new Date().toISOString()
+          message: "无效的通知ID",
+          timestamp: new Date().toISOString(),
         },
         { status: 400 }
       );
@@ -90,23 +90,23 @@ export async function PUT(request: NextRequest, { params }: { params: Promise<{ 
     const updatedNotification = {
       id: notificationId,
       ...body,
-      updatedAt: new Date().toISOString()
+      updatedAt: new Date().toISOString(),
     };
 
     return NextResponse.json({
       success: true,
       data: updatedNotification,
-      message: '通知更新成功',
-      timestamp: new Date().toISOString()
+      message: "通知更新成功",
+      timestamp: new Date().toISOString(),
     });
   } catch (error) {
-    console.error('更新通知失败:', error);
+    console.error("更新通知失败:", error);
     return NextResponse.json(
       {
         success: false,
-        message: '更新通知失败',
-        error: error instanceof Error ? error.message : '未知错误',
-        timestamp: new Date().toISOString()
+        message: "更新通知失败",
+        error: error instanceof Error ? error.message : "未知错误",
+        timestamp: new Date().toISOString(),
       },
       { status: 500 }
     );
@@ -128,8 +128,8 @@ export async function DELETE(request: NextRequest, { params }: { params: Promise
       return NextResponse.json(
         {
           success: false,
-          message: '无效的通知ID',
-          timestamp: new Date().toISOString()
+          message: "无效的通知ID",
+          timestamp: new Date().toISOString(),
         },
         { status: 400 }
       );
@@ -139,17 +139,17 @@ export async function DELETE(request: NextRequest, { params }: { params: Promise
     return NextResponse.json({
       success: true,
       data: null,
-      message: '通知删除成功',
-      timestamp: new Date().toISOString()
+      message: "通知删除成功",
+      timestamp: new Date().toISOString(),
     });
   } catch (error) {
-    console.error('删除通知失败:', error);
+    console.error("删除通知失败:", error);
     return NextResponse.json(
       {
         success: false,
-        message: '删除通知失败',
-        error: error instanceof Error ? error.message : '未知错误',
-        timestamp: new Date().toISOString()
+        message: "删除通知失败",
+        error: error instanceof Error ? error.message : "未知错误",
+        timestamp: new Date().toISOString(),
       },
       { status: 500 }
     );

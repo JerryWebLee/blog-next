@@ -3,8 +3,8 @@ import { eq } from "drizzle-orm";
 
 import { db } from "@/lib/db/config";
 import { users } from "@/lib/db/schema";
+import { generatePasswordResetToken, isValidEmail } from "@/lib/utils";
 import { ApiResponse } from "@/types/blog";
-import { isValidEmail, generatePasswordResetToken } from "@/lib/utils";
 
 // 模拟发送邮件功能（实际项目中应该集成真实的邮件服务）
 async function sendPasswordResetEmail(email: string, resetToken: string) {

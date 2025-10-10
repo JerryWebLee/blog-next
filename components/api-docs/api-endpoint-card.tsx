@@ -19,7 +19,9 @@ interface ApiEndpointCardProps {
 
 export function ApiEndpointCard({ endpoint }: ApiEndpointCardProps) {
   const [isExpanded, setIsExpanded] = useState(false);
-  const [activeTab, setActiveTab] = useState<"parameters" | "request" | "responses" | "examples" | "test">("parameters");
+  const [activeTab, setActiveTab] = useState<"parameters" | "request" | "responses" | "examples" | "test">(
+    "parameters"
+  );
 
   const getMethodColor = (method: string) => {
     const colors = {
@@ -54,18 +56,11 @@ export function ApiEndpointCard({ endpoint }: ApiEndpointCardProps) {
           <div className="flex items-center gap-3">
             <Badge className={getMethodColor(endpoint.method)}>{endpoint.method}</Badge>
             <code className="text-sm font-mono bg-muted px-2 py-1 rounded">{endpoint.path}</code>
-            {endpoint.description && (
-              <span className="text-sm text-muted-foreground">{endpoint.description}</span>
-            )}
+            {endpoint.description && <span className="text-sm text-muted-foreground">{endpoint.description}</span>}
           </div>
           <div className="flex items-center gap-2">
             <ApiTester endpoint={endpoint} />
-            <Button
-              variant="ghost"
-              size="sm"
-              onClick={() => setIsExpanded(!isExpanded)}
-              className="h-8 w-8 p-0"
-            >
+            <Button variant="ghost" size="sm" onClick={() => setIsExpanded(!isExpanded)} className="h-8 w-8 p-0">
               {isExpanded ? (
                 <ChevronDown className="h-4 w-4 text-muted-foreground" />
               ) : (
@@ -106,26 +101,16 @@ export function ApiEndpointCard({ endpoint }: ApiEndpointCardProps) {
 
             {/* 标签页内容 */}
             <div className="min-h-[200px]">
-              {activeTab === "parameters" && (
-                <ApiParameters parameters={endpoint.parameters || []} />
-              )}
-              {activeTab === "request" && (
-                <ApiRequestBody requestBody={endpoint.requestBody} />
-              )}
-              {activeTab === "responses" && (
-                <ApiResponses responses={endpoint.responses || []} />
-              )}
-              {activeTab === "examples" && (
-                <ApiExamples examples={endpoint.examples || []} />
-              )}
+              {activeTab === "parameters" && <ApiParameters parameters={endpoint.parameters || []} />}
+              {activeTab === "request" && <ApiRequestBody requestBody={endpoint.requestBody} />}
+              {activeTab === "responses" && <ApiResponses responses={endpoint.responses || []} />}
+              {activeTab === "examples" && <ApiExamples examples={endpoint.examples || []} />}
               {activeTab === "test" && (
                 <div className="space-y-4">
                   <div className="text-center py-8">
                     <Code className="h-12 w-12 text-muted-foreground/50 mx-auto mb-4" />
                     <h3 className="text-lg font-semibold mb-2">接口测试</h3>
-                    <p className="text-muted-foreground mb-4">
-                      点击上方的"测试接口"按钮开始测试此API接口
-                    </p>
+                    <p className="text-muted-foreground mb-4">点击上方的"测试接口"按钮开始测试此API接口</p>
                     <div className="bg-muted/30 rounded-lg p-4 text-left">
                       <h4 className="font-medium mb-2">测试功能包括：</h4>
                       <ul className="text-sm text-muted-foreground space-y-1">

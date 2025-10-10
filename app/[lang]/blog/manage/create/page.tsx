@@ -7,7 +7,6 @@ import { Card, CardBody, CardHeader } from "@heroui/card";
 import { Chip } from "@heroui/chip";
 import { Input } from "@heroui/input";
 import { Textarea } from "@heroui/react";
-import SimpleEditor from "@/components/blog/simple-editor";
 import { Select, SelectItem } from "@heroui/select";
 import { Spinner } from "@heroui/spinner";
 import { Switch } from "@heroui/switch";
@@ -17,21 +16,22 @@ import {
   Eye,
   EyeOff,
   FileText,
+  Folder,
   Image,
   Lock,
   MessageSquare,
   Save,
   Settings,
   Sparkles,
-  Type,
   Tag as TagIcon,
-  Folder,
+  Type,
 } from "lucide-react";
 
-import { message } from "@/lib/utils";
-import { CreatePostRequest, PostStatus, PostVisibility, Category, Tag } from "@/types/blog";
+import SimpleEditor from "@/components/blog/simple-editor";
 import { useCategories } from "@/lib/hooks/useCategories";
 import { useTags } from "@/lib/hooks/useTags";
+import { message } from "@/lib/utils";
+import { Category, CreatePostRequest, PostStatus, PostVisibility, Tag } from "@/types/blog";
 
 export default function CreateBlogPage() {
   const router = useRouter();
@@ -264,9 +264,7 @@ export default function CreateBlogPage() {
                 isLoading={categoriesLoading}
               >
                 {categories.map((category) => (
-                  <SelectItem key={category.id.toString()}>
-                    {category.name}
-                  </SelectItem>
+                  <SelectItem key={category.id.toString()}>{category.name}</SelectItem>
                 ))}
               </Select>
               <p className="text-xs text-default-400">选择最适合的分类，帮助读者找到您的文章</p>
@@ -278,7 +276,7 @@ export default function CreateBlogPage() {
                 <span className="text-sm font-medium">选择标签</span>
                 {tagsLoading && <Spinner size="sm" />}
               </div>
-              
+
               {tags.length > 0 ? (
                 <div className="flex flex-wrap gap-2">
                   {tags.map((tag) => (

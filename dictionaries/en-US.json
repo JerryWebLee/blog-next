@@ -182,5 +182,66 @@
     "manageTags": "Manage blog tags, including create, edit, delete and status control",
     "totalTags": "Total {count} tags"
   },
+  "terms": {
+    "title": "Terms of Service",
+    "subtitle": "Please read the following terms carefully. By using our services, you agree to comply with these terms",
+    "lastUpdated": "Last Updated",
+    "sections": {
+      "acceptance": {
+        "title": "1. Acceptance of Terms",
+        "content": "By accessing or using Wilderness Blog (hereinafter referred to as \"this website\"), you agree to be bound by these Terms of Service. If you do not agree to these terms, please do not use this website."
+      },
+      "description": {
+        "title": "2. Service Description",
+        "content": "Wilderness Blog is a technology blog platform that provides users with technical articles, thought sharing, and knowledge exchange services. We are committed to exploring technology in the digital wilderness and seeking truth in the forest of thought."
+      },
+      "userAccounts": {
+        "title": "3. User Accounts",
+        "content": "Using certain features of this website requires account registration. You are responsible for:\n• Providing accurate and complete information\n• Keeping account information up to date\n• Protecting account password security\n• Being responsible for all activities under your account"
+      },
+      "contentPolicy": {
+        "title": "4. Content Policy",
+        "content": "User-published content must:\n• Comply with relevant laws and regulations\n• Not infringe on others' rights\n• Not contain malicious, harmful, or inappropriate content\n• Respect intellectual property rights\n\nWe reserve the right to remove content that violates these policies."
+      },
+      "intellectualProperty": {
+        "title": "5. Intellectual Property",
+        "content": "The content, design, trademarks, etc. of this website are protected by intellectual property laws. Users retain copyright to their original content but grant us necessary usage licenses. Unauthorized copying, distribution, or commercial use of website content is prohibited."
+      },
+      "privacy": {
+        "title": "6. Privacy Protection",
+        "content": "We value your privacy. Please review our privacy policy to understand how we collect, use, and protect your personal information. We are committed to protecting user privacy in accordance with relevant laws and regulations."
+      },
+      "prohibitedUses": {
+        "title": "7. Prohibited Uses",
+        "content": "It is prohibited to use this website for:\n• Illegal activities\n• Spreading malware\n• Infringing on others' rights\n• Interfering with normal website operation\n• Any behavior that violates laws and regulations"
+      },
+      "disclaimers": {
+        "title": "8. Disclaimers",
+        "content": "This website is provided \"as is\" without any express or implied warranties. We do not guarantee:\n• Service continuity and error-free operation\n• Accuracy or completeness of content\n• Security of third-party links\n\nUsers assume the risk of using this website."
+      },
+      "limitation": {
+        "title": "9. Limitation of Liability",
+        "content": "To the maximum extent permitted by law, we are not liable for:\n• Direct or indirect losses\n• Profit losses\n• Data loss\n• Business interruption\n• Losses caused by third-party actions"
+      },
+      "termination": {
+        "title": "10. Service Termination",
+        "content": "We reserve the right to terminate or suspend services at any time, including but not limited to:\n• Violation of terms of service\n• Technical or security reasons\n• Legal requirements\n• Business adjustments\n\nWe will provide advance notice to users when possible before termination."
+      },
+      "changes": {
+        "title": "11. Changes to Terms",
+        "content": "We reserve the right to modify these terms at any time. Significant changes will be notified to users through website announcements or other means. Continued use of the service indicates acceptance of the modified terms."
+      },
+      "governingLaw": {
+        "title": "12. Governing Law",
+        "content": "These terms are governed by the laws of the People's Republic of China. Disputes arising from the use of this website should be resolved through friendly consultation; if consultation fails, they may be brought to a court with jurisdiction."
+      },
+      "contact": {
+        "title": "13. Contact Us",
+        "content": "If you have any questions about these Terms of Service, please contact us through:\n• Email: contact@huangye.cn\n• Website: https://blog.huangye.cn\n\nWe will respond to your inquiries within a reasonable time."
+      }
+    },
+    "agreement": "I have read and agree to the Terms of Service",
+    "backToHome": "Back to Home"
+  },
   "title": "Wilderness"
 }
