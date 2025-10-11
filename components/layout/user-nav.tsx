@@ -83,7 +83,7 @@ export function UserNav() {
             key="user-center"
             description="个人信息操作入口"
             startContent={<UserCircleIcon className={iconClasses} width="1em" height="1em" />}
-            href="/dashboard"
+            href="/profile"
           >
             个人中心
           </DropdownItem>
@@ -99,7 +99,7 @@ export function UserNav() {
             key="settings"
             description="系统设置"
             startContent={<SettingsIcon width="1em" height="1em" className={iconClasses} />}
-            href="/dashboard/settings"
+            href="/settings"
           >
             设置
           </DropdownItem>

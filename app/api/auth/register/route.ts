@@ -1,15 +1,15 @@
 import { NextRequest, NextResponse } from "next/server";
-import { eq } from "drizzle-orm";
+import { and, eq, gt } from "drizzle-orm";
 
 import { db } from "@/lib/db/config";
-import { users } from "@/lib/db/schema";
+import { emailVerifications, users } from "@/lib/db/schema";
 import { hashPassword, isValidEmail, validatePasswordStrength } from "@/lib/utils";
 import { ApiResponse } from "@/types/blog";
 
 export async function POST(request: NextRequest) {
   try {
     const body = await request.json();
-    const { username, email, password, displayName } = body;
+    const { username, email, password, displayName, verificationCode, useEmailVerification = false } = body;
 
     // 验证输入
     if (!username || !email || !password || !displayName) {
@@ -21,6 +21,49 @@ export async function POST(request: NextRequest) {
         },
         { status: 400 }
       );
+    }
+
+    // 如果使用邮箱验证，检查验证码
+    if (useEmailVerification) {
+      if (!verificationCode) {
+        return NextResponse.json<ApiResponse>(
+          {
+            success: false,
+            message: "请输入邮箱验证码",
+            timestamp: new Date().toISOString(),
+          },
+          { status: 400 }
+        );
+      }
+
+      // 验证邮箱验证码
+      const verification = await db
+        .select()
+        .from(emailVerifications)
+        .where(
+          and(
+            eq(emailVerifications.email, email),
+            eq(emailVerifications.code, verificationCode),
+            eq(emailVerifications.type, "register"),
+            eq(emailVerifications.isUsed, false),
+            gt(emailVerifications.expiresAt, new Date())
+          )
+        )
+        .limit(1);
+
+      if (verification.length === 0) {
+        return NextResponse.json<ApiResponse>(
+          {
+            success: false,
+            message: "邮箱验证码无效或已过期",
+            timestamp: new Date().toISOString(),
+          },
+          { status: 400 }
+        );
+      }
+
+      // 标记验证码为已使用
+      await db.update(emailVerifications).set({ isUsed: true }).where(eq(emailVerifications.id, verification[0].id));
     }
 
     // 验证邮箱格式
@@ -88,7 +131,7 @@ export async function POST(request: NextRequest) {
       displayName,
       role: "user",
       status: "active",
-      emailVerified: false,
+      emailVerified: useEmailVerification, // 如果使用邮箱验证，则邮箱已验证
     });
 
     // 获取新创建的用户信息

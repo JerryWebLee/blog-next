@@ -461,3 +461,152 @@ export interface CategoryQueryParams extends PaginationParams {
   isActive?: boolean; // 是否激活
   parentId?: number; // 父分类ID
 }
+
+// ==================== 个人中心相关类型 ====================
+
+/**
+ * 用户个人资料接口
+ */
+export interface UserProfile extends BaseEntity {
+  userId: number;
+  firstName?: string;
+  lastName?: string;
+  phone?: string;
+  website?: string;
+  location?: string;
+  timezone?: string;
+  language: string;
+  dateFormat: string;
+  timeFormat: string;
+  theme: string;
+  notifications?: Record<string, any>;
+  privacy?: Record<string, any>;
+  socialLinks?: Record<string, any>;
+}
+
+/**
+ * 用户偏好设置接口
+ */
+export interface UserPreference extends BaseEntity {
+  userId: number;
+  key: string;
+  value?: string;
+  category: string;
+}
+
+/**
+ * 用户活动接口
+ */
+export interface UserActivity extends BaseEntity {
+  userId: number;
+  action: string;
+  description?: string;
+  metadata?: Record<string, any>;
+  ipAddress?: string;
+  userAgent?: string;
+}
+
+/**
+ * 用户收藏接口
+ */
+export interface UserFavorite extends BaseEntity {
+  userId: number;
+  postId: number;
+  post?: PostData;
+}
+
+/**
+ * 用户关注接口
+ */
+export interface UserFollow extends BaseEntity {
+  followerId: number;
+  followingId: number;
+  follower?: User;
+  following?: User;
+}
+
+/**
+ * 用户通知接口
+ */
+export interface UserNotification extends BaseEntity {
+  userId: number;
+  type: "comment" | "like" | "follow" | "mention" | "system";
+  title: string;
+  content?: string;
+  data?: Record<string, any>;
+  isRead: boolean;
+  readAt?: Date;
+}
+
+/**
+ * 个人中心统计信息接口
+ */
+export interface ProfileStats {
+  totalPosts: number;
+  totalComments: number;
+  totalViews: number;
+  totalLikes: number;
+  totalFavorites: number;
+  totalFollowers: number;
+  totalFollowing: number;
+  unreadNotifications: number;
+  lastActivityAt?: Date;
+}
+
+/**
+ * 个人资料更新请求接口
+ */
+export interface UpdateProfileRequest {
+  firstName?: string;
+  lastName?: string;
+  phone?: string;
+  website?: string;
+  location?: string;
+  timezone?: string;
+  language?: string;
+  dateFormat?: string;
+  timeFormat?: string;
+  theme?: string;
+  notifications?: Record<string, any>;
+  privacy?: Record<string, any>;
+  socialLinks?: Record<string, any>;
+}
+
+/**
+ * 偏好设置更新请求接口
+ */
+export interface UpdatePreferenceRequest {
+  key: string;
+  value?: string;
+  category?: string;
+}
+
+/**
+ * 关注用户请求接口
+ */
+export interface FollowUserRequest {
+  followingId: number;
+}
+
+/**
+ * 收藏文章请求接口
+ */
+export interface FavoritePostRequest {
+  postId: number;
+}
+
+/**
+ * 通知查询参数接口
+ */
+export interface NotificationQueryParams extends PaginationParams {
+  type?: "comment" | "like" | "follow" | "mention" | "system";
+  isRead?: boolean;
+}
+
+/**
+ * 个人中心查询参数接口
+ */
+export interface ProfileQueryParams extends PaginationParams {
+  search?: string;
+  type?: "posts" | "comments" | "favorites" | "activities";
+}

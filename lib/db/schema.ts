@@ -195,6 +195,30 @@ export const media = mysqlTable(
 );
 
 /**
+ * 邮箱验证码表
+ * 存储邮箱验证码信息，用于用户注册和密码重置
+ */
+export const emailVerifications = mysqlTable(
+  "email_verifications",
+  {
+    id: int("id").primaryKey().autoincrement(),
+    email: varchar("email", { length: 100 }).notNull(), // 邮箱地址
+    code: varchar("code", { length: 10 }).notNull(), // 验证码
+    type: mysqlEnum("type", ["register", "reset_password", "change_email"]).notNull(), // 验证码类型
+    isUsed: boolean("is_used").default(false), // 是否已使用
+    expiresAt: timestamp("expires_at").notNull(), // 过期时间
+    createdAt: timestamp("created_at").defaultNow().notNull(),
+    updatedAt: timestamp("updated_at").defaultNow().onUpdateNow().notNull(),
+  },
+  (table) => [
+    index("email_idx").on(table.email),
+    index("code_idx").on(table.code),
+    index("type_idx").on(table.type),
+    index("expires_idx").on(table.expiresAt),
+  ]
+);
+
+/**
  * 系统设置表
  * 存储博客系统的配置信息
  */
@@ -212,6 +236,146 @@ export const settings = mysqlTable(
   (table) => [index("key_idx").on(table.key), index("public_idx").on(table.isPublic)]
 );
 
+/**
+ * 用户个人资料表
+ * 存储用户的详细个人资料信息
+ */
+export const userProfiles = mysqlTable(
+  "user_profiles",
+  {
+    id: int("id").primaryKey().autoincrement(),
+    userId: int("user_id").notNull(), // 关联用户ID
+    firstName: varchar("first_name", { length: 50 }), // 名字
+    lastName: varchar("last_name", { length: 50 }), // 姓氏
+    phone: varchar("phone", { length: 20 }), // 电话号码
+    website: varchar("website", { length: 255 }), // 个人网站
+    location: varchar("location", { length: 100 }), // 所在地
+    timezone: varchar("timezone", { length: 50 }), // 时区
+    language: varchar("language", { length: 10 }).default("zh-CN"), // 语言偏好
+    dateFormat: varchar("date_format", { length: 20 }).default("YYYY-MM-DD"), // 日期格式
+    timeFormat: varchar("time_format", { length: 10 }).default("24h"), // 时间格式
+    theme: varchar("theme", { length: 20 }).default("system"), // 主题偏好
+    notifications: text("notifications"), // 通知设置（JSON格式）
+    privacy: text("privacy"), // 隐私设置（JSON格式）
+    socialLinks: text("social_links"), // 社交媒体链接（JSON格式）
+    createdAt: timestamp("created_at").defaultNow().notNull(),
+    updatedAt: timestamp("updated_at").defaultNow().onUpdateNow().notNull(),
+  },
+  (table) => [
+    index("user_idx").on(table.userId),
+    index("language_idx").on(table.language),
+    index("theme_idx").on(table.theme),
+  ]
+);
+
+/**
+ * 用户偏好设置表
+ * 存储用户的各种偏好设置
+ */
+export const userPreferences = mysqlTable(
+  "user_preferences",
+  {
+    id: int("id").primaryKey().autoincrement(),
+    userId: int("user_id").notNull(), // 关联用户ID
+    key: varchar("key", { length: 100 }).notNull(), // 设置键
+    value: text("value"), // 设置值
+    category: varchar("category", { length: 50 }).default("general"), // 设置分类
+    createdAt: timestamp("created_at").defaultNow().notNull(),
+    updatedAt: timestamp("updated_at").defaultNow().onUpdateNow().notNull(),
+  },
+  (table) => [
+    index("user_idx").on(table.userId),
+    index("key_idx").on(table.key),
+    index("category_idx").on(table.category),
+  ]
+);
+
+/**
+ * 用户活动日志表
+ * 记录用户的各种活动
+ */
+export const userActivities = mysqlTable(
+  "user_activities",
+  {
+    id: int("id").primaryKey().autoincrement(),
+    userId: int("user_id").notNull(), // 用户ID
+    action: varchar("action", { length: 50 }).notNull(), // 活动类型
+    description: text("description"), // 活动描述
+    metadata: text("metadata"), // 额外数据（JSON格式）
+    ipAddress: varchar("ip_address", { length: 45 }), // IP地址
+    userAgent: text("user_agent"), // 用户代理
+    createdAt: timestamp("created_at").defaultNow().notNull(),
+  },
+  (table) => [
+    index("user_idx").on(table.userId),
+    index("action_idx").on(table.action),
+    index("created_idx").on(table.createdAt),
+  ]
+);
+
+/**
+ * 用户收藏表
+ * 存储用户收藏的文章
+ */
+export const userFavorites = mysqlTable(
+  "user_favorites",
+  {
+    id: int("id").primaryKey().autoincrement(),
+    userId: int("user_id").notNull(), // 用户ID
+    postId: int("post_id").notNull(), // 文章ID
+    createdAt: timestamp("created_at").defaultNow().notNull(),
+  },
+  (table) => [
+    index("user_idx").on(table.userId),
+    index("post_idx").on(table.postId),
+    index("created_idx").on(table.createdAt),
+  ]
+);
+
+/**
+ * 用户关注表
+ * 存储用户关注关系
+ */
+export const userFollows = mysqlTable(
+  "user_follows",
+  {
+    id: int("id").primaryKey().autoincrement(),
+    followerId: int("follower_id").notNull(), // 关注者ID
+    followingId: int("following_id").notNull(), // 被关注者ID
+    createdAt: timestamp("created_at").defaultNow().notNull(),
+  },
+  (table) => [
+    index("follower_idx").on(table.followerId),
+    index("following_idx").on(table.followingId),
+    index("created_idx").on(table.createdAt),
+  ]
+);
+
+/**
+ * 用户通知表
+ * 存储用户通知信息
+ */
+export const userNotifications = mysqlTable(
+  "user_notifications",
+  {
+    id: int("id").primaryKey().autoincrement(),
+    userId: int("user_id").notNull(), // 用户ID
+    type: mysqlEnum("type", ["comment", "like", "follow", "mention", "system"]).notNull(), // 通知类型
+    title: varchar("title", { length: 200 }).notNull(), // 通知标题
+    content: text("content"), // 通知内容
+    data: text("data"), // 额外数据（JSON格式）
+    isRead: boolean("is_read").default(false), // 是否已读
+    readAt: timestamp("read_at"), // 阅读时间
+    createdAt: timestamp("created_at").defaultNow().notNull(),
+  },
+  (table) => [
+    index("user_idx").on(table.userId),
+    index("type_idx").on(table.type),
+    index("read_idx").on(table.isRead),
+    index("created_idx").on(table.createdAt),
+  ]
+);
+
 // 导出所有表，供其他地方使用
 export const schema = {
   users,
@@ -221,5 +385,12 @@ export const schema = {
   postTags,
   comments,
   media,
+  emailVerifications,
   settings,
+  userProfiles,
+  userPreferences,
+  userActivities,
+  userFavorites,
+  userFollows,
+  userNotifications,
 };
