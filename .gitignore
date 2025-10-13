@@ -39,3 +39,4 @@ bun.lockb
 *.sql
 
 .backups
+.env.local
